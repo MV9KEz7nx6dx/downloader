@@ -37,7 +37,7 @@ jobs:
         url=$(cat url)
         filename=${url##*##}
         download=${url%##*}
-        downloadurl = $(python3 get_url.py $download)
+        downloadurl = $(python3.9 get_url.py $download)
         echo "::set-output name=path::downloads/$filename"
         echo "::set-output name=filename::$filename"
         aria2c --seed-time=0 -d downloads -c $downloadurl -o $filename
