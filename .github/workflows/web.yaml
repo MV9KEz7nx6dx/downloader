@@ -29,7 +29,7 @@ jobs:
       run: sudo apt install -y aria2 python3.9
       
     - name: pip Install
-      run: sudo pip3 install lk21==1.5.61
+      run: sudo pip3.9 install lk21==1.5.61
 
     - name: Downloading
       id: downloading
