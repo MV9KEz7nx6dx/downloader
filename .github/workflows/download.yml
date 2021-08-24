@@ -46,4 +46,5 @@ jobs:
         web3_token: ${{ secrets.WEB3_STORAGE_TOKEN }}
         path_to_add: ${{ steps.downloading.outputs.path }} 
         file_name: ${{ steps.downloading.outputs.filename }} 
+        wrap_with_directory: true
     - run: echo ${{ steps.web3.outputs.url }}
