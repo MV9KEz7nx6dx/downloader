@@ -1,4 +1,4 @@
-name: Download fro Web
+name: Download from WebSite
 
 on:
   repository_dispatch:
