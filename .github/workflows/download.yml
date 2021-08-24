@@ -4,10 +4,10 @@ on:
   repository_dispatch:
   workflow_dispatch:
     inputs:
-      ssh:
+      Url:
         description: 'Download Url'
         required: false
-        default: 'false'
+        default: ''
 #   watch:
 #     types: started
 
