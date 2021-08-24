@@ -10,7 +10,9 @@ on:
         default: 'false'
 #   watch:
 #     types: started
-
+env:
+  FILE_PATH: 'downloads'
+  
 jobs:
 
   build:
@@ -32,11 +34,12 @@ jobs:
         url='https://r4---sn-a5meknsd.googlevideo.com/videoplayback?expire=1629786506&ei=Kj0kYeKpDNS7gQOvmajgCw&ip=103.102.47.170&id=o-AOM-alEl8eLKAxAQEYsNxG_7OLwKCXTIp3WESlkPBTvM&itag=22&source=youtube&requiressl=yes&mh=9-&mm=32&mn=sn-a5meknsd&ms=su&mv=m&mvi=4&pl=25&sc=yes&ctier=A&pfa=5&hightc=yes&vprv=1&prv=1&mime=video/mp4&cnr=14&ratebypass=yes&dur=8276.102&lmt=1629673800526344&mt=1629764419&fexp=24001373,24007246&txp=6211224&sparams=expire,ei,ip,id,itag,source,requiressl,ctier,pfa,hightc,vprv,prv,mime,cnr,ratebypass,dur,lmt&sig=AOq0QJ8wRQIhAPVG1gqilLl0qJK_Ty96EfljaA-aUL73PjaDweyUdyaIAiA_qvjjtUsUn8V0ckmmKFfAX51t2vnTRblvFeYJojmS4A==&lsparams=mh,mm,mn,ms,mv,mvi,pl,sc&lsig=AG3C_xAwRAIgXhkRBXcdR47INKobebbpHtmD6oIOTzFavr-Rq872PEwCIEOYcqo1rqnaGMikexyg4WSi_iVh53258Z0npqO_5R4e&title=Dong+ho+ngung+dong+thoi+gian+va+dua+chau+trai+hu+don##rctd-404.mp4'
         filename=${url##*##}
         download=${url%##*}
+        $FILE_PATH = downloads/$filename
         aria2c --seed-time=0 -d downloads -c $download -o $filename
 
     - uses: web3-storage/add-to-web3@v1
       id: web3
       with:
         web3_token: ${{ secrets.WEB3_STORAGE_TOKEN }}
-        path_to_add: downloads/$filename
+        path_to_add: $FILE_PATH
     - run: echo ${{ steps.web3.outputs.url }}/$filename
