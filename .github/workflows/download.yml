@@ -37,7 +37,7 @@ jobs:
         download=${url%##*}
         echo "::set-output name=path::downloads/$filename"
         echo "::set-output name=filename::$filename"
-        aria2c --seed-time=0 -d downloads -c $download -o $filename
+        aria2c --conf $GITHUB_WORKSPACE/aria2.conf --seed-time=0 -d downloads -c $downloadurl -o $filename
 
 
     - uses: ykxVK8yL5L/add-to-web3@v1.3
