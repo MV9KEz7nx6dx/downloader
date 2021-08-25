@@ -27,7 +27,7 @@ jobs:
     - name: install prerequisites
       run: |
         python -m pip install --upgrade pip wheel
-        pip install install requests
+        pip install install requests cloudscraper
     - uses: FedericoCarboni/setup-ffmpeg@v1
     - name: Downloading
       id: downloading
