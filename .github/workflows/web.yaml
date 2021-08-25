@@ -27,6 +27,12 @@ jobs:
         fetch-depth: 0 
     - name: Aria2 Install
       run: sudo apt install -y aria2 
+    - name: Inject Aria2 config
+      run: |
+        mkdir -p ~/.aria2/
+        cat >  ~/.aria2/aria2.conf  << EOF
+        ${{ secrets.ARIA2_CONF }}
+        EOF
     
     - name: Set up Python 3.9
       uses: actions/setup-python@v2
