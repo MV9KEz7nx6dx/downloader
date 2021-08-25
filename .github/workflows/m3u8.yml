@@ -27,7 +27,7 @@ jobs:
         filename=${url##*##}
         download=${url%##*}
         mkdir video
-        ffmpeg -i $url video/$filename
+        ffmpeg -i $download video/$filename
         echo "::set-output name=path::video/$filename"
         echo "::set-output name=filename::$filename"
        
