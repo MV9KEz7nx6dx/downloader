@@ -37,7 +37,7 @@ jobs:
         download=${url%##*}
         downloadurl=$(python get_m3u8.py $download)
         mkdir video
-        ffmpeg -i $downloadurl video/$filename
+        ffmpeg -user_agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36" -i $downloadurl video/$filename
         echo "::set-output name=path::video/$filename"
         echo "::set-output name=filename::$filename"
        
