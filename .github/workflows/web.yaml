@@ -27,12 +27,7 @@ jobs:
         fetch-depth: 0 
     - name: Aria2 Install
       run: sudo apt install -y aria2 
-    - name: Inject Aria2 config
-      run: |
-        mkdir -p ~/.aria2/
-        cat >  ~/.aria2/aria2.conf  << EOF
-        ${{ secrets.ARIA2_CONF }}
-        EOF
+
     
     - name: Set up Python 3.9
       uses: actions/setup-python@v2
@@ -53,7 +48,7 @@ jobs:
         downloadurl=$(python get_url.py $download)
         echo "::set-output name=path::downloads/$filename"
         echo "::set-output name=filename::$filename"
-        aria2c --seed-time=0 -d downloads -c $downloadurl -o $filename
+        aria2c --conf $GITHUB_WORKSPACE/aria2.conf --seed-time=0 -d downloads -c $downloadurl -o $filename
 
 
     - uses: ykxVK8yL5L/add-to-web3@v1.3
