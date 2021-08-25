@@ -21,8 +21,6 @@ jobs:
         fetch-depth: 0 
     - name: ffmpeg Install
       run: |
-        sudo add-apt-repository ppa:djcj/hybrid
-        sudo apt update
         sudo apt install ffmpeg
     - name: Downloading
       id: downloading
