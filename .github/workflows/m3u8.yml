@@ -1,1 +1,31 @@
-
+name: m3u8
+on:
+  workflow_dispatch:
+jobs:
+  m3u8download:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+        fetch-depth: 0 
+    - name: ffmpeg Install
+      run: |
+        sudo add-apt-repository ppa:djcj/hybrid
+        sudo apt update
+        sudo apt install ffmpeg
+    - name: Downloading
+      run: |
+        url=${{ secrets.DOWNLOAD }}
+        filename=${url##*/}.mp4
+        mkdir video
+        ffmpeg -i $url video/$filename
+        git lfs install
+        git lfs track video/$filename
+        git config --local user.email ${{ secrets.EMAIL }}
+        git config --local user.name ${{ secrets.NAME }}
+        git add -f video/$filename
+        git commit -m "video"
+    - uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.TOKEN }}
