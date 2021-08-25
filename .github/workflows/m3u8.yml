@@ -21,7 +21,7 @@ jobs:
         fetch-depth: 0 
     - name: ffmpeg Install
       run: |
-        sudo apt install ffmpeg
+        sudo apt -y install ffmpeg
     - name: Downloading
       id: downloading
       run: |
