@@ -1,16 +1,19 @@
-import lk21
+import requests
 import sys
+import re
+import time
+import cloudscraper
 
 
-def sbembed(link: str) -> str:
-    bypasser = lk21.Bypass()
-    dl_url = bypasser.bypass_sbembed(link)
-    lst_link = []
-    count = len(dl_url)
-    for i in dl_url:
-        lst_link.append(dl_url[i])
-    return lst_link[count - 1]
+def get_link(link: str) -> str:
+    if "jable.tv" in link:
+        htmlfile = cloudscraper.create_scraper().get(link)
+        result = re.search("https://.+m3u8", htmlfile.text)
+        m3u8url = result[0]
+        return m3u8url
+    else:
+        return link
 
 
-link = sbembed(sys.argv[1])
+link = get_link(sys.argv[1])
 print(link)
