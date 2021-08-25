@@ -7,7 +7,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+        persist-credentials: false 
         fetch-depth: 0 
     - name: ffmpeg Install
       run: |
@@ -15,20 +15,21 @@ jobs:
         sudo apt update
         sudo apt install ffmpeg
     - name: Downloading
+      id: downloading
       run: |
         url=$(cat url)
         filename=${url##*##}
         download=${url%##*}
-        echo "::set-output name=path::downloads/$filename"
-        echo "::set-output name=filename::$filename"
         mkdir video
         ffmpeg -i $url video/$filename
-        git lfs install
-        git lfs track video/$filename
-        git config --local user.email ${{ secrets.EMAIL }}
-        git config --local user.name ${{ secrets.NAME }}
-        git add -f video/$filename
-        git commit -m "video"
-    - uses: ad-m/github-push-action@master
+        echo "::set-output name=path::video/$filename"
+        echo "::set-output name=filename::$filename"
+       
+    - uses: ykxVK8yL5L/add-to-web3@v1.3
+      id: web3
       with:
-        github_token: ${{ secrets.TOKEN }}
+        web3_token: ${{ secrets.WEB3_STORAGE_TOKEN }}
+        path_to_add: ${{ steps.downloading.outputs.path }} 
+        file_name: ${{ steps.downloading.outputs.filename }} 
+        wrap_with_directory: true
+    - run: echo ${{ steps.web3.outputs.url }}
