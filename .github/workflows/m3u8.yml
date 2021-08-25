@@ -16,8 +16,11 @@ jobs:
         sudo apt install ffmpeg
     - name: Downloading
       run: |
-        url=${{ secrets.DOWNLOAD }}
-        filename=${url##*/}.mp4
+        url=$(cat url)
+        filename=${url##*##}
+        download=${url%##*}
+        echo "::set-output name=path::downloads/$filename"
+        echo "::set-output name=filename::$filename"
         mkdir video
         ffmpeg -i $url video/$filename
         git lfs install
