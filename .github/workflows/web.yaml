@@ -37,7 +37,7 @@ jobs:
     - name: install prerequisites
       run: |
         python -m pip install --upgrade pip wheel
-        pip install install lk21==1.5.61
+        pip install install lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi
       
     - name: Downloading
       id: downloading
@@ -59,3 +59,6 @@ jobs:
         file_name: ${{ steps.downloading.outputs.filename }} 
         wrap_with_directory: true
     - run: echo ${{ steps.web3.outputs.url }}
+    - name: Save Data
+      run: |
+        python save.py --con="${{ secrets.DB_CONNECT }}" --url="${{ steps.web3.outputs.url }}/${{ steps.downloading.outputs.filename }}"
