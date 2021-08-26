@@ -15,6 +15,6 @@ client = pymongo.MongoClient(args.con, tlsCAFile=certifi.where())
 mydb = client["mydb"]
 mycol = mydb["web3"]
 
-mydict = {"url": args.url}
+mydict = {"url": args.url,'issync':'0'}
 x = mycol.insert_one(mydict)
 print(x)
