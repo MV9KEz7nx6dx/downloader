@@ -51,4 +51,4 @@ jobs:
     - run: echo ${{ steps.web3.outputs.url }}
     - name: Save Data
       run: |
-        python save.py --con="${{ secrets.DB_CONNECT }}" --url="${{ steps.web3.outputs.url }}/${{ steps.downloading.outputs.filename }}"
+        python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --url="${{ steps.web3.outputs.url }}/${{ steps.downloading.outputs.filename }}"
