@@ -14,6 +14,8 @@ def direct_link_generator(link: str):
         return fembed(link)
     elif 'asianclub.tv' in link:
         return fembed(link)
+    elif 'dutrag.com' in link:
+        return fembed(link)
     elif 'femax20.com' in link:
         return fembed(link)
     elif 'fcdn.stream' in link:
