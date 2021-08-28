@@ -1,4 +1,4 @@
-name: Download task
+name: 1Download task
 
 on:
     workflow_dispatch:
