@@ -1,4 +1,4 @@
-name: Download from WebSite
+name: Download task
 
 on:
   repository_dispatch:
