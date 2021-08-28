@@ -1,7 +1,8 @@
 name: Download task
 
 on:
-  repository_dispatch:
+  schedule:
+    - cron:  '*/30 * * * *'
   workflow_dispatch:
     inputs:
       Url:
