@@ -1,6 +1,12 @@
 
 import lk21
 import sys
+import argparse
+
+
+parser = argparse.ArgumentParser(description='Insert data to mongdb.net')
+parser.add_argument("--url", help="Connection url", default="")
+args = parser.parse_args()
 
 
 def direct_link_generator(link: str):
@@ -97,5 +103,5 @@ def streamtape(url: str) -> str:
     return dl_url
 
 
-link = direct_link_generator(sys.argv[1])
+link = direct_link_generator(args.url)
 print(link)
