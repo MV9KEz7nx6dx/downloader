@@ -1,0 +1,72 @@
+name: Upload to nft.storage
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      Url:
+        description: 'Download Url'
+        required: false
+        default: 'false'
+#   watch:
+#     types: started
+env:
+  FILE_PATH: 'downloads'
+  
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+        fetch-depth: 0 
+    - name: Aria2 Install
+      run: sudo apt install -y aria2 
+
+    
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+        
+    - name: install prerequisites
+      run: |
+        python -m pip install --upgrade pip wheel
+        pip install install lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi
+    
+    - name: Get Download Url
+      id: geturl
+      run: |
+        url=$(python task.py  --con="${{ secrets.DB_CONNECT }}")
+        echo "::set-output name=fileurl::$url"
+      
+      
+    - name: Downloading
+      id: downloading
+      if: steps.geturl.outputs.fileurl != 'None' && !cancelled()
+      run: |
+        url=${{ steps.geturl.outputs.fileurl }} 
+        filename=${url##*##}
+        download=${url%##*}
+        downloadurl=$(python get_url.py $download)
+        echo "::set-output name=path::downloads/$filename"
+        echo "::set-output name=filename::$filename"
+        aria2c --conf $GITHUB_WORKSPACE/aria2.conf --seed-time=0 -d downloads -c $downloadurl -o $filename
+
+
+    - uses: ykxVK8yL5L/add-to-nft@v1.0
+      id: web3
+      with:
+        web3_token: ${{ secrets.NFT_STORAGE_TOKEN }}
+        path_to_add: ${{ steps.downloading.outputs.path }} 
+        file_name: ${{ steps.downloading.outputs.filename }} 
+        wrap_with_directory: true
+    - run: echo ${{ steps.web3.outputs.url }}
+    - name: Save Data
+      run: |
+        python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --url="${{ steps.web3.outputs.url }}/${{ steps.downloading.outputs.filename }}"
