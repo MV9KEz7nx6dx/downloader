@@ -43,7 +43,7 @@ jobs:
       id: geturl
       run: |
         url=$(python task.py  --con="${{ secrets.DB_CONNECT }}")
-        echo "::set-output fileurl=path::$url"
+        echo "::set-output name=fileurl::$url"
       
       
     - name: Downloading
