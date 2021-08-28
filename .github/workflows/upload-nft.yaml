@@ -1,4 +1,4 @@
-name: Upload to nft.storage
+name: 2Upload to nft.storage
 
 on:
   repository_dispatch:
