@@ -1,14 +1,9 @@
 name: Download task
 
 on:
-  schedule:
-    - cron:  '*/20 * * * *'
-  workflow_dispatch:
-    inputs:
-      Url:
-        description: 'Download Url'
-        required: false
-        default: 'false'
+    workflow_dispatch:
+    schedule:
+    - cron: "*/20 * * * *"
 #   watch:
 #     types: started
 env:
