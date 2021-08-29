@@ -2,8 +2,8 @@ name: 1Download task
 
 on:
     workflow_dispatch:
-#    schedule:
-#     - cron: "*/20 * * * *"
+    schedule:
+     - cron: "*/60 * * * *"
 #   watch:
 #     types: started
 env:
