@@ -45,7 +45,7 @@ jobs:
         url=$(cat url)
         filename=${url##*##}
         download=${url%##*}
-         downloadurl=$(python get_url.py --url="$download")
+        downloadurl=$(python get_url.py --url="$download")
         echo "::set-output name=path::downloads/$filename"
         echo "::set-output name=filename::$filename"
         aria2c --conf $GITHUB_WORKSPACE/aria2.conf --seed-time=0 -d downloads -c $downloadurl -o $filename
@@ -53,6 +53,7 @@ jobs:
 
     - uses: ykxVK8yL5L/add-to-web3@v1.3
       id: web3
+      if: steps.downloading.outputs.filename != '' && !cancelled()
       with:
         web3_token: ${{ secrets.WEB3_STORAGE_TOKEN }}
         path_to_add: ${{ steps.downloading.outputs.path }} 
@@ -60,5 +61,6 @@ jobs:
         wrap_with_directory: true
     - run: echo ${{ steps.web3.outputs.url }}
     - name: Save Data
+      if: steps.web3.outputs.url != '' && !cancelled()
       run: |
         python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --url="${{ steps.web3.outputs.url }}/${{ steps.downloading.outputs.filename }}" --cid="${{ steps.web3.outputs.cid }}"
