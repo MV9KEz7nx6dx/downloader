@@ -12,11 +12,9 @@ jobs:
 
     - name: Set up secret file
       env:
-        DEBUG_PASSWORD: ${{ secrets.DEBUG_PASSWORD }}
-        DEBUG_SECRET_KEY: ${{ secrets.DEBUG_SECRET_KEY }}
+        DEBUG_PASSWORD: ${{ secrets.WEB3_STORAGE_TOKEN }}
       run: |
         echo $DEBUG_PASSWORD >> secrets.txt
-        echo $DEBUG_SECRET_KEY >> secrets.txt
 
     - name: Run tmate
       uses: mxschmitt/action-tmate@v2
