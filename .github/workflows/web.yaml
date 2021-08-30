@@ -63,4 +63,4 @@ jobs:
     - name: Save Data
       if: steps.web3.outputs.url != '' && !cancelled()
       run: |
-        python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --url="${{ steps.web3.outputs.url }}/${{ steps.downloading.outputs.filename }}" --cid="${{ steps.web3.outputs.cid }}"
+        python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --cid="${{ steps.web3.outputs.cid }}"
