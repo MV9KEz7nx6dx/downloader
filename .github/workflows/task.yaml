@@ -68,3 +68,10 @@ jobs:
       if: steps.downloading.outputs.filename != '' && !cancelled()
       run: |
         python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --url="${{ steps.web3.outputs.url }}/${{ steps.downloading.outputs.filename }}" --cid="${{ steps.web3.outputs.cid }}"
+
+    - name: Delete workflow runs
+      uses: Mattraks/delete-workflow-runs@main
+      with:
+        token: ${{ github.token }}
+        repository: ${{ github.repository }}
+        retain_days: 2
