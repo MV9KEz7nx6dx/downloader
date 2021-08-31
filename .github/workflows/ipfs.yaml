@@ -54,7 +54,8 @@ jobs:
       id: web3
       if: steps.geturl.outputs.fileurl != 'None' && !cancelled()
       with:
-        path: downloads/  
+        path: downloads/
+        timeout: 6000000
         
     - name: Save Data
       if: steps.downloading.outputs.filename != '' && !cancelled()
