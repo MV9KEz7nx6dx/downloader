@@ -46,7 +46,7 @@ jobs:
       id: downloading
       if: steps.geturl.outputs.fileurl != 'None' && !cancelled()
       run: |
-        url=${{ steps.geturl.outputs.fileurl }} 
+        url=$(cat url)
         filename=${url##*##}
         download=${url%##*}
         downloadurl=$(python get_url.py --url="$download")
@@ -61,12 +61,12 @@ jobs:
       id: web3
       if: steps.geturl.outputs.fileurl != 'None' && !cancelled()
       with:
-      path: downloads/  
+        path: downloads/  
         
     - name: Save Data
       if: steps.downloading.outputs.filename != '' && !cancelled()
       run: |
-        python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="${{ steps.web3.outputs.cid }}"
+        python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="${{ steps.web3.outputs.hash }}"
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@main
