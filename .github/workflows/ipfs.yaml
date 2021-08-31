@@ -57,7 +57,7 @@ jobs:
         echo "::set-output name=size::$size"
 
 
-    - uses: aquiladev/ipfs-action@v1
+    - uses: aquiladev/ipfs-action@v0.1.1
       id: web3
       if: steps.geturl.outputs.fileurl != 'None' && !cancelled()
       with:
