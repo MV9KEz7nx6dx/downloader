@@ -49,6 +49,8 @@ jobs:
         echo "::set-output name=path::downloads/$filename"
         echo "::set-output name=filename::$filename"
         aria2c --conf $GITHUB_WORKSPACE/aria2.conf --seed-time=0 -d downloads -c $downloadurl -o $filename
+        size=$(ls -l downloads/$filename | awk '{print $5}' )
+        echo "::set-output name=size::$size"
 
 
     - uses: ykxVK8yL5L/add-to-web3@v1.3
@@ -63,4 +65,4 @@ jobs:
     - name: Save Data
       if: steps.web3.outputs.url != '' && !cancelled()
       run: |
-        python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --cid="${{ steps.web3.outputs.cid }}"
+        python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="${{ steps.web3.outputs.cid }}"
