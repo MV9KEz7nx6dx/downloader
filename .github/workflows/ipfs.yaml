@@ -2,8 +2,8 @@ name: 3Upload to ipfs
 
 on:
     workflow_dispatch:
-    schedule:
-     - cron: "0 * * * *"
+#    schedule:
+#     - cron: "0 * * * *"
 #   watch:
 #     types: started
 env:
@@ -57,7 +57,7 @@ jobs:
         echo "::set-output name=size::$size"
 
 
-    - uses: aquiladev/ipfs-action@v0.1.1
+    - uses: aquiladev/ipfs-action@v0.1.6
       id: web3
       if: steps.geturl.outputs.fileurl != 'None' && !cancelled()
       with:
