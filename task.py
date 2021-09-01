@@ -6,6 +6,7 @@ from bson.json_util import dumps, loads
 
 parser = argparse.ArgumentParser(description='Insert data to mongdb.net')
 parser.add_argument("--con", help="Connection url", default="")
+parser.add_argument("--isnow", type=int, help="execute now", default="0")
 
 
 args = parser.parse_args()
@@ -16,7 +17,7 @@ mydb = client["mydb"]
 mycol = mydb["task"]
 
 
-x = mycol.find_one({}, {"_id": 0})
+x = mycol.find_one({}, {"isnow": args.isnow})
 if x is None:
     print("None")
     quit()
