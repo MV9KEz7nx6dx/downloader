@@ -42,7 +42,7 @@ jobs:
     - name: Get Download Url
       id: geturl
       run: |
-        url=$(python task.py  --con="${{ secrets.DB_CONNECT }} --isnow=1")
+        url=$(python task.py  --con="${{ secrets.DB_CONNECT }} --isnow='1'")
         echo "::set-output name=fileurl::$url"
       
       
