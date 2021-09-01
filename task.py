@@ -17,7 +17,7 @@ mydb = client["mydb"]
 mycol = mydb["task"]
 
 
-x = mycol.find_one({}, {"isnow": args.isnow})
+x = mycol.find_one({"isnow": args.isnow})
 if x is None:
     print("None")
     quit()
