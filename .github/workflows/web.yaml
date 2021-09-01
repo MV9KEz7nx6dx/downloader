@@ -1,4 +1,4 @@
-name: 2Download from WebSite
+name: 2Download right now
 
 on:
   repository_dispatch:
@@ -39,10 +39,18 @@ jobs:
         python -m pip install --upgrade pip wheel
         pip install install lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi
       
+    - name: Get Download Url
+      id: geturl
+      run: |
+        url=$(python task.py  --con="${{ secrets.DB_CONNECT }} --isnow=1")
+        echo "::set-output name=fileurl::$url"
+      
+      
     - name: Downloading
       id: downloading
+      if: steps.geturl.outputs.fileurl != 'None' && !cancelled()
       run: |
-        url=$(cat url)
+        url=${{ steps.geturl.outputs.fileurl }} 
         filename=${url##*##}
         download=${url%##*}
         downloadurl=$(python get_url.py --url="$download")
