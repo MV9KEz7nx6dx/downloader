@@ -48,7 +48,7 @@ jobs:
         downloadurl=$(python get_url.py --url="$download")
         echo "::set-output name=path::downloads/$filename"
         echo "::set-output name=filename::$filename"
-        aria2c --conf $GITHUB_WORKSPACE/aria2.conf --https-proxy http://218.244.147.59:3128 --seed-time=0 -d downloads -c $downloadurl -o $filename
+        aria2c --conf $GITHUB_WORKSPACE/aria2-x.conf --https-proxy http://218.244.147.59:3128 --seed-time=0 -d downloads -c $downloadurl -o $filename
         size=$(ls -l downloads/$filename | awk '{print $5}' )
         echo "::set-output name=size::$size"
 
