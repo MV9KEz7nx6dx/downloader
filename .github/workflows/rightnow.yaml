@@ -50,7 +50,7 @@ jobs:
       id: downloading
       if: steps.geturl.outputs.fileurl != 'None' && !cancelled()
       run: |
-        url=${{ steps.geturl.outputs.fileurl }} 
+        url="${{ steps.geturl.outputs.fileurl }}"
         filename=${url##*##}
         download=${url%##*}
         downloadurl=$(python get_url.py --url="$download")
