@@ -32,7 +32,7 @@ jobs:
     - name: Downloading
       id: downloading
       run: |
-        url=$(cat url)
+        url="$(cat url)"
         filename=${url##*##}
         download=${url%##*}
         downloadurl=$(python get_m3u8.py $download)
