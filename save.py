@@ -20,3 +20,4 @@ mycol = mydb["web3"]
 mydict = {"name":args.name,"cid": args.cid,"size": args.size,"issync":"0"}
 x = mycol.insert_one(mydict)
 print(x)
+
