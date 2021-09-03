@@ -69,7 +69,7 @@ jobs:
         path_to_add: ${{ steps.downloading.outputs.path }} 
         file_name: ${{ steps.downloading.outputs.filename }} 
         wrap_with_directory: true
-    - run: echo ${{ steps.web3.outputs.url }}
+
     - name: Save Data
       if: steps.web3.outputs.url != '' && !cancelled()
       run: |
