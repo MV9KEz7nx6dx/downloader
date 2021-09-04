@@ -65,9 +65,24 @@ jobs:
         timeout: 6000000
         
     - name: Save Data
+      id:  database
       if: steps.downloading.outputs.filename != '' && !cancelled()
       run: |
-        python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="${{ steps.web3.outputs.hash }}"
+        python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="${{ steps.web3.outputs.cid }}"
+        echo "::set-output name=status::ok"
+
+
+    - name: Notify upload info to mqtt broker
+      if: steps.database.outputs.status != '' && !cancelled()
+      uses: juhrlass/mqtt-action@master
+      with:
+        protocol: mqtt
+        host: broker-cn.emqx.io
+        port: 1883
+        topic: ${{ secrets.SYNC_TOPIC }}
+        message: "${{ steps.downloading.outputs.filename }}"
+        username: ''
+        password: ''
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@main
