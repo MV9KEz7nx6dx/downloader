@@ -79,7 +79,7 @@ jobs:
         host: broker-cn.emqx.io
         port: 1883
         topic: ${{ secrets.SYNC_TOPIC }}
-        message: "${{ steps.downloading.outputs.filename }}"
+        message: 'ok'
         username: ''
         password: ''
 
