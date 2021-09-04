@@ -51,8 +51,31 @@ jobs:
         path_to_add: ${{ steps.downloading.outputs.path }} 
         file_name: ${{ steps.downloading.outputs.filename }} 
         wrap_with_directory: true
-    - run: echo ${{ steps.web3.outputs.url }}
+        
     - name: Save Data
-      if: steps.web3.outputs.url != '' && !cancelled()
+      id:  database
+      if: steps.downloading.outputs.filename != '' && !cancelled()
       run: |
         python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="${{ steps.web3.outputs.cid }}"
+        echo "::set-output name=status::ok"
+
+
+    - name: Notify upload info to mqtt broker
+      if: steps.database.outputs.status != '' && !cancelled()
+      uses: juhrlass/mqtt-action@master
+      with:
+        protocol: mqtt
+        host: broker-cn.emqx.io
+        port: 1883
+        topic: ${{ secrets.SYNC_TOPIC }}
+        message: "${{ steps.downloading.outputs.filename }}"
+        username: ''
+        password: ''
+
+    - name: Delete workflow runs
+      uses: Mattraks/delete-workflow-runs@main
+      with:
+        token: ${{ github.token }}
+        repository: ${{ github.repository }}
+        retain_days: 0
+        keep_minimum_runs: 0
