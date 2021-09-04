@@ -71,7 +71,7 @@ jobs:
         echo "::set-output name=status::ok"
 
 
-    - name: Publish commit hash to mqtt broker
+    - name: Notify upload info to mqtt broker
       if: steps.database.outputs.status != '' && !cancelled()
       uses: juhrlass/mqtt-action@master
       with:
