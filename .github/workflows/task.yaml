@@ -68,6 +68,19 @@ jobs:
       run: |
         python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="${{ steps.web3.outputs.cid }}"
 
+
+    - name: Publish commit hash to mqtt broker
+      if: steps.web3.outputs.cid != '' && !cancelled()
+      uses: juhrlass/mqtt-action@master
+      with:
+        protocol: mqtt
+        host: broker-cn.emqx.io
+        port: 1883
+        topic: ${{ secrets.SYNC_TOPIC }}
+        message: "{'save':'ok'}"
+        username: ''
+        password: ''
+
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@main
       with:
