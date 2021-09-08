@@ -34,7 +34,7 @@ jobs:
         pip install install requests pymongo pymongo[srv] pymongo[tls] certifi lxml selenium
         
     - name: 'Working'
-        run: |
+      run: |
           sudo cp -p ./chrome/chromedriver /usr/bin/
           chmod -R 777 /usr/bin/chromedriver
           python ./test.py
