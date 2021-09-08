@@ -59,21 +59,21 @@ jobs:
 
     - uses: aquiladev/ipfs-action@v0.1.6
       id: web3
-      if: steps.geturl.outputs.fileurl != 'None' && !cancelled()
+      if: steps.geturl.outputs.fileurl != 'None' && !cancelled() && !failure()
       with:
         path: downloads/
         timeout: 6000000
         
     - name: Save Data
       id:  database
-      if: steps.downloading.outputs.filename != '' && !cancelled()
+      if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       run: |
         python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="${{ steps.web3.outputs.hash }}"
         echo "::set-output name=status::ok"
 
 
     - name: Notify upload info to mqtt broker
-      if: steps.database.outputs.status != '' && !cancelled()
+      if: steps.database.outputs.status != '' && !cancelled() && !failure()
       uses: juhrlass/mqtt-action@master
       with:
         protocol: mqtt
