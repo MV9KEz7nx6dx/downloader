@@ -12,6 +12,10 @@ parser.add_argument("--size", help="Insert size", default="")
 
 args = parser.parse_args()
 
+if args.cid is None:
+  print("Nothing to save")
+  quit()
+
 
 client = pymongo.MongoClient(args.con, tlsCAFile=certifi.where())
 mydb = client["mydb"]
