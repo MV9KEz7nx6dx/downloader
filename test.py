@@ -34,6 +34,32 @@ url = info['link']+str(int(info['page']))
 display = Display(visible=0, size=(1024, 768))
 display.start()
 
+
+
+
+
+options = uc.ChromeOptions()
+options.headless=True
+options.add_argument('--headless')
+driver = uc.Chrome(options=options)
+driver.get(url)
+videos=driver.find_elements(By.CSS_SELECTOR,'a.thumb')
+links=[]
+for index,video in enumerate(videos):
+    href=video.get_attribute('href')
+    if 'exosrv' in href:
+        continue
+    links.append(href)
+print(links)
+
+
+
+
+
+
+
+quit()
+
 chrome_options = uc.ChromeOptions()
 #chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--window-size=1024,768")
