@@ -40,7 +40,7 @@ chromedriver = "/usr/bin/chromedriver"
 os.environ["webdriver.chrome.driver"] = chromedriver
 driver = webdriver.Chrome(chrome_options=chrome_options,executable_path=chromedriver)
 driver.get(url)
-
+driver.implicitly_wait(5)
 print(driver.title)
 quit()
 
