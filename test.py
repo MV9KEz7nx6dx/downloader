@@ -54,7 +54,7 @@ videos=driver.find_elements(By.CSS_SELECTOR,'a.thumb')
 links=[]
 for index,video in enumerate(videos):
     href=video.get_attribute('href')
-    if 'exosrv' inhref:
+    if 'exosrv' in href:
         continue
     links.append(href)
 
