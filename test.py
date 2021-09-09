@@ -70,6 +70,7 @@ for index,link in enumerate(links):
     driver.implicitly_wait(2)
     task['downloadlink']=driver.current_url
     tasks.append(task)
+    print(task)
     windows = driver.window_handles
     for index,window in enumerate(windows):
         if index>0:
