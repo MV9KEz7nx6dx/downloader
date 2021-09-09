@@ -8,6 +8,8 @@ from bson.json_util import dumps, loads
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from pyvirtualdisplay import Display
@@ -45,6 +47,10 @@ chrome_options.add_argument('--no-first-run --no-service-autorun --password-stor
 #os.environ["webdriver.chrome.driver"] = chromedriver
 driver = uc.Chrome(options=chrome_options)
 #driver = webdriver.Chrome(chrome_options=chrome_options,executable_path=chromedriver)
+wait = WebDriverWait(driver, 10)
+
+
+
 driver.get(url)
 #driver.implicitly_wait(5)
 #print(driver.title)
@@ -69,7 +75,9 @@ for index,link in enumerate(links):
     driver.implicitly_wait(10)
     print(driver.title)
     #quit()
-    shodiv=driver.find_element(By.CSS_SELECTOR,'button#showdiv')
+    
+    shodiv = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button#showdiv')))
+#    shodiv=driver.find_element(By.CSS_SELECTOR,'button#showdiv')
     ActionChains(driver).click(shodiv).perform()
     driver.implicitly_wait(1)
     btn=driver.find_element(By.XPATH, '//a[contains(text(),"AC")]')
@@ -80,8 +88,9 @@ for index,link in enumerate(links):
     windows = driver.window_handles
     driver.switch_to.window(windows[1])
     print(driver.title)
-    driver.implicitly_wait(10)
-    button=driver.find_element(By.XPATH, '//button[contains(text(),"DOWNLOAD")]')
+#    driver.implicitly_wait(10)
+    button=wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button#showdiv')))
+#    button=driver.find_element(By.XPATH, '//button[contains(text(),"DOWNLOAD")]')
     ActionChains(driver).click(button).perform()
     if index ==0:
         driver.implicitly_wait(2)
