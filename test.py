@@ -69,7 +69,7 @@ for index,link in enumerate(links):
     driver.implicitly_wait(2)
     windows = driver.window_handles
     driver.switch_to.window(windows[1])
-    downloadurl=driver.current.url
+    downloadurl=driver.current_url
     driver.get(downloadurl)
 #    driver.implicitly_wait(1)
     print(driver.page_source)
