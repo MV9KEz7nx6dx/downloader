@@ -66,7 +66,7 @@ for index,link in enumerate(links):
     task['name']=name
     print(name)
     driver.get(link)
-    driver.implicitly_wait(5)
+    driver.implicitly_wait(6)
     print(driver.title)
     quit()
     shodiv=driver.find_element(By.CSS_SELECTOR,'button#showdiv')
