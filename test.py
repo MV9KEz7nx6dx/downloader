@@ -80,6 +80,9 @@ for index,link in enumerate(links):
     windows = driver.window_handles
     driver.switch_to.window(windows[1])
     driver.implicitly_wait(2)
+    print(driver.title)
+    quit()
+
     button=driver.find_element(By.XPATH, '//button[contains(text(),"DOWNLOAD")]')
     ActionChains(driver).click(button).perform()
     if index ==0:
