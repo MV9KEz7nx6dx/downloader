@@ -98,6 +98,7 @@ for index,link in enumerate(links):
             driver.switch_to.window(window)
             driver.close()
     driver.switch_to.window(windows[0])
+    quit()
     continue
 driver.quit()
 
