@@ -68,6 +68,11 @@ for index,link in enumerate(links):
     ActionChains(driver).click(btn).perform()
     driver.implicitly_wait(2)
     windows = driver.window_handles
+    driver.switch_to.window(windows[1])
+    button=wait.until(EC.element_to_be_clickable((By.XPATH,  '//button[contains(text(),"DOWNLOAD")]')))
+    ActionChains(driver).click(button).perform()
+    driver.implicitly_wait(2)
+    windows = driver.window_handles
     print(len(windows))
     print(driver.current_url)
     quit()
