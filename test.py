@@ -66,7 +66,7 @@ for index,link in enumerate(links):
     task['name']=name
     print(name)
     driver.get(link)
-    driver.implicitly_wait(6)
+    driver.implicitly_wait(10)
     print(driver.title)
     #quit()
     shodiv=driver.find_element(By.CSS_SELECTOR,'button#showdiv')
@@ -76,11 +76,11 @@ for index,link in enumerate(links):
     if btn is None:
         continue
     ActionChains(driver).click(btn).perform()
-    driver.implicitly_wait(6)
+    driver.implicitly_wait(2)
     windows = driver.window_handles
     driver.switch_to.window(windows[1])
     print(driver.title)
-    driver.implicitly_wait(6)
+    driver.implicitly_wait(10)
     button=driver.find_element(By.XPATH, '//button[contains(text(),"DOWNLOAD")]')
     ActionChains(driver).click(button).perform()
     if index ==0:
@@ -88,7 +88,7 @@ for index,link in enumerate(links):
         driver.switch_to.window(windows[1])
         button=driver.find_element(By.XPATH, '//button[contains(text(),"DOWNLOAD")]')
         ActionChains(driver).click(button).perform()
-    driver.implicitly_wait(2)
+    driver.implicitly_wait(10)
     task['downloadlink']=driver.current_url
     tasks.append(task)
     print(task)
