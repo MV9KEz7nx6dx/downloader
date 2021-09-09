@@ -2,6 +2,7 @@ from time import sleep
 import certifi
 import pymongo
 import sys
+import os
 import argparse
 from bson.json_util import dumps, loads
 from selenium import webdriver
@@ -9,7 +10,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
-import os
+from pyvirtualdisplay import Display
+
 parser = argparse.ArgumentParser(description='Insert data to mongdb.net')
 parser.add_argument("--con", help="Connection url", default="")
 args = parser.parse_args()
@@ -25,8 +27,13 @@ if x is None:
 info = loads(dumps(x))
 mycol.update_one(x, { "$set": { 'page':int(info['page'])+1 } })  
 url = info['link']+str(int(info['page']))
+
+display = Display(visible=0, size=(1024, 768))
+display.start()
+
+
 chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument("--window-size=1920,1080")
+chrome_options.add_argument("--window-size=1024,768")
 chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-gpu')
