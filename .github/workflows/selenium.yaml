@@ -34,7 +34,7 @@ jobs:
     - name: install prerequisites
       run: |
         python -m pip install --upgrade pip wheel
-        pip install install requests pymongo pymongo[srv] pymongo[tls] certifi lxml selenium pyvirtualdisplay
+        pip install install requests pymongo pymongo[srv] pymongo[tls] certifi lxml selenium pyvirtualdisplay undetected-chromedriver
         
     - name: Run headless test
       run: |
