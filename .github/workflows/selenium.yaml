@@ -35,6 +35,8 @@ jobs:
         
     - name: Run headless test
       run: |
+        Xvfb -ac :7 -screen 0 1024x768x8
+        export  DISPLAY=:7
         sudo cp -p ./chrome/chromedriver /usr/bin/
         chmod -R 777 /usr/bin/chromedriver
         python ./test.py --con="${{ secrets.DB_CONNECT }}"
