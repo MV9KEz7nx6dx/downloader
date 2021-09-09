@@ -40,6 +40,10 @@ chromedriver = "/usr/bin/chromedriver"
 os.environ["webdriver.chrome.driver"] = chromedriver
 driver = webdriver.Chrome(chrome_options=chrome_options,executable_path=chromedriver)
 driver.get(url)
+
+print(driver.title)
+quit()
+
 videos=driver.find_elements_by_css_selector('a.thumb')
 links=[]
 for index,video in enumerate(videos):
