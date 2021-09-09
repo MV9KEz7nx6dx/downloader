@@ -58,9 +58,6 @@ for index,video in enumerate(videos):
         continue
     links.append(href)
 
-print(links)    
-quit()
-
 tasks=[]
 for index,link in enumerate(links):
     task = {}
