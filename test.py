@@ -63,6 +63,7 @@ for index,link in enumerate(links):
     name=link.split('/')[-1].replace('_watch-online','')+'.mp4'
     task['link']=link
     task['name']=name
+    print(name)
     driver.get(link)
     driver.implicitly_wait(5)
     shodiv=driver.find_element(By.CSS_SELECTOR('button#showdiv'))
