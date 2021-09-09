@@ -61,6 +61,12 @@ for index,link in enumerate(links):
     print(driver.title)
     shodiv = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button#showdiv')))
     ActionChains(driver).click(shodiv).perform()
+    
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH,  '//a[contains(text(),"AC")]')))
+    if btn is None:
+        continue
+    ActionChains(driver).click(btn).perform()
+    driver.implicitly_wait(2)
     print(driver.title)
     quit()
 
