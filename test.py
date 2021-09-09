@@ -39,6 +39,7 @@ videos=driver.find_elements_by_css_selector('a.thumb')
 links=[]
 for index,video in enumerate(videos):
     href=video.get_attribute('href')
+    print(href)
     links.append(href)
 
 tasks=[]
