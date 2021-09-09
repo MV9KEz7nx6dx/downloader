@@ -76,9 +76,10 @@ for index,link in enumerate(links):
     if btn is None:
         continue
     ActionChains(driver).click(btn).perform()
-    driver.implicitly_wait(2)
+    driver.implicitly_wait(6)
     windows = driver.window_handles
     driver.switch_to.window(windows[1])
+    print(driver.title)
     driver.implicitly_wait(6)
     button=driver.find_element(By.XPATH, '//button[contains(text(),"DOWNLOAD")]')
     ActionChains(driver).click(button).perform()
