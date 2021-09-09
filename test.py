@@ -69,7 +69,7 @@ for index,link in enumerate(links):
     driver.implicitly_wait(2)
     windows = driver.window_handles
     driver.switch_to.window(windows[1])
-    button=wait.until(EC.presence_of_element_located((By.XPATH,  '//button[contains(text(),"DOWNLOAD")]')))
+    button=wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'.sBtn')]')))
 #    button=driver.find_element(By.XPATH, '//button[contains(text(),"DOWNLOAD")]')
 #    ActionChains(driver).click(button).perform()
 #    driver.implicitly_wait(2)
