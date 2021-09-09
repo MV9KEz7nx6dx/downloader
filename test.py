@@ -60,6 +60,9 @@ for index,link in enumerate(links):
     print(name)
     driver.get(link)
     print(driver.title)
+    shodiv = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button#showdiv')))
+    ActionChains(driver).click(shodiv).perform()
+    print(driver.title)
     quit()
 
 
