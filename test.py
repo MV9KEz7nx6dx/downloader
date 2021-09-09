@@ -50,7 +50,7 @@ driver.get(url)
 #print(driver.title)
 #quit()
 
-videos=driver.find_elements_by_css_selector('a.thumb')
+videos=driver.find_element(By.CSS_SELECTOR('a.thumb'))
 links=[]
 for index,video in enumerate(videos):
     href=video.get_attribute('href')
@@ -65,7 +65,7 @@ for index,link in enumerate(links):
     task['name']=name
     driver.get(link)
     driver.implicitly_wait(5)
-    shodiv=driver.find_element_by_css_selector('button#showdiv')
+    shodiv=driver.find_element(By.CSS_SELECTOR('button#showdiv'))
     ActionChains(driver).click(shodiv).perform()
     driver.implicitly_wait(1)
     btn=driver.find_element(By.XPATH, '//a[contains(text(),"AC")]')
