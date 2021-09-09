@@ -41,8 +41,8 @@ chrome_options.add_argument('--disable-gpu')
 chrome_options.add_argument('--disable-dev-shm-usage')
 chrome_options.add_argument('--user-data-dir=/root/chrome')
 chrome_options.add_argument('--no-first-run --no-service-autorun --password-store=basic')
-chromedriver = "/usr/bin/chromedriver"
-os.environ["webdriver.chrome.driver"] = chromedriver
+#chromedriver = "/usr/bin/chromedriver"
+#os.environ["webdriver.chrome.driver"] = chromedriver
 driver = uc.Chrome(options=chrome_options)
 #driver = webdriver.Chrome(chrome_options=chrome_options,executable_path=chromedriver)
 driver.get(url)
