@@ -60,6 +60,7 @@ for index,link in enumerate(links):
     print(name)
     driver.get(link)
     print(driver.title)
+    quit()
 
 
 
