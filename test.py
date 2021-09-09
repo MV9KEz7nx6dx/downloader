@@ -35,9 +35,7 @@ display = Display(visible=0, size=(1024, 768))
 display.start()
 
 
-
-
-
+wait = WebDriverWait(driver, 10)
 options = uc.ChromeOptions()
 options.headless=True
 options.add_argument('--headless')
