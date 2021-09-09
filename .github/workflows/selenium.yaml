@@ -30,11 +30,14 @@ jobs:
         python -m pip install --upgrade pip wheel
         pip install install requests pymongo pymongo[srv] pymongo[tls] certifi lxml selenium
         
-    - name: 'Working'
-      run: |
+    - name: Run headless test
+      uses: GabrielBB/xvfb-action@v1
+      with:
+        run: |
           sudo cp -p ./chrome/chromedriver /usr/bin/
           chmod -R 777 /usr/bin/chromedriver
           python ./test.py --con="${{ secrets.DB_CONNECT }}"
+
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@main
