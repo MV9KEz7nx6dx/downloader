@@ -73,7 +73,9 @@ for index,link in enumerate(links):
 #    button=driver.find_element(By.XPATH, '//button[contains(text(),"DOWNLOAD")]')
 #    ActionChains(driver).click(button).perform()
 #    driver.implicitly_wait(2)
-    ActionChains(driver).move_by_offset('500','300').click().perform()
+    button=driver.find_element(By.XPATH, '//button[contains(text(),"DOWNLOAD")]')
+    ActionChains(driver).move_to_element(button).click().perform()
+#    ActionChains(driver).move_by_offset('500','300').click().perform()
     windows = driver.window_handles
     print(len(windows))
     print(driver.current_url)
