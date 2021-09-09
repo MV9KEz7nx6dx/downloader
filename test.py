@@ -11,6 +11,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from pyvirtualdisplay import Display
+import undetected_chromedriver.v2 as uc
 
 parser = argparse.ArgumentParser(description='Insert data to mongdb.net')
 parser.add_argument("--con", help="Connection url", default="")
@@ -30,18 +31,20 @@ url = info['link']+str(int(info['page']))
 
 display = Display(visible=0, size=(1024, 768))
 display.start()
-chrome_options = webdriver.ChromeOptions()
+
+chrome_options = uc.ChromeOptions()
+#chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--window-size=1024,768")
 chrome_options.add_argument('--headless')
-chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-chrome_options.add_experimental_option('useAutomationExtension', False)
-chrome_options.add_argument("--disable-blink-features=AutomationControlled")
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-gpu')
 chrome_options.add_argument('--disable-dev-shm-usage')
+chrome_options.add_argument('--user-data-dir=/root/chrome')
+chrome_options.add_argument('--no-first-run --no-service-autorun --password-store=basic')
 chromedriver = "/usr/bin/chromedriver"
 os.environ["webdriver.chrome.driver"] = chromedriver
-driver = webdriver.Chrome(chrome_options=chrome_options,executable_path=chromedriver)
+driver = uc.Chrome(options=chrome_options)
+#driver = webdriver.Chrome(chrome_options=chrome_options,executable_path=chromedriver)
 driver.get(url)
 #driver.implicitly_wait(5)
 #print(driver.title)
