@@ -67,6 +67,8 @@ for index,link in enumerate(links):
         continue
     ActionChains(driver).click(btn).perform()
     driver.implicitly_wait(2)
+    windows = driver.window_handles
+    print(len(windows))
     print(driver.current_url)
     quit()
 
