@@ -72,11 +72,11 @@ for index,link in enumerate(links):
     task['name']=name
     print(name)
     driver.get(link)
-    driver.implicitly_wait(10)
-    print(driver.title)
+#    driver.implicitly_wait(10)
     #quit()
     
     shodiv = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button#showdiv')))
+    print(driver.title)
 #    shodiv=driver.find_element(By.CSS_SELECTOR,'button#showdiv')
     ActionChains(driver).click(shodiv).perform()
     driver.implicitly_wait(1)
