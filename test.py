@@ -50,8 +50,16 @@ for index,video in enumerate(videos):
     if 'exosrv' in href:
         continue
     links.append(href)
-print(links)
 
+tasks=[]
+for index,link in enumerate(links):
+    task = {}
+    name=link.split('/')[-1].replace('_watch-online','')+'.mp4'
+    task['link']=link
+    task['name']=name
+    print(name)
+    driver.get(link)
+    print(driver.title)
 
 
 
