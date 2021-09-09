@@ -50,7 +50,7 @@ driver.get(url)
 #print(driver.title)
 #quit()
 
-videos=driver.find_element(By.CSS_SELECTOR('a.thumb'))
+videos=driver.find_elements(By.CSS_SELECTOR('a.thumb'))
 links=[]
 for index,video in enumerate(videos):
     href=video.get_attribute('href')
