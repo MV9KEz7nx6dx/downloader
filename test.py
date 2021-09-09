@@ -68,7 +68,7 @@ for index,link in enumerate(links):
     driver.get(link)
     driver.implicitly_wait(6)
     print(driver.title)
-    quit()
+    #quit()
     shodiv=driver.find_element(By.CSS_SELECTOR,'button#showdiv')
     ActionChains(driver).click(shodiv).perform()
     driver.implicitly_wait(1)
