@@ -1,4 +1,4 @@
-name: 2Download right now
+name: 8Download right now with inputs
 
 on:
   repository_dispatch:
