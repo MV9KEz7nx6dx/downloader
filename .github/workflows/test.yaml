@@ -42,7 +42,6 @@ jobs:
          
     - name: Downloading
       id: downloading
-      if: !cancelled()
       run: |
         python download.py  --con="${{ secrets.DB_CONNECT }}"
         size=$(ls -l downloads/$filename | awk '{print $5}' )
