@@ -61,7 +61,7 @@ jobs:
         filename=${url##*##}
         download=${url%##*}
         downloadurl=$(python get_url.py --url="$download")
-        python download.py  --url="$downloadurl"
+        python download.py  --url="$downloadurl" --filename="$filename"
         echo "::set-output name=path::downloads/$filename"
         echo "::set-output name=filename::$filename"
         size=$(ls -l downloads/$filename | awk '{print $5}' )
