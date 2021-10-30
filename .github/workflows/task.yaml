@@ -33,31 +33,40 @@ jobs:
         python -m pip install --upgrade pip wheel
         pip install install lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi
     
-    - name: Get Download Url
-      id: geturl
-      run: |
-        url=$(python task.py  --con="${{ secrets.DB_CONNECT }}" --isnow="0")
-        echo "::set-output name=fileurl::$url"
+#     - name: Get Download Url
+#       id: geturl
+#       run: |
+#         url=$(python task.py  --con="${{ secrets.DB_CONNECT }}" --isnow="0")
+#         echo "::set-output name=fileurl::$url"
       
-      
+#     - name: Downloading
+#       id: downloading
+#       if: steps.geturl.outputs.fileurl != 'None' && !cancelled()
+#       run: |
+#         url="${{ steps.geturl.outputs.fileurl }}"
+#         filename=${url##*##}
+#         download=${url%##*}
+#         downloadurl=$(python get_url.py --url="$download")
+#         echo "::set-output name=path::downloads/$filename"
+#         echo "::set-output name=filename::$filename"
+#         aria2c --conf $GITHUB_WORKSPACE/aria2.conf --seed-time=0 -d downloads -c $downloadurl -o $filename
+#         size=$(ls -l downloads/$filename | awk '{print $5}' )
+#         echo "::set-output name=size::$size"
+
+
     - name: Downloading
       id: downloading
-      if: steps.geturl.outputs.fileurl != 'None' && !cancelled()
       run: |
-        url="${{ steps.geturl.outputs.fileurl }}"
-        filename=${url##*##}
-        download=${url%##*}
-        downloadurl=$(python get_url.py --url="$download")
+        filename=$(python download.py  --con="${{ secrets.DB_CONNECT }}")
         echo "::set-output name=path::downloads/$filename"
         echo "::set-output name=filename::$filename"
-        aria2c --conf $GITHUB_WORKSPACE/aria2.conf --seed-time=0 -d downloads -c $downloadurl -o $filename
         size=$(ls -l downloads/$filename | awk '{print $5}' )
         echo "::set-output name=size::$size"
 
 
     - uses: ykxVK8yL5L/add-to-web3@v1.3
       id: web3
-      if: steps.geturl.outputs.fileurl != 'None' && !cancelled()  && !failure()
+      if: steps.downloading.outputs.filename != 'None' && !cancelled()  && !failure()
       with:
         web3_token: ${{ secrets.WEB3_STORAGE_TOKEN }}
         path_to_add: ${{ steps.downloading.outputs.path }} 
