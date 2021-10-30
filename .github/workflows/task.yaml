@@ -33,11 +33,11 @@ jobs:
         python -m pip install --upgrade pip wheel
         pip install install lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi
     
-    - name: Get Download Url
-      id: geturl
-      run: |
-        url=$(python task.py  --con="${{ secrets.DB_CONNECT }}" --isnow="0")
-        echo "::set-output name=fileurl::$url"
+#     - name: Get Download Url
+#       id: geturl
+#       run: |
+#         url=$(python task.py  --con="${{ secrets.DB_CONNECT }}" --isnow="0")
+#         echo "::set-output name=fileurl::$url"
       
 #     - name: Downloading
 #       id: downloading
@@ -57,11 +57,7 @@ jobs:
     - name: Downloading
       id: downloading
       run: |
-        url="${{ steps.geturl.outputs.fileurl }}"
-        filename=${url##*##}
-        download=${url%##*}
-        downloadurl=$(python get_url.py --url="$download")
-        python download.py  --url="$downloadurl" --filename="$filename"
+        python download.py  --con="${{ secrets.DB_CONNECT }}" --isnow="0"
         echo "::set-output name=path::downloads/$filename"
         echo "::set-output name=filename::$filename"
         size=$(ls -l downloads/$filename | awk '{print $5}' )
