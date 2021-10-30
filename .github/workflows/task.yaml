@@ -58,7 +58,7 @@ jobs:
       id: downloading
       run: |
         python download.py  --con="${{ secrets.DB_CONNECT }}" --isnow="0"
-        filename = $(ls downloads | head -n1)
+        filename=$(ls downloads | head -n1)
         echo "::set-output name=path::downloads/$filename"
         echo "::set-output name=filename::$filename"
         size=$(ls -l downloads/$filename | awk '{print $5}' )
