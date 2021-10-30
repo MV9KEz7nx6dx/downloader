@@ -58,9 +58,9 @@ jobs:
       id: downloading
       run: |
         filename=$(python download.py  --con="${{ secrets.DB_CONNECT }}")
-        echo "::set-output name=path::$GITHUB_WORKSPACE/$filename"
+        echo "::set-output name=path::$GITHUB_WORKSPACE/downloads/$filename"
         echo "::set-output name=filename::$filename"
-        size=$(ls -l $GITHUB_WORKSPACE/$filename | awk '{print $5}' )
+        size=$(ls -l $GITHUB_WORKSPACE/downloads/$filename | awk '{print $5}' )
         echo "::set-output name=size::$size"
 
 
