@@ -26,6 +26,6 @@ if x is None:
 info = loads(dumps(x))
 mycol.delete_one(x)
 urlinfo = info['url'].split("##");
-cmd = "aria2c --conf aria2.conf --seed-time=0 -o "+urlinfo[1]+" -c \""+urlinfo[0]+"\""
+cmd = "aria2c --conf aria2.conf --seed-time=0 -o "+urlinfo[1]+" -d downloads -c \""+urlinfo[0]+"\""
 os.system(cmd)
 print(urlinfo[1])
