@@ -86,7 +86,7 @@ jobs:
       uses: juhrlass/mqtt-action@master
       with:
         protocol: mqtt
-        host: broker-cn.emqx.io
+        host: broker.emqx.io
         port: 1883
         topic: ${{ secrets.SYNC_TOPIC }}
         message: 'ok'
