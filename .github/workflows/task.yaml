@@ -2,7 +2,7 @@ name: 1Download task by hour
 on:
     workflow_dispatch:
     schedule:
-     - cron: "0 * * * *"
+     - cron: "0 */2 * * *"
 #   watch:
 #     types: started
 env:
