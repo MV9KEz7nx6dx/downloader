@@ -33,6 +33,7 @@ else:
 
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 print(username)
+print(type(username))
 print(re.fullmatch(regex, username))
 if re.fullmatch(regex, username) is None:
 	print("无效 Email")
