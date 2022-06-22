@@ -36,7 +36,7 @@ if(re.fullmatch(regex, username)):
 	print("Valid Email")
 else:
 	print("Invalid Email")
-	quit()
+	#quit()
 
 password_regex = r"密码\<span class=\"notion-orange\"\>([^\<]*)\<\/span\>"
 password_pattern = re.search(password_regex, r.text)
