@@ -63,5 +63,5 @@ else:
 	account['password']=password
 	accounts.append(account)
 
-res = mycol.update_one({"name": "pikpak"}, {"$set": {"value": json.dumps(accounts)},upsert=True})
+res = mycol.update_one({"name": "pikpak"}, {"$set": {"value": json.dumps(accounts)}},upsert=True)
 
