@@ -19,7 +19,7 @@ mydb = client["mydb"]
 mycol = mydb["setting"]
 
 
-
+username=""
 r = requests.get('https://raino.dev/30pikpak')
 username_regex = r"账号\<span class=\"notion-orange\"\>([^\<]*)\<\/span\>"
 username_pattern = re.search(username_regex, r.text)
@@ -32,14 +32,12 @@ else:
 
 
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+print(re.fullmatch(regex, username))
 if re.fullmatch(regex, username) is None:
 	print("无效 Email")
 else:
 	print("有效 Email")
 	#quit()
-
-	
-
 
 password_regex = r"密码\<span class=\"notion-orange\"\>([^\<]*)\<\/span\>"
 password_pattern = re.search(password_regex, r.text)
