@@ -29,7 +29,6 @@ else:
 	quit()
 
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-print(re.fullmatch(regex, username.strip()))
 if re.fullmatch(regex, username.strip()) is None:
 	print("无效 Email")
 	quit()
