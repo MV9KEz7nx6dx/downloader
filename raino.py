@@ -8,6 +8,12 @@ import argparse
 from bson.json_util import dumps, loads
 
 
+username="buwrzd08175@027168.com "
+regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+print(username)
+print(type(username))
+print(re.fullmatch(regex, username))
+quit()
 
 parser = argparse.ArgumentParser(description='Insert data to mongdb.net')
 parser.add_argument("--con", help="Connection url", default="")
