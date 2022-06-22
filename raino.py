@@ -23,7 +23,7 @@ username_regex = r"账号\<span class=\"notion-orange\"\>([^\<]*)\<\/span\>"
 username_pattern = re.search(username_regex, r.text)
 if username_pattern:
 	username = username_pattern.group(1)
-	print(username_pattern.group(1))
+	#print(username_pattern.group(1))
 else:
 	print("找不到用户名")
 	quit()
