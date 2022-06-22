@@ -8,13 +8,6 @@ import argparse
 from bson.json_util import dumps, loads
 
 
-username="buwrzd08175@027168.com"
-regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-print(username)
-print(type(username))
-print(re.fullmatch(regex, username))
-quit()
-
 parser = argparse.ArgumentParser(description='Insert data to mongdb.net')
 parser.add_argument("--con", help="Connection url", default="")
 args = parser.parse_args()
@@ -23,7 +16,6 @@ args = parser.parse_args()
 client = pymongo.MongoClient(args.con, tlsCAFile=certifi.where())
 mydb = client["mydb"]
 mycol = mydb["setting"]
-
 
 
 r = requests.get('https://raino.dev/30pikpak')
@@ -36,12 +28,9 @@ else:
 	print("找不到用户名")
 	quit()
 
-
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-print(username)
-print(type(username))
-print(re.fullmatch(regex, username))
-if re.fullmatch(regex, username) is None:
+print(re.fullmatch(regex, username.strip()))
+if re.fullmatch(regex, username.strip()) is None:
 	print("无效 Email")
 else:
 	print("有效 Email")
