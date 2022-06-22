@@ -30,7 +30,6 @@ else:
 	quit()
 
 
-print(username)
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 if(re.fullmatch(regex, username)):
 	print("Valid Email")
@@ -50,12 +49,9 @@ else:
 
 accounts={}
 text="[]"
-
 x = mycol.find_one({"name": "pikpak"})
 if x is not None:
 	text = x["value"]
-
-print(text)
 accounts = json.loads(text)
 find=list(filter(lambda account:account['username']==username and account['password']==password,accounts))
 
@@ -66,7 +62,5 @@ else:
 	account['username']=username
 	account['password']=password
 	accounts.append(account)
-
-print(json.dumps(accounts))
 res = mycol.update_one({"name": "pikpak"}, {"$set": {"value": json.dumps(accounts)}},upsert=True)
 
