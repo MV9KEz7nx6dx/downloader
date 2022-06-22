@@ -32,9 +32,9 @@ regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 print(re.fullmatch(regex, username.strip()))
 if re.fullmatch(regex, username.strip()) is None:
 	print("无效 Email")
+	quit()
 else:
 	print("有效 Email")
-	#quit()
 
 password_regex = r"密码\<span class=\"notion-orange\"\>([^\<]*)\<\/span\>"
 password_pattern = re.search(password_regex, r.text)
@@ -44,7 +44,6 @@ if password_pattern:
 else:
 	print("找不到密码")
 	quit()
-
 
 accounts={}
 text="[]"
