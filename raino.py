@@ -31,8 +31,10 @@ else:
 
 
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-if re.fullmatch(regex, username) is None:
+if(re.fullmatch(regex, username)):
 	print("Valid Email")
+else:
+	print("Invalid Email")
 	quit()
 
 password_regex = r"密码\<span class=\"notion-orange\"\>([^\<]*)\<\/span\>"
