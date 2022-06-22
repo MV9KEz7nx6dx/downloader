@@ -9,14 +9,6 @@ from bson.json_util import dumps, loads
 
 
 
-regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-username2="hhhh@126.com"
-username="hhello@123"
-print(re.fullmatch(regex, username))
-print(re.fullmatch(regex, username2))
-quit()
-
-
 parser = argparse.ArgumentParser(description='Insert data to mongdb.net')
 parser.add_argument("--con", help="Connection url", default="")
 args = parser.parse_args()
@@ -40,10 +32,10 @@ else:
 
 
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-if(re.fullmatch(regex, username)):
-	print("Valid Email")
+if re.fullmatch(regex, username) is None:
+	print("无效 Email")
 else:
-	print("Invalid Email")
+	print("有效 Email")
 	#quit()
 
 	
