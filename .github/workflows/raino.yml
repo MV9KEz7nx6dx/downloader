@@ -6,7 +6,7 @@ on:
 #   watch:
 #     types: started
 env:
-  FILE_PATH: 'downloads'
+  TZ: Asia/Shanghai
   
 jobs:
 
