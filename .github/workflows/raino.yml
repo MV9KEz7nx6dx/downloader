@@ -19,6 +19,16 @@ jobs:
       with:
         persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
         fetch-depth: 0 
+        
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo -E apt-get -qq update
+        sudo -E apt-get -qq install git subversion git-core wget
+        sudo timedatectl set-timezone "$TZ"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
     
     - name: Set up Python 3.9
       uses: actions/setup-python@v2
@@ -34,4 +44,13 @@ jobs:
       id: fetch
       run: |
         python raino.py  --con="${{ secrets.DB_CONNECT }}"
+    
+    - name: Update
+      env: 
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        echo `date` > runtime.txt
+        git add .
+        git commit -m "update$(TZ='Asia/Shanghai' date +@%Y%m%d)"
+        git push --quiet "https://${{ secrets.TOKEN }}@github.com/ykxVK8yL5L/packages.git"
        
