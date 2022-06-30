@@ -19,7 +19,8 @@ mycol = mydb["setting"]
 
 
 r = requests.get('https://raino.dev/30pikpak')
-usernames_regex = r"\<span class=\"notion-orange\"\>([^\<]*)\<\/span\>"
+#usernames_regex = r"\<span class=\"notion-orange\"\>([^\<]*)\<\/span\>"
+usernames_regex = r"\<span class=\"notion-orange\"\>([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\s*)\<\/span\>"
 usernames = re.findall(usernames_regex,r.text)
 
 
