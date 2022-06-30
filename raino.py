@@ -19,45 +19,41 @@ mycol = mydb["setting"]
 
 
 r = requests.get('https://raino.dev/30pikpak')
-username_regex = r"账号\<span class=\"notion-orange\"\>([^\<]*)\<\/span\>"
-username_pattern = re.search(username_regex, r.text)
-if username_pattern:
-	username = username_pattern.group(1).strip()
-	#print(username_pattern.group(1))
-else:
-	print("找不到用户名")
-	quit()
+usernames_regex = r"\<span class=\"notion-orange\"\>([^\<]*)\<\/span\>"
+usernames = re.findall(usernames_regex,r.text)
 
-regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-if re.fullmatch(regex, username.strip()) is None:
-	print("无效 Email")
-	quit()
-else:
-	print("有效 Email")
 
 password_regex = r"密码\<span class=\"notion-orange\"\>([^\<]*)\<\/span\>"
 password_pattern = re.search(password_regex, r.text)
 if password_pattern:
 	password = password_pattern.group(1)
-	#print(password_pattern.group(1))
+	print(password_pattern.group(1))
 else:
 	print("找不到密码")
 	quit()
-
+	
 accounts={}
 text="[]"
 x = mycol.find_one({"name": "pikpak"})
 if x is not None:
 	text = x["value"]
-accounts = json.loads(text)
-find=list(filter(lambda account:account['username']==username and account['password']==password,accounts))
+accounts = json.loads(text)	
 
-if find:
-	quit()
+if usernames:
+	for username in usernames:
+		email_regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+		if re.search(email_regex,username.strip()) is None:
+			continue
+		find=list(filter(lambda account:account['username'].strip()==username.strip() and account['password']==password,accounts))
+		if find:
+			continue
+		else:
+			account={}
+			account['username']=username.strip()
+			account['password']=password
+			accounts.append(account)
 else:
-	account={}
-	account['username']=username
-	account['password']=password
-	accounts.append(account)
-res = mycol.update_one({"name": "pikpak"}, {"$set": {"value": json.dumps(accounts)}},upsert=True)
+	print("找不到用户名")
+	quit()
 
+res = mycol.update_one({"name": "pikpak"}, {"$set": {"value": json.dumps(accounts)}},upsert=True)
