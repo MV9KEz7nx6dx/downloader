@@ -1,0 +1,52 @@
+name: 1task to fetch per hour
+on:
+    workflow_dispatch:
+    schedule:
+     - cron: "20 * * * *"
+#   watch:
+#     types: started
+env:
+  TZ: Asia/Shanghai
+  
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    
+    name: Update Packages
+    strategy:
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+        fetch-depth: 0 
+        
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo -E apt-get -qq update
+        sudo -E apt-get -qq install git subversion git-core wget
+        sudo timedatectl set-timezone "$TZ"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
+    
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+        
+    - name: install prerequisites
+      run: |
+        python -m pip install --upgrade pip wheel
+        pip install install lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi requests
+    
+    - name: Fetch
+      id: fetch
+      run: |
+        python raino.py  --con="${{ secrets.DB_CONNECT }}"
+    
+       
