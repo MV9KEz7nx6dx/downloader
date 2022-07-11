@@ -19,9 +19,15 @@ mycol = mydb["setting"]
 
 
 r = requests.get('https://raino.dev/30pikpak')
+content_regex = r"(?<=<div class=\"notion-callout-text\">).*?(?=<\/div>)"
+content = re.search(content_regex,r.text)
+
+
 #usernames_regex = r"\<span class=\"notion-orange\"\>([^\<]*)\<\/span\>"
-usernames_regex = r"\<span class=\"notion-orange\"\>([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\s*)\<\/span\>"
-usernames = re.findall(usernames_regex,r.text)
+#usernames_regex = r"\<span class=\"notion-orange\"\>([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\s*)\<\/span\>"
+
+usernames_regex = r"([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\s*)"
+usernames = re.findall(usernames_regex,content)
 
 
 password_regex = r"密码\<span class=\"notion-orange\"\>([^\<]*)\<\/span\>"
