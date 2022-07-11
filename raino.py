@@ -27,7 +27,7 @@ content = re.search(content_regex,r.text)
 #usernames_regex = r"\<span class=\"notion-orange\"\>([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\s*)\<\/span\>"
 
 usernames_regex = r"([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\s*)"
-usernames = re.findall(usernames_regex,content)
+usernames = re.findall(usernames_regex,content.group())
 
 
 password_regex = r"密码\<span class=\"notion-orange\"\>([^\<]*)\<\/span\>"
