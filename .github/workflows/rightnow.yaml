@@ -56,7 +56,7 @@ jobs:
 #         downloadurl=$(python get_url.py --url="$download")
 #         echo "::set-output name=path::downloads/$filename"
 #         echo "::set-output name=filename::$filename"
-#         aria2c --conf $GITHUB_WORKSPACE/aria2.conf --seed-time=0 -o $filename -d downloads -c "$downloadurl"
+#         aria2c -x 16 -s 16 --conf $GITHUB_WORKSPACE/aria2.conf --seed-time=0 -o $filename -d downloads -c "$downloadurl"
 #         size=$(ls -l downloads/$filename | awk '{print $5}' )
 #         echo "::set-output name=size::$size"
 
