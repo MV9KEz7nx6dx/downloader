@@ -126,5 +126,5 @@ if __name__ == '__main__':
     mycol.delete_one(x)
     urlinfo = info['url'].split("##");
     streamurl = direct_link_generator(urlinfo[0])
-    cmd = "aria2c --conf aria2.conf --seed-time=0 -o "+urlinfo[1]+" -d downloads -c \""+streamurl+"\""
+    cmd = "aria2c -x 16 -s 16 --conf aria2.conf --seed-time=0 -o "+urlinfo[1]+" -d downloads -c \""+streamurl+"\""
     os.system(cmd)
