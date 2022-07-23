@@ -61,15 +61,13 @@ jobs:
 #         echo "::set-output name=path::$filename"
 #         echo "::set-output name=filename::$filename"
 #         echo "::set-output name=size::$size"
-        
-    - uses: ykxVK8yL5L/add-to-web3@v1.3
+
+    - name: Save Data    
+      uses: web3-storage/add-to-web3@v2
       id: web3
-      if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       with:
         web3_token: ${{ secrets.WEB3_STORAGE_TOKEN }}
-        path_to_add: ${{ steps.downloading.outputs.path }} 
-        file_name: ${{ steps.downloading.outputs.filename }} 
-        wrap_with_directory: true
+        path_to_add: 'video'
         
     - name: Save Data
       id:  database
