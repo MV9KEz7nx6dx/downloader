@@ -44,6 +44,7 @@ jobs:
         yt-dlp --downloader aria2c -f 137+140 -o "video/$filename"  $download
         size=$(ls -l "video/$filename" | awk '{print $5}' )
         echo "::set-output name=filename::$filename"
+        echo "::set-output name=path::video/$filename"
         echo "::set-output name=size::$size"
         
         
@@ -65,7 +66,7 @@ jobs:
       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       with:
         web3_token: ${{ secrets.WEB3_STORAGE_TOKEN }}
-        path_to_add: 'video'
+        path_to_add: '${{ steps.downloading.outputs.path }}'
         file_name: '${{ steps.downloading.outputs.filename }}'
         wrap_with_directory: true
         
