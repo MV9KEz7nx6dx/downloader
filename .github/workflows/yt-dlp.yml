@@ -38,15 +38,30 @@ jobs:
       id: downloading
       run: |
         url="${{ github.event.inputs.Url}}"
-        downloadurl="$download"
+        filename=${url##*##}
+        download=${url%##*}
         mkdir video
-        yt-dlp --downloader aria2c -f 137+140 -o "video/%(title)s.%(ext)s"  $url
-        size=$(ls -l video/$filename | awk 'NR == 2' | awk '{print $5}' )
-        filename=$(yt-dlp -f 137+140 --get-filename -o "video/%(title)s.%(ext)s" $url)
-        echo "::set-output name=path::$filename"
+        yt-dlp --downloader aria2c -f 137+140 -o "video/$filename"  $download
+        size=$(ls -l video/$filename | awk '{print $5}' )
+        filename=$(yt-dlp -f 137+140 --get-filename -o "video/$filename" $download)
+        echo "::set-output name=path::video/"
         echo "::set-output name=filename::$filename"
         echo "::set-output name=size::$size"
-       
+        
+        
+#     - name: Downloading
+#       id: downloading
+#       run: |
+#         url="${{ github.event.inputs.Url}}"
+#         downloadurl="$download"
+#         mkdir video
+#         yt-dlp --downloader aria2c -f 137+140 -o "video/%(title)s.%(ext)s"  $url
+#         size=$(ls -l video/$filename | awk 'NR == 2' | awk '{print $5}' )
+#         filename=$(yt-dlp -f 137+140 --get-filename -o "video/%(title)s.%(ext)s" $url)
+#         echo "::set-output name=path::$filename"
+#         echo "::set-output name=filename::$filename"
+#         echo "::set-output name=size::$size"
+        
     - uses: ykxVK8yL5L/add-to-web3@v1.3
       id: web3
       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
