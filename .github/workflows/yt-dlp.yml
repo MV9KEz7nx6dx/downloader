@@ -42,7 +42,7 @@ jobs:
         mkdir video
         yt-dlp --downloader aria2c -f 137+140 -o "video/%(title)s.%(ext)s"  $url
         size=$(ls -l video/$filename | awk 'NR == 2' | awk '{print $5}' )
-        filename=$(ls -l video/$filename | awk 'NR == 2' | awk '{print $9}' )
+        filename=$(yt-dlp --get-filename -o "video/%(title)s.%(ext)s" $url)
         echo "::set-output name=path::video/$filename"
         echo "::set-output name=filename::$filename"
         echo "::set-output name=size::$size"
