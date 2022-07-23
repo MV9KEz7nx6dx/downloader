@@ -71,13 +71,13 @@ jobs:
         echo "::set-output name=size::$size"
 
 
-    - uses: ykxVK8yL5L/add-to-web3@v1.3
+    - uses: ykxVK8yL5L/add-to-web3@v1.5
       id: web3
       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       with:
         web3_token: ${{ secrets.WEB3_STORAGE_TOKEN }}
-        path_to_add: ${{ steps.downloading.outputs.path }} 
-        file_name: ${{ steps.downloading.outputs.filename }} 
+        path_to_add: "${{ steps.downloading.outputs.path }}" 
+        file_name: "${{ steps.downloading.outputs.filename }}" 
         wrap_with_directory: true
     
     
