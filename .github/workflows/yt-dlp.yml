@@ -66,7 +66,7 @@ jobs:
       with:
         web3_token: ${{ secrets.WEB3_STORAGE_TOKEN }}
         path_to_add: 'video'
-        file_name: ${{ steps.downloading.outputs.filename }} 
+        file_name: '${{ steps.downloading.outputs.filename }}'
         wrap_with_directory: true
         
         
