@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import requests
 import json
 import re
@@ -19,6 +20,7 @@ mycol = mydb["setting"]
 
 
 r = requests.get('https://raino.dev/30pikpak')
+r.encoding='utf-8'
 content_regex = r"(?<=<div class=\"notion-callout-text\">).*?(?=<\/div>)"
 content = re.search(content_regex,r.text)
 
