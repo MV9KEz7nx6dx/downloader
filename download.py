@@ -9,7 +9,7 @@ import lk21
 
 parser = argparse.ArgumentParser(description='Insert data to mongdb.net')
 parser.add_argument("--con", help="Connection url", default="")
-parser.add_argument("--isnow", help="execute now", default="0")
+parser.add_argument("--isnow", help="execute now", default=0)
 
 
 
