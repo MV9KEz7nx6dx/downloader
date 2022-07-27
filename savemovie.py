@@ -21,6 +21,6 @@ client = pymongo.MongoClient(args.con, tlsCAFile=certifi.where())
 mydb = client["mydb"]
 mycol = mydb["movie"]
 
-mydict = {"name":args.name,"cid": args.cid,"size": args.size,"issync":"0"}
+mydict = {"name":args.name,"cid": args.cid,"size": args.size,"issync":0}
 x = mycol.insert_one(mydict)
 print(x)
