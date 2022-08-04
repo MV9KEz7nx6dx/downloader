@@ -27,8 +27,10 @@ content = re.search(content_regex,r.text)
 
 #usernames_regex = r"\<span class=\"notion-orange\"\>([^\<]*)\<\/span\>"
 #usernames_regex = r"\<span class=\"notion-orange\"\>([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\s*)\<\/span\>"
+#usernames_regex = r"([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\s*)"
+usernames_regex = r"最火磁力应用(.*)上面为共享账号，谁都可以登录使用"
 
-usernames_regex = r"([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\s*)"
+
 usernames = re.findall(usernames_regex,content.group())
 
 
