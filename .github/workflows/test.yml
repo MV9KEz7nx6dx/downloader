@@ -17,7 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+        persist-credentials: false 
         fetch-depth: 0 
-  
+
     - uses: ./.github/workflows/test.yml
