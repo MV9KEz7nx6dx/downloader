@@ -20,4 +20,4 @@ jobs:
         persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
         fetch-depth: 0 
   
-    - uses: xdrghbjiikmdghu/downloader/.github/workflows/test.yml
+    - uses: ./.github/workflows/test.yml
