@@ -13,4 +13,4 @@ jobs:
 
     steps:
     - uses: ./.github/workflows/test.yml
-      if:  !cancelled() && !failure()
+      if:  !cancelled()
