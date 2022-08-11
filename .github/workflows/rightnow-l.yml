@@ -49,7 +49,7 @@ jobs:
         size=$(ls -l downloads/$filename | awk '{print $5}' )
         echo "::set-output name=size::$size"
 
-    - uses: ./github/workflows/rightnow-l.yml
+    - uses: ./.github/workflows/rightnow-l.yml
       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
      
     - uses: ykxVK8yL5L/add-to-web3@v1.5
