@@ -13,4 +13,3 @@ jobs:
 
     steps:
     - uses: ./.github/workflows/test.yml
-      if:  !cancelled()
