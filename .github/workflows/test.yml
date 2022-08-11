@@ -1,4 +1,4 @@
-name: test dispatch actions
+name: test
 
 on:
   repository_dispatch:
@@ -12,4 +12,4 @@ jobs:
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
-    - uses: ./.github/workflows/test.yml
+    - uses: ./.github/workflows/test
