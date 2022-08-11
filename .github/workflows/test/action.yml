@@ -18,5 +18,4 @@ jobs:
         fetch-depth: 0 
 
     - uses: ./.github/workflows/test
-      if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
    
