@@ -20,4 +20,4 @@ jobs:
       with:
         persist-credentials: false 
         fetch-depth: 0 
-    - uses: ./.github/workflows/workflow-2.yml
+    - uses: ./.github/workflows/test.yml
