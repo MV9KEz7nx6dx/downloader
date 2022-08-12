@@ -49,7 +49,7 @@ jobs:
         size=$(ls -l downloads/$filename | awk '{print $5}' )
         echo "::set-output name=size::$size"
 
-    - name: Invoke workflow without inputs
+    - name: Download another right now
       uses: benc-uk/workflow-dispatch@v1
       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       with:
