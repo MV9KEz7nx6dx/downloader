@@ -16,10 +16,5 @@ jobs:
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        persist-credentials: false 
-        fetch-depth: 0 
-        
-  test:
     - uses: ./.github/workflows/test.yml
+      
