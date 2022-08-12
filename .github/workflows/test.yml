@@ -1,6 +1,7 @@
 name: test
 
 on:
+  workflow_call:
   repository_dispatch:
   workflow_dispatch:
     inputs:
@@ -19,5 +20,4 @@ jobs:
       with:
         persist-credentials: false 
         fetch-depth: 0 
-
-    - uses: ./.github/workflows/test.yml
+    - uses: ./.github/workflows/workflow-2.yml
