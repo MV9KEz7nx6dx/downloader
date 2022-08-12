@@ -22,7 +22,6 @@ jobs:
    
     - name: start another test
       uses: benc-uk/workflow-dispatch@v1
-      if: !cancelled() && !failure()
       with:
         workflow: test
         token: ${{ secrets.TOKEN }}
