@@ -51,14 +51,7 @@ jobs:
         size=$(ls -l downloads/$filename | awk '{print $5}' )
         echo "::set-output name=size::$size"
 
-    - name: Download another right now
-      uses: benc-uk/workflow-dispatch@v1
-      if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-      with:
-        workflow: 2Download right now loop
-        token: ${{ secrets.TOKEN }}
-      
-     
+  
     - uses: ykxVK8yL5L/add-to-web3@v1.5
       id: web3
       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
@@ -76,6 +69,12 @@ jobs:
         python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="${{ steps.web3.outputs.cid }}"
         echo "::set-output name=status::ok"
 
+    - name: Download another right now
+      uses: benc-uk/workflow-dispatch@v1
+      if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      with:
+        workflow: 2Download right now loop
+        token: ${{ secrets.TOKEN }}
 
     - name: Notify upload info to mqtt broker
       if: steps.database.outputs.status != '' && !cancelled() && !failure()
