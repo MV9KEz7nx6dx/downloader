@@ -60,6 +60,13 @@ jobs:
       run: |
         python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="${{ steps.web3.outputs.cid }}"
         echo "::set-output name=status::ok"
+    
+    - name: Download another right now
+      uses: benc-uk/workflow-dispatch@v1
+      if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      with:
+        workflow: macos test
+        token: ${{ secrets.TOKEN }}
 
 
     - name: Notify upload info to mqtt broker
