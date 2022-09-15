@@ -20,8 +20,15 @@ if args.cid is None:
 client = pymongo.MongoClient(args.con, tlsCAFile=certifi.where())
 mydb = client["mydb"]
 mycol = mydb["web3"]
+taskcol = mydb["task"]
+
 
 mydict = {"name":args.name,"cid": args.cid,"size": args.size,"issync":0}
 x = mycol.insert_one(mydict)
+
+keyword="##"+args.name
+task = mycol.find_one(filter={'url':{'$regex':keyword}})
+taskcol.delete_one(task)
+
 print(x)
 
