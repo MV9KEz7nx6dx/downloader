@@ -2,7 +2,7 @@ import certifi
 import pymongo
 import sys
 import argparse
-
+from bson.json_util import dumps, loads
 
 parser = argparse.ArgumentParser(description='Insert data to mongdb.net')
 parser.add_argument("--con", help="Connection url", default="")
@@ -27,7 +27,7 @@ mydict = {"name":args.name,"cid": args.cid,"size": args.size,"issync":0}
 x = mycol.insert_one(mydict)
 
 keyword="##"+args.name
-task = mycol.find_one(filter={'url':{'$regex':keyword}})
+task = mycol.find_one({'url':{'$regex':keyword}})
 taskcol.delete_one(task)
 
 print(x)
