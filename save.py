@@ -27,7 +27,7 @@ mydict = {"name":args.name,"cid": args.cid,"size": args.size,"issync":0}
 x = mycol.insert_one(mydict)
 
 keyword="##"+args.name
-task = mycol.find_one({'url':{'$regex':keyword}})
+task = taskcol.find_one({'url':{'$regex':keyword}})
 taskcol.delete_one(task)
 
 print(x)
