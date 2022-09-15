@@ -22,5 +22,5 @@ if x is None:
     quit()
 
 info = loads(dumps(x))
-mycol.delete_one(x)
+#mycol.delete_one(x)
 print(info['url'])
