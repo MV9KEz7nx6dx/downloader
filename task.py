@@ -16,8 +16,7 @@ client = pymongo.MongoClient(args.con, tlsCAFile=certifi.where())
 mydb = client["mydb"]
 mycol = mydb["task"]
 
-
-x = mycol.find_one({"isnow": args.isnow})
+x = mycol.find_one_and_update({'isnow': args.isnow}, '$set': {'isnow': 10}})
 if x is None:
     print("None")
     quit()
