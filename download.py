@@ -117,13 +117,14 @@ if __name__ == '__main__':
     mycol = mydb["task"]
 
 
-    x = mycol.find_one({"isnow": args.isnow})
+    #x = mycol.find_one({"isnow": args.isnow})
+    x = mycol.find_one_and_update({'isnow': args.isnow}, '$set': {'isnow': 10}})
     if x is None:
         print("None")
         quit()
 
     info = loads(dumps(x))
-    mycol.delete_one(x)
+    #mycol.delete_one(x)
     urlinfo = info['url'].split("##");
     streamurl = direct_link_generator(urlinfo[0])
     cmd = "aria2c --conf aria2.conf --seed-time=0 -o "+urlinfo[1]+" -d downloads -c \""+streamurl+"\""
