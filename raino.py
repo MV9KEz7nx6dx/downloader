@@ -22,7 +22,7 @@ mycol = mydb["setting"]
 r = requests.get('https://raino.dev/30pikpak')
 r.encoding='utf-8'
 #content_regex = r"(?<=<div class=\"notion-callout-text\">).*?(?=<\/div>)"
-content_regex = r"最火磁力应用<\/b>(.*)>上面为共享账号"
+content_regex = r"最火磁力应用<\/b>(.*)>(如果有人更改密码"
 content = re.search(content_regex,r.text)
 
 
