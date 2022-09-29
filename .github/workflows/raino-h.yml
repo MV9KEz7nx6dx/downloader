@@ -1,8 +1,8 @@
 name: 1task to fetch per hour
 on:
     workflow_dispatch:
-    schedule:
-     - cron: "20 * * * *"
+#    schedule:
+#     - cron: "20 * * * *"
 #   watch:
 #     types: started
 env:
