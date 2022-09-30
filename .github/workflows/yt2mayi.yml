@@ -45,7 +45,7 @@ jobs:
         url="${{ github.event.inputs.Url}}"
         #filename=${url##*##}
         #download=${url%##*}
-        download=url
+        download=${url}
         mkdir video
         yt-dlp --downloader aria2c -o "video/%(title)s.%(ext)s"  $download
         size=$(ls -l "video/$filename" | awk '{print $5}' )
