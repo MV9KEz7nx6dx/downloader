@@ -59,7 +59,7 @@ jobs:
         webdav_address: ${{secrets.WEBDAV_ADDRESS}}
         webdav_username: ${{secrets.WEBDAV_USERNAME}}
         webdav_password: ${{secrets.WEBDAV_PASSWORD}}
-        webdav_upload_path: "/"
+        webdav_upload_path: "/dav"
         files: "./video/${{ steps.downloading.outputs.filename }}"
         
 
