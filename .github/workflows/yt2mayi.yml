@@ -1,4 +1,4 @@
-name: ZDownload youtube by input
+name: ZDownload youtube upload mayiyun
 on:
   repository_dispatch:
   workflow_dispatch:
