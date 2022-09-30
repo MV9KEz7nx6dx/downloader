@@ -43,11 +43,13 @@ jobs:
       id: downloading
       run: |
         url="${{ github.event.inputs.Url}}"
-        filename=${url##*##}
-        download=${url%##*}
+        #filename=${url##*##}
+        #download=${url%##*}
+        download=url
         mkdir video
-        yt-dlp --downloader aria2c -f 137+140 -o "video/$filename"  $download
+        yt-dlp --downloader aria2c -o "video/%(title)s.%(ext)s"  $download
         size=$(ls -l "video/$filename" | awk '{print $5}' )
+        filename=$(ls -l "video" | awk '{getline;print $9}' )
         echo "::set-output name=filename::$filename"
         echo "::set-output name=path::video/$filename"
         echo "::set-output name=size::$size"
