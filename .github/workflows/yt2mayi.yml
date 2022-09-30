@@ -52,7 +52,7 @@ jobs:
         webdav_address: ${{secrets.webdav_address}}
         webdav_username: ${{secrets.webdav_username}}
         webdav_password: ${{secrets.webdav_password}}
-        webdav_upload_path: "/actions"
+        webdav_upload_path: "/"
         files: "./video/${{ steps.downloading.outputs.filename }}"
         
     - name: Notify upload info to mqtt broker
