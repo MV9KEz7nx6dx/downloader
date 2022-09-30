@@ -29,6 +29,14 @@ jobs:
         python -m pip install --upgrade pip wheel
         pip install install requests cloudscraper pymongo pymongo[srv] pymongo[tls] certifi
         
+    - name: Install rclone 
+      run: curl https://rclone.org/install.sh | sudo bash
+
+    - name: Setup config 
+      run: |
+       mkdir -p ~/.config/rclone/
+       echo ${{ secrets.RCLONE_CONF }}>>~/.config/rclone/rclone.conf
+        
     - name: Setup yt-dlp
       uses: AnimMouse/setup-yt-dlp@v1
       with:
@@ -55,12 +63,16 @@ jobs:
 #         webdav_upload_path: "/"
 #         files: "./video/${{ steps.downloading.outputs.filename }}"
         
-    - name: rclone
-      uses: wei/rclone@v1
-      env:
-        RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
-      with:
-        args: copy ./video/${{ steps.downloading.outputs.filename }} remote:/actions
+#     - name: rclone
+#       uses: wei/rclone@v1
+#       env:
+#         RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
+#       with:
+#         args: copy ./video/${{ steps.downloading.outputs.filename }} remote:/actions
+
+    - name: Copy File
+      run: |
+       rclone copy ./video/${{ steps.downloading.outputs.filename }}  remote:/actions
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@main
