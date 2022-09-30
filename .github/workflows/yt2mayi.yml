@@ -35,7 +35,7 @@ jobs:
     - name: Setup config 
       run: |
        mkdir -p ~/.config/rclone/
-       echo ${{ secrets.RCLONE_CONF }}>>~/.config/rclone/rclone.conf
+       echo "${{ secrets.RCLONE_CONF }}">>~/.config/rclone/rclone.conf
         
     - name: Setup yt-dlp
       uses: AnimMouse/setup-yt-dlp@v1
