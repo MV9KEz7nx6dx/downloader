@@ -47,13 +47,20 @@ jobs:
         echo "::set-output name=path::video/$filename"
         echo "::set-output name=size::$size"
         
-    - uses: bxb100/action-upload-webdav@v1
+#     - uses: bxb100/action-upload-webdav@v1
+#       with:
+#         webdav_address: ${{secrets.WEBDAV_ADDRESS}}
+#         webdav_username: ${{secrets.WEBDAV_USERNAME}}
+#         webdav_password: ${{secrets.WEBDAV_PASSWORD}}
+#         webdav_upload_path: "/"
+#         files: "./video/${{ steps.downloading.outputs.filename }}"
+        
+    - name: rclone
+      uses: wei/rclone@v1
+      env:
+        RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
       with:
-        webdav_address: ${{secrets.WEBDAV_ADDRESS}}
-        webdav_username: ${{secrets.WEBDAV_USERNAME}}
-        webdav_password: ${{secrets.WEBDAV_PASSWORD}}
-        webdav_upload_path: "/"
-        files: "./video/${{ steps.downloading.outputs.filename }}"
+        args: copy ./video/${{ steps.downloading.outputs.filename }} remote:/actions
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@main
