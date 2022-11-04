@@ -67,6 +67,7 @@ jobs:
       with:
         workflow: macos test
         token: ${{ secrets.TOKEN }}
+        ref: main
 
 
     - name: Notify upload info to mqtt broker
