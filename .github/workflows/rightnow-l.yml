@@ -75,6 +75,7 @@ jobs:
       with:
         workflow: 2Download right now loop
         token: ${{ secrets.TOKEN }}
+        ref:main
 
     - name: Notify upload info to mqtt broker
       if: steps.database.outputs.status != '' && !cancelled() && !failure()
