@@ -6,7 +6,7 @@ on:
       download_url:
         description: '下载网址'
         required: true
-        default: 'https://www.youtube.com/watch?v=q0hyYWKXF0Q'
+        default: ''
 
 jobs:
   Onedriver:
