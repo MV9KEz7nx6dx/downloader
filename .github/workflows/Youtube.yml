@@ -9,7 +9,7 @@ on:
         default: ''
 
 jobs:
-  Onedriver:
+  Download:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
