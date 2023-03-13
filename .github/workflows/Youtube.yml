@@ -13,22 +13,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-#       - name: Setup yt-dlp
-#         uses: AnimMouse/setup-yt-dlp@v1
-#         with:
-#           with-ffmpeg: true
-#       - name: 'Download Video' 
-#         run: |
-#           mkdir videos
-#           cd videos
-#           yt-dlp -f bestvideo+bestaudio -S ext:mp4:m4a --downloader aria2c ${{ github.event.inputs.download_url }}
+      - name: Setup yt-dlp
+        uses: AnimMouse/setup-yt-dlp@v1
+        with:
+          with-ffmpeg: true
+      - name: 'Download Video' 
+        run: |
+          mkdir videos
+          cd videos
+          yt-dlp -f bestvideo+bestaudio -S ext:mp4:m4a --downloader aria2c ${{ github.event.inputs.download_url }}
             
       - name: rclone
         uses: wei/rclone@v1
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
         with:
-          args: lsf cloud:
+          args: copy videos cloud:videos
 
         
 
