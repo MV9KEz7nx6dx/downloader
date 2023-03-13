@@ -28,7 +28,7 @@ jobs:
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
         with:
-          args: copy videos cloud:videos
+          args: copy --s3-upload-cutoff=50M videos cloud:videos
 
         
 
