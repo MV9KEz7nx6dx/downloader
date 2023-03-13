@@ -27,10 +27,9 @@ jobs:
         uses: wei/rclone@v1
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
-#         with:
-#           args: copy videos cloud:videos
-      - run:
-          rclone lsf cloud
+        with:
+          args: lsf cloud
+
         
 
 
