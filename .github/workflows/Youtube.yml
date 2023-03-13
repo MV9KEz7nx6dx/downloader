@@ -3,7 +3,7 @@ on:
   repository_dispatch:
   workflow_dispatch:
     inputs:
-      path:
+      download_url:
         description: '下载网址'
         required: true
         default: 'https://www.youtube.com/watch?v=q0hyYWKXF0Q'
@@ -21,7 +21,7 @@ jobs:
         run: |
           mkdir videos
           cd videos
-          yt-dlp --downloader aria2c https://www.youtube.com/watch?v=BaW_jenozKc
+          yt-dlp --downloader aria2c ${{ github.event.inputs.download_url }}
             
       - name: rclone
         uses: wei/rclone@v1
