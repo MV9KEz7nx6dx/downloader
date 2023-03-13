@@ -28,7 +28,7 @@ jobs:
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
         with:
-          args: lsf cloud
+          args: lsf cloud:
 
         
 
