@@ -22,7 +22,6 @@ jobs:
           mkdir videos
           cd videos
           yt-dlp -f bestvideo+bestaudio -S ext:mp4:m4a --downloader aria2c ${{ github.event.inputs.download_url }}
-          export http_proxy=http://210.5.10.87:53281
             
       - name: rclone
         uses: wei/rclone@v1
