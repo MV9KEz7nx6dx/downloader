@@ -7,6 +7,10 @@ on:
         description: '下载网址'
         required: true
         default: ''
+      proxy:
+        description: '代理地址'
+        required: false
+        default: ''
 
 jobs:
   Download:
@@ -22,6 +26,10 @@ jobs:
           mkdir videos
           cd videos
           yt-dlp -f bestvideo+bestaudio -S ext:mp4:m4a --downloader aria2c ${{ github.event.inputs.download_url }}
+      - name: 'Set Proxy'
+        run: |
+          export http_proxy=${{ github.event.inputs.proxy }}
+          export HTTP_PROXY=${{ github.event.inputs.proxy }}
             
       - name: rclone
         uses: wei/rclone@v1
