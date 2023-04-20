@@ -61,10 +61,6 @@ jobs:
         run: |
           PORT=$ALIYUN_WEBDAV_PORT aliyundrive-webdav --host 127.0.0.1 -p 5244 --auto-index -r ${{ secrets.ALIYUN_REFRESH_TOKEN }} &
           PORT=$ALIS_ENCRYPT_PORT node app.js &
-        wait-on: |
-            http://127.0.0.1:${{ env.ALIYUN_WEBDAV_PORT }}
-            http://127.0.0.1:${{ env.ALIS_ENCRYPT_PORT }}
-        working-directory: alist-encrypt/node-proxy
     
     - name: rclone
       uses: wei/rclone@v1
