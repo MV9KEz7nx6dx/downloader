@@ -73,7 +73,8 @@ jobs:
       env:
         RCLONE_CONF: ${{ secrets.RCLONE_ALIYUN_CONF }}
       with:
-        args: copy ${{ steps.downloading.outputs.path }} aliyun:/
+      #  args: copy ${{ steps.downloading.outputs.path }} aliyun:/
+        args: ls aliyun:/test
           
     - name: Notify upload info to mqtt broker
       if: steps.database.outputs.status != '' && !cancelled() && !failure()
