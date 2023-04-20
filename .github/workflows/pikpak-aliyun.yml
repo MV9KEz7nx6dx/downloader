@@ -19,15 +19,17 @@ jobs:
         image: messense/aliyundrive-webdav
         env:
           REFRESH_TOKEN: '${{ secrets.ALIYUN_REFRESH_TOKEN }}'
+      alist:
+        image: ykxvk8yl5l/alist-encrypt
     steps:
       - uses: actions/checkout@v2
         with:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 
+          
       - name: Aria2 Install
         run: sudo apt install -y aria2 
-
-    
+        
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
@@ -38,21 +40,22 @@ jobs:
           python -m pip install --upgrade pip wheel
           pip install install lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi
       
-#     - name: Downloading
-#       id: downloading
-#       run: |
-#         python download.py  --con="${{ secrets.DB_CONNECT }}" --isnow=1
-#         filename=$(ls downloads | head -n1)
-#         echo "::set-output name=path::downloads/$filename"
-#         echo "::set-output name=filename::$filename"
-#         size=$(ls -l downloads/$filename | awk '{print $5}' )
-#         echo "::set-output name=size::$size"
+      - name: Downloading
+        id: downloading
+        run: |
+          python download.py  --con="${{ secrets.DB_CONNECT }}" --isnow=1
+          filename=$(ls downloads | head -n1)
+          echo "::set-output name=path::downloads/$filename"
+          echo "::set-output name=filename::$filename"
+          size=$(ls -l downloads/$filename | awk '{print $5}' )
+          echo "::set-output name=size::$size"
+          
       - name: rclone
         uses: wei/rclone@v1
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_ALIYUN_CONF }}
         with:
-          args: ls aliyun:/
+          args: copy ${{ steps.downloading.outputs.path }}  aliyun:/test
 
 
       - name: Notify upload info to mqtt broker
