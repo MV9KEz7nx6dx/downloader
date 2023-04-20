@@ -28,7 +28,7 @@ jobs:
         persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
         fetch-depth: 0 
     - name: Aria2 Install
-      run: sudo apt install -y aria2 nodejs
+      run: sudo apt install -y aria2 
 
     
     - name: Set up Python 3.9
@@ -40,9 +40,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip wheel
         pip install install lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi aliyundrive-webdav
-#     - uses: actions/setup-node@v3
-#       with:
-#         node-version: 18
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
     
       
     - name: Downloading
@@ -64,7 +64,7 @@ jobs:
         echo 'cat config.json'
         cat conf/config.json
         echo 'cat config.json end'
-        nohup node -v > alist-encrypt.log 2>&1 &
+        #nohup node -v > alist-encrypt.log 2>&1 &
         cat alist-encrypt.log
       
     - name: rclone
