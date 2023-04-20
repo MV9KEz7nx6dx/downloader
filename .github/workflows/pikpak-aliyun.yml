@@ -21,6 +21,8 @@ jobs:
           REFRESH_TOKEN: '${{ secrets.ALIYUN_REFRESH_TOKEN }}'
       alist:
         image: ykxvk8yl5l/alist-encrypt
+        env:
+          DAV_PASSWORD: '123456'
     steps:
       - uses: actions/checkout@v2
         with:
