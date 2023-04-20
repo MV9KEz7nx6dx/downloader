@@ -55,19 +55,19 @@ jobs:
         size=$(ls -l downloads/$filename | awk '{print $5}' )
         echo "::set-output name=size::$size"
 
-    -run: |
-      nohup aliyundrive-webdav --host 127.0.0.1 -p 5244 --auto-index -r ${{ secrets.ALIYUN_REFRESH_TOKEN }} > aliyundrive.log 2>&1 &
-      git clone https://github.com/traceless/alist-encrypt
-      cd alist-encrypt/node-proxy
-      npm i
-      nohup node app.js > alist-encrypt.log 2>&1 &
+    - run: |
+        nohup aliyundrive-webdav --host 127.0.0.1 -p 5244 --auto-index -r ${{ secrets.ALIYUN_REFRESH_TOKEN }} > aliyundrive.log 2>&1 &
+        git clone https://github.com/traceless/alist-encrypt
+        cd alist-encrypt/node-proxy
+        npm i
+        nohup node app.js > alist-encrypt.log 2>&1 &
       
     - name: rclone
-        uses: wei/rclone@v1
-        env:
-          RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
-        with:
-          args: copy ${{ steps.downloading.outputs.path }} aliyun:/
+      uses: wei/rclone@v1
+      env:
+        RCLONE_CONF: ${{ secrets.RCLONE_ALIYUN_CONF }}
+      with:
+        args: copy ${{ steps.downloading.outputs.path }} aliyun:/
           
     - name: Notify upload info to mqtt broker
       if: steps.database.outputs.status != '' && !cancelled() && !failure()
