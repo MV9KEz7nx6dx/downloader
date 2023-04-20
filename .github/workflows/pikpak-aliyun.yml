@@ -55,16 +55,16 @@ jobs:
         size=$(ls -l downloads/$filename | awk '{print $5}' )
         echo "::set-output name=size::$size"
 
-    - run: |
-        nohup aliyundrive-webdav --host 127.0.0.1 -p 5244 --auto-index -r ${{ secrets.ALIYUN_REFRESH_TOKEN }} > aliyundrive.log 2>&1 &
-        git clone https://github.com/traceless/alist-encrypt
-        ls
-        cd alist-encrypt/node-proxy
-        ls
-        echo ${{ secrets.ALIST_ENCRYPT }} > conf/config.json
-        npm i
-        ls
-        nohup node -v > alist-encrypt.log 2>&1 &
+    - name: Setup aliyundrive-webdav
+      run: nohup aliyundrive-webdav --host 127.0.0.1 -p 5244 --auto-index -r ${{ secrets.ALIYUN_REFRESH_TOKEN }} > aliyundrive.log 2>&1 &
+    - name: Clone alist-encrypt
+      run: git clone https://github.com/traceless/alist-encrypt
+    - name: Install alist-encrypt depences
+      run: cd alist-encrypt/node-proxy && npm i 
+    - name: Create alist-encrypt config
+      run: mkdir alist-encrypt/node-proxy/conf && echo ${{ secrets.ALIST_ENCRYPT }} > alist-encrypt/node-proxy/conf/config.json
+    - name: Run alist-encrypt
+      run: cd alist-encrypt/node-proxy && nohup node -v > alist-encrypt.log 2>&1 &
       
     - name: rclone
       uses: wei/rclone@v1
