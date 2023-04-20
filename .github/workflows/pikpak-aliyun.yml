@@ -56,7 +56,20 @@ jobs:
       run: mkdir alist-encrypt/node-proxy/conf && echo '${{ secrets.ALIST_ENCRYPT }}' > alist-encrypt/node-proxy/conf/config.json
       
     - uses: JarvusInnovations/background-action@v1
-    
+    - name: Webdav
+      with:
+          run: |
+            PORT=$ALIYUN_WEBDAV_PORT aliyundrive-webdav --host 127.0.0.1 -p 5244 --auto-index -r ${{ secrets.ALIYUN_REFRESH_TOKEN }} &
+            PORT=$ALIS_ENCRYPT_PORT node app.js &
+          wait-on: |
+              http://127.0.0.1:${{ env.ALIYUN_WEBDAV_PORT }}
+              http://127.0.0.1:${{ env.ALIS_ENCRYPT_PORT }}
+          tail: true
+          log-output-resume: stderr
+          wait-for: 10m
+          log-output: stderr,stdout
+          log-output-if: failure
+          working-directory: alist-encrypt/node-proxy
       
     
     - name: rclone
