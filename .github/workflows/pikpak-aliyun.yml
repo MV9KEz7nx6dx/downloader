@@ -64,11 +64,6 @@ jobs:
         wait-on: |
             http://127.0.0.1:${{ env.ALIYUN_WEBDAV_PORT }}
             http://127.0.0.1:${{ env.ALIS_ENCRYPT_PORT }}
-        tail: true
-        log-output-resume: stderr
-        wait-for: 10m
-        log-output: stderr,stdout
-        log-output-if: failure
         working-directory: alist-encrypt/node-proxy
     
     - name: rclone
