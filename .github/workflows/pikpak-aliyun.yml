@@ -19,8 +19,6 @@ jobs:
         image: messense/aliyundrive-webdav
         env:
           REFRESH_TOKEN: '${{ secrets.ALIYUN_REFRESH_TOKEN }}'
-        ports:
-          - 5244:8080
     steps:
       - uses: actions/checkout@v2
         with:
