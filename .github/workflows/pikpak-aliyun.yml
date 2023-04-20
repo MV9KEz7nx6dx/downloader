@@ -69,7 +69,7 @@ jobs:
 #       run: cd alist-encrypt/node-proxy && nohup node app.js > alist-encrypt.log 2>&1 &
 #     - name: Webdav status
 #       run: cat aliyundrive.log && cat alist-encrypt/node-proxy/alist-encrypt.log
-    - name: Install alist-encrypt depences
+    - name: Run Webdav Service
       with:
         run: |
           PORT=$ALIYUN_WEBDAV_PORT aliyundrive-webdav --host 127.0.0.1 -p 5244 --auto-index -r ${{ secrets.ALIYUN_REFRESH_TOKEN }} &
