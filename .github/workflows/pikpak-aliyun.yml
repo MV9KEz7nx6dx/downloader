@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
     services:
-      aliyun-webdav:
+      aliyun:
         image: messense/aliyundrive-webdav
         env:
           REFRESH_TOKEN: '${{ secrets.ALIYUN_REFRESH_TOKEN }}'
