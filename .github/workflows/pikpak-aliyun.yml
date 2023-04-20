@@ -64,7 +64,8 @@ jobs:
         echo 'cat config.json'
         cat conf/config.json
         echo 'cat config.json end'
-        nohup node app.js > alist-encrypt.log 2>&1 &
+        nohup node -v > alist-encrypt.log 2>&1 &
+        cat alist-encrypt.log
       
     - name: rclone
       uses: wei/rclone@v1
