@@ -17,27 +17,21 @@ env:
   ALIYUN_WEBDAV_PORT: 5244
   ALIS_ENCRYPT_PORT: 5344
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
-
     steps:
     - uses: actions/checkout@v2
       with:
         persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
         fetch-depth: 0 
     - uses: JarvusInnovations/background-action@v1
-
     - name: Aria2 Install
       run: sudo apt install -y aria2 
-
     - name: Set up Python 3.9
       uses: actions/setup-python@v2
       with:
         python-version: 3.9
-        
     - name: install prerequisites
       run: |
         python -m pip install --upgrade pip wheel
@@ -45,8 +39,6 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 18
-    
-      
     - name: Downloading
       id: downloading
       run: |
@@ -56,19 +48,12 @@ jobs:
         echo "::set-output name=filename::$filename"
         size=$(ls -l downloads/$filename | awk '{print $5}' )
         echo "::set-output name=size::$size"
-
-#     - name: Setup aliyundrive-webdav
-#       run: nohup aliyundrive-webdav --host 127.0.0.1 -p 5244 --auto-index -r ${{ secrets.ALIYUN_REFRESH_TOKEN }} > aliyundrive.log 2>&1 &
     - name: Clone alist-encrypt
       run: git clone https://github.com/traceless/alist-encrypt
     - name: Install alist-encrypt depences
       run: cd alist-encrypt/node-proxy && npm i 
     - name: Create alist-encrypt config
       run: mkdir alist-encrypt/node-proxy/conf && echo '${{ secrets.ALIST_ENCRYPT }}' > alist-encrypt/node-proxy/conf/config.json
-#     - name: Run alist-encrypt
-#       run: cd alist-encrypt/node-proxy && nohup node app.js > alist-encrypt.log 2>&1 &
-#     - name: Webdav status
-#       run: cat aliyundrive.log && cat alist-encrypt/node-proxy/alist-encrypt.log
     - name: Run Webdav Service
       with:
         run: |
@@ -83,15 +68,13 @@ jobs:
         log-output: stderr,stdout
         log-output-if: failure
         working-directory: alist-encrypt/node-proxy
-
-      
     - name: rclone
       uses: wei/rclone@v1
       env:
         RCLONE_CONF: ${{ secrets.RCLONE_ALIYUN_CONF }}
       with:
-      #  args: copy ${{ steps.downloading.outputs.path }} aliyun:/
-        args: ls aliyun:/
+       args: copy ${{ steps.downloading.outputs.path }} aliyun:/
+
           
     - name: Notify upload info to mqtt broker
       if: steps.database.outputs.status != '' && !cancelled() && !failure()
