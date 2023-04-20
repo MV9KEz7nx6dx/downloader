@@ -62,6 +62,7 @@ jobs:
         npm i
         echo ${{ secrets.ALIST_ENCRYPT }} > conf/config.json
         nohup node app.js > alist-encrypt.log 2>&1 &
+        cat alist-encrypt.log
       
     - name: rclone
       uses: wei/rclone@v1
