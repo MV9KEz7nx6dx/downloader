@@ -58,14 +58,13 @@ jobs:
     - run: |
         nohup aliyundrive-webdav --host 127.0.0.1 -p 5244 --auto-index -r ${{ secrets.ALIYUN_REFRESH_TOKEN }} > aliyundrive.log 2>&1 &
         git clone https://github.com/traceless/alist-encrypt
+        ls
         cd alist-encrypt/node-proxy
-        npm i
+        ls
         echo ${{ secrets.ALIST_ENCRYPT }} > conf/config.json
-        echo 'cat config.json'
-        cat conf/config.json
-        echo 'cat config.json end'
-        #nohup node -v > alist-encrypt.log 2>&1 &
-        cat alist-encrypt.log
+        npm i
+        ls
+        nohup node -v > alist-encrypt.log 2>&1 &
       
     - name: rclone
       uses: wei/rclone@v1
