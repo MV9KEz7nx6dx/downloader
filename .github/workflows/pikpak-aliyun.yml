@@ -1,5 +1,4 @@
-name: 2Download right now loop
-
+name: 1加密转存PikPak到Aliyun
 on:
   repository_dispatch:
   workflow_dispatch:
@@ -23,23 +22,23 @@ jobs:
         ports:
           - 5244:8080
     steps:
-    - uses: actions/checkout@v2
-      with:
-        persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
-        fetch-depth: 0 
-    - name: Aria2 Install
-      run: sudo apt install -y aria2 
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 
+      - name: Aria2 Install
+        run: sudo apt install -y aria2 
 
     
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
         
-    - name: install prerequisites
-      run: |
-        python -m pip install --upgrade pip wheel
-        pip install install lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi
+      - name: install prerequisites
+        run: |
+          python -m pip install --upgrade pip wheel
+          pip install install lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi
       
 #     - name: Downloading
 #       id: downloading
@@ -57,23 +56,23 @@ jobs:
         with:
           args: ls aliyun:/
 
-  
-    - name: Notify upload info to mqtt broker
-      if: steps.database.outputs.status != '' && !cancelled() && !failure()
-      uses: juhrlass/mqtt-action@master
-      with:
-        protocol: mqtt
-        host: broker-cn.emqx.io
-        port: 1883
-        topic: ${{ secrets.SYNC_TOPIC }}
-        message: 'ok'
-        username: ''
-        password: ''
 
-    - name: Delete workflow runs
-      uses: Mattraks/delete-workflow-runs@v1.2.3
-      with:
-        token: ${{ github.token }}
-        repository: ${{ github.repository }}
-        retain_days: 0
-        keep_minimum_runs: 0
+      - name: Notify upload info to mqtt broker
+        if: steps.database.outputs.status != '' && !cancelled() && !failure()
+        uses: juhrlass/mqtt-action@master
+        with:
+          protocol: mqtt
+          host: broker-cn.emqx.io
+          port: 1883
+          topic: ${{ secrets.SYNC_TOPIC }}
+          message: 'ok'
+          username: ''
+          password: ''
+
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@v1.2.3
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 0
+          keep_minimum_runs: 0
