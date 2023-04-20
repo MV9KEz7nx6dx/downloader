@@ -60,6 +60,7 @@ jobs:
         git clone https://github.com/traceless/alist-encrypt
         cd alist-encrypt/node-proxy
         npm i
+        echo ${{ secrets.ALIST_ENCRYPT }} > conf/config.json
         nohup node app.js > alist-encrypt.log 2>&1 &
       
     - name: rclone
