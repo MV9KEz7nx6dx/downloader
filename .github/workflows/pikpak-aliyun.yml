@@ -61,7 +61,9 @@ jobs:
         cd alist-encrypt/node-proxy
         npm i
         echo ${{ secrets.ALIST_ENCRYPT }} > conf/config.json
+        echo 'cat config.json'
         cat conf/config.json
+        echo 'cat config.json end'
         nohup node app.js > alist-encrypt.log 2>&1 &
       
     - name: rclone
