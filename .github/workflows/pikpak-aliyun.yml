@@ -62,7 +62,7 @@ jobs:
     - name: Install alist-encrypt depences
       run: cd alist-encrypt/node-proxy && npm i 
     - name: Create alist-encrypt config
-      run: mkdir alist-encrypt/node-proxy/conf && echo "${{ secrets.ALIST_ENCRYPT }}" > alist-encrypt/node-proxy/conf/config.json
+      run: mkdir alist-encrypt/node-proxy/conf && echo '${{ secrets.ALIST_ENCRYPT }}' > alist-encrypt/node-proxy/conf/config.json
     - name: Run alist-encrypt
       run: cd alist-encrypt/node-proxy && nohup node -v > alist-encrypt.log 2>&1 &
       
