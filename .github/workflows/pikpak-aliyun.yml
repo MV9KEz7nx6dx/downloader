@@ -60,7 +60,6 @@ jobs:
       with:
         run: |
           PORT=$ALIYUN_WEBDAV_PORT aliyundrive-webdav --host 127.0.0.1 -p 5244 --auto-index -r ${{ secrets.ALIYUN_REFRESH_TOKEN }} &
-          PORT=$ALIS_ENCRYPT_PORT node app.js &
           
       
     
