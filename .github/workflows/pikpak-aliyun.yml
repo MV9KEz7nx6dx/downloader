@@ -65,13 +65,15 @@ jobs:
       run: mkdir alist-encrypt/node-proxy/conf && echo '${{ secrets.ALIST_ENCRYPT }}' > alist-encrypt/node-proxy/conf/config.json
     - name: Run alist-encrypt
       run: cd alist-encrypt/node-proxy && nohup node app.js > alist-encrypt.log 2>&1 &
+    - name: Webdav status
+      run: cat aliyundrive.log && cat alist-encrypt/node-proxy/alist-encrypt.log
       
     - name: rclone
       uses: wei/rclone@v1
       env:
         RCLONE_CONF: ${{ secrets.RCLONE_ALIYUN_CONF }}
       with:
-        args: copy ${{ steps.downloading.outputs.path }} aliyun:/
+        args: copy ${{ steps.downloading.outputs.path }} aliyun:/webdav
           
     - name: Notify upload info to mqtt broker
       if: steps.database.outputs.status != '' && !cancelled() && !failure()
