@@ -57,6 +57,8 @@ jobs:
 
     - name: Setup aliyundrive-webdav
       run: nohup aliyundrive-webdav --host 127.0.0.1 -p 5244 --auto-index -r ${{ secrets.ALIYUN_REFRESH_TOKEN }} > aliyundrive.log 2>&1 &
+      env:
+          PORT: 5244
     - name: Clone alist-encrypt
       run: git clone https://github.com/traceless/alist-encrypt
     - name: Install alist-encrypt depences
@@ -65,6 +67,8 @@ jobs:
       run: mkdir alist-encrypt/node-proxy/conf && echo '${{ secrets.ALIST_ENCRYPT }}' > alist-encrypt/node-proxy/conf/config.json
     - name: Run alist-encrypt
       run: cd alist-encrypt/node-proxy && nohup node app.js > alist-encrypt.log 2>&1 &
+      env:
+          PORT: 5344
     - name: Webdav status
       run: cat aliyundrive.log && cat alist-encrypt/node-proxy/alist-encrypt.log
       
