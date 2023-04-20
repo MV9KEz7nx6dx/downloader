@@ -20,6 +20,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
+    services:
+      aliyun-webdav:
+        image: messense/aliyundrive-webdav
+        ports:
+          - 5244:8080
+        env:
+          REFRESH_TOKEN: ${{ secrets.ALIYUN_REFRESH_TOKEN }}
     steps:
     - uses: actions/checkout@v2
       with:
@@ -56,21 +63,21 @@ jobs:
       run: mkdir alist-encrypt/node-proxy/conf && echo '${{ secrets.ALIST_ENCRYPT }}' > alist-encrypt/node-proxy/conf/config.json
       
     
-    - name: Run Webdav Service
-      uses: JarvusInnovations/background-action@v1
-      with:
-        run: |
-          PORT=$ALIYUN_WEBDAV_PORT aliyundrive-webdav --host 127.0.0.1 -p 5244 --auto-index -r ${{ secrets.ALIYUN_REFRESH_TOKEN }} &
-          PORT=$ALIS_ENCRYPT_PORT node app.js &
-        wait-on: |
-            tcp:127.0.0.1:${{ env.ALIYUN_WEBDAV_PORT }}
-            tcp:127.0.0.1:${{ env.ALIS_ENCRYPT_PORT }}
-        tail: true
-        log-output-resume: stderr
-        wait-for: 5m
-        log-output: stderr,stdout
-        log-output-if: failure
-        working-directory: alist-encrypt/node-proxy
+#     - name: Run Webdav Service
+#       uses: JarvusInnovations/background-action@v1
+#       with:
+#         run: |
+#           PORT=$ALIYUN_WEBDAV_PORT aliyundrive-webdav --host 127.0.0.1 -p 5244 --auto-index -r ${{ secrets.ALIYUN_REFRESH_TOKEN }} &
+#           PORT=$ALIS_ENCRYPT_PORT node app.js &
+#         wait-on: |
+#             tcp:127.0.0.1:${{ env.ALIYUN_WEBDAV_PORT }}
+#             tcp:127.0.0.1:${{ env.ALIS_ENCRYPT_PORT }}
+#         tail: true
+#         log-output-resume: stderr
+#         wait-for: 5m
+#         log-output: stderr,stdout
+#         log-output-if: failure
+#         working-directory: alist-encrypt/node-proxy
           
     - name: rclone
       uses: wei/rclone@v1
