@@ -56,10 +56,10 @@ jobs:
       run: mkdir alist-encrypt/node-proxy/conf && echo '${{ secrets.ALIST_ENCRYPT }}' > alist-encrypt/node-proxy/conf/config.json
       
     - uses: JarvusInnovations/background-action@v1
-    - name: Webdav
+    - name: Bootstrap System Under Test (SUT)
       with:
         run: |
-          echo 'hello'
+          npm install
           
       
     
