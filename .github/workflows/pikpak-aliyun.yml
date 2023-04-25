@@ -7,6 +7,10 @@ on:
         description: 'Download Url'
         required: false
         default: 'false'
+      Folder:
+        description: '保存目录'
+        required: true
+        default: 'encrypt_folder'
 env:
   FILE_PATH: 'downloads'
   
@@ -23,6 +27,7 @@ jobs:
         image: ykxvk8yl5l/alist-encrypt
         env:
           DAV_PASSWORD: '123456'
+          DAV_ENCNAME: true
     steps:
       - uses: actions/checkout@v2
         with:
@@ -52,13 +57,10 @@ jobs:
           size=$(ls -l downloads/$filename | awk '{print $5}' )
           echo "::set-output name=size::$size"
           
-      - name: rclone
-        uses: wei/rclone@v1
-        env:
-          RCLONE_CONF: ${{ secrets.RCLONE_ALIYUN_CONF }}
+      - name: upload
+        uses: wei/curl@v1
         with:
-          args: copy ${{ steps.downloading.outputs.path }}  aliyun:/test
-
+          args: --upload-file ${{ steps.downloading.outputs.path }} http://alist:5344/encrypt_folder/${{ steps.downloading.outputs.filename }}
 
       - name: Notify upload info to mqtt broker
         if: steps.database.outputs.status != '' && !cancelled() && !failure()
