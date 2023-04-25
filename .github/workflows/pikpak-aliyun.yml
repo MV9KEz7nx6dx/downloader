@@ -1,4 +1,4 @@
-name: 1加密转存PikPak到Aliyun
+name: 1PikPAK2Aliyun
 on:
   repository_dispatch:
   workflow_dispatch:
@@ -7,10 +7,7 @@ on:
         description: 'Download Url'
         required: false
         default: 'false'
-      Folder:
-        description: '保存目录'
-        required: true
-        default: 'encrypt_folder'
+
 env:
   FILE_PATH: 'downloads'
   
@@ -56,11 +53,19 @@ jobs:
           echo "::set-output name=filename::$filename"
           size=$(ls -l downloads/$filename | awk '{print $5}' )
           echo "::set-output name=size::$size"
-          
+      
       - name: upload
         uses: wei/curl@v1
         with:
           args: --upload-file ${{ steps.downloading.outputs.path }} http://alist:5344/encrypt_folder/${{ steps.downloading.outputs.filename }}
+          
+      - name: Download another right now
+        uses: benc-uk/workflow-dispatch@v1
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        with:
+          workflow: 1PikPAK2Aliyun
+          token: ${{ secrets.TOKEN }}
+          ref: main
 
       - name: Notify upload info to mqtt broker
         if: steps.database.outputs.status != '' && !cancelled() && !failure()
