@@ -23,7 +23,7 @@ jobs:
       alist:
         image: ykxvk8yl5l/alist-encrypt
         env:
-          DAV_PASSWORD: '123456'
+          DAV_PASSWORD: '${{ secrets.ALIST_ENCRYPT_PASSWORD }}'
           DAV_ENCNAME: true
     steps:
       - uses: actions/checkout@v2
