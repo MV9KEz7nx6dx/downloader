@@ -56,6 +56,7 @@ jobs:
       
       - name: upload
         uses: wei/curl@v1
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         with:
           args: --upload-file ${{ steps.downloading.outputs.path }} http://alist:5344/encrypt_folder/${{ steps.downloading.outputs.filename }}
           
