@@ -23,4 +23,4 @@ keyword="##"+args.name
 task = taskcol.find_one({'url':{'$regex':keyword}})
 taskcol.delete_one(task)
 
-print(x)
+print('ok')
