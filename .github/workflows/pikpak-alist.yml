@@ -4,9 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       Url:
-        description: 'Download Url'
-        required: false
-        default: 'false'
+        description: '下载URL'
+        required: true
+        default: 'https://网址##名称'
+      Folder:
+        description: '保存目录'
+        required: true
+        default: 'encrypt_folder'
 
 env:
   FILE_PATH: 'downloads'
