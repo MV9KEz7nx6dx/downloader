@@ -49,7 +49,7 @@ jobs:
         with:
           python-version: 3.9
         
-      - name: install prerequisites
+      - name: Install prerequisites
         run: |
           python -m pip install --upgrade pip wheel
           pip install install requests lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi
@@ -68,11 +68,13 @@ jobs:
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
           python alist.py --fileName="${{ steps.downloading.outputs.filename }}"  --path="${{ steps.downloading.outputs.path }}" --storage_body="${{ secrets.ALIST_STORAGE_BODY }}"
-      - name: upload
-        uses: wei/curl@v1
+      - name: Rclone Copy
+        uses: wei/rclone@v1
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        env:
+          RCLONE_CONF: ${{ secrets.RCLONE_ALIYUN_CONF }}
         with:
-          args: --upload-file ${{ steps.downloading.outputs.path }} http://alist-encrypt:5344/encrypt_folder/${{ steps.downloading.outputs.filename }}
+          args: copy ${{ steps.downloading.outputs.path }} alist:/encrypt_folder
           
       - name: Save Data
         id:  database
