@@ -74,7 +74,7 @@ jobs:
 #         env:
 #           RCLONE_CONF: ${{ secrets.RCLONE_ALIYUN_CONF }}
 #         with:
-#           args: copy ${{ steps.downloading.outputs.path }} alist:/encrypt_folder/${{ steps.downloading.outputs.filename }}
+#           args: copy ${{ steps.downloading.outputs.path }} alist:/encrypt_folder
           
       - name: Save Data
         id:  database
