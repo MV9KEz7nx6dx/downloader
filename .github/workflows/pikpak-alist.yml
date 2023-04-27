@@ -30,7 +30,7 @@ jobs:
       alist-encrypt:
         image: ykxvk8yl5l/alist-encrypt:dev
         env:
-          DAV_PASSWORD: '123456'
+          DAV_PASSWORD: '${{ secrets.ALIST_ENCRYPT_PASSWORD }}'
           DAV_ENCNAME: true
           DAV_ENABLE_OTHER: false
         ports:
