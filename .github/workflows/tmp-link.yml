@@ -58,7 +58,7 @@ jobs:
         uses: wei/curl@v1
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         with:
-          args: --upload-file ${{ steps.downloading.outputs.path }} -F "token=${{ secrets.TMP_TOKEN }}" -F "model=1" "https://connect.tmp.link/api_v2/cli_uploader" 
+          args: -F "file=@${{ steps.downloading.outputs.path }}" -k -F "token=${{ secrets.TMP_TOKEN }}" -F "model=1" -X POST "https://connect.tmp.link/api_v2/cli_uploader" 
           
       - name: Save Data
         id:  database
