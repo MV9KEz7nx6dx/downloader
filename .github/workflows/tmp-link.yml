@@ -16,15 +16,16 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
     services:
-      tmplink:
+      aliyun:
         image: ykxvk8yl5l/tmp-link-webdav
         env:
           TMP_LINK_TOKEN: '${{ secrets.TMP_TOKEN }}'
-#       alist:
-#         image: ykxvk8yl5l/alist-encrypt:dev
-#         env:
-#           DAV_PASSWORD: '${{ secrets.ALIST_ENCRYPT_PASSWORD }}'
-#           DAV_ENCNAME: true
+          PORT: 8080
+      alist:
+        image: ykxvk8yl5l/alist-encrypt:dev
+        env:
+          DAV_PASSWORD: '${{ secrets.ALIST_ENCRYPT_PASSWORD }}'
+          DAV_ENCNAME: true
     steps:
       - uses: actions/checkout@v2
         with:
@@ -58,7 +59,7 @@ jobs:
         uses: wei/curl@v1
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         with:
-          args: --upload-file ${{ steps.downloading.outputs.path }} http://tmplink:9867/${{ steps.downloading.outputs.filename }} 
+          args: --upload-file ${{ steps.downloading.outputs.path }} http://alist:5344/${{ steps.downloading.outputs.filename }} 
           
       - name: Save Data
         id:  database
