@@ -26,6 +26,7 @@ jobs:
         env:
           DAV_PASSWORD: '${{ secrets.ALIST_ENCRYPT_PASSWORD }}'
           DAV_ENCNAME: true
+          DAV_ENCPATH: '/*'
     steps:
       - uses: actions/checkout@v2
         with:
