@@ -21,6 +21,7 @@ jobs:
         env:
           TMP_LINK_TOKEN: '${{ secrets.TMP_TOKEN }}'
           PORT: 8080
+          RUST_LOG: 'tmp_link_webdav=debug'
       alist:
         image: ykxvk8yl5l/alist-encrypt:dev
         env:
