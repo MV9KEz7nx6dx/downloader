@@ -53,7 +53,9 @@ jobs:
           python transfer.py  --con="${{ secrets.DB_CONNECT }}" --isnow=1
           filename=$(ls downloads | head -n1)
           sha1_s=`openssl sha1 $filename | awk '{ print $2 }'`
+          echo $sha1_s
           header="OC-Checksum:sha1:$sha1_s"
+          echo $header
           echo "::set-output name=path::downloads/$filename"
           echo "::set-output name=filename::$filename"
           echo "::set-output name=header::$header"
