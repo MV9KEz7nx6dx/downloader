@@ -52,9 +52,11 @@ jobs:
         run: |
           python transfer.py  --con="${{ secrets.DB_CONNECT }}" --isnow=1
           filename=$(ls downloads | head -n1)
-          sha1_s=$(openssl sha1 downloads/$filename)
+          sha1_s=`openssl sha1 $filename | awk '{ print $2 }'`
+          header="OC-Checksum:sha1:$sha1_s"
           echo "::set-output name=path::downloads/$filename"
           echo "::set-output name=filename::$filename"
+          echo "::set-output name=header::$header"
           size=$(ls -l downloads/$filename | awk '{print $5}' )
           echo "::set-output name=size::$size"
       
@@ -62,7 +64,7 @@ jobs:
         uses: wei/curl@v1
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         with:
-          args: --upload-file ${{ steps.downloading.outputs.path }} http://aliyun:8080/${{ steps.downloading.outputs.filename }}
+          args: --upload-file ${{ steps.downloading.outputs.path }} --header "${{ steps.downloading.outputs.header }}" http://aliyun:8080/${{ steps.downloading.outputs.filename }}
           
       - name: Save Data
         id:  database
