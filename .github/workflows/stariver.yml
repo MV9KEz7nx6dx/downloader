@@ -79,7 +79,7 @@ jobs:
         uses: benc-uk/workflow-dispatch@v1
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         with:
-          workflow: 1TMPLINK
+          workflow: 1stariver
           token: ${{ secrets.TOKEN }}
           ref: main
 
