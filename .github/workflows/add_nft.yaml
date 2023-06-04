@@ -55,15 +55,12 @@ jobs:
         echo "::set-output name=filename::$filename"
         size=$(ls -l downloads/$filename | awk '{print $5}' )
         echo "::set-output name=size::$size"
-        
-    - run: echo "${{ secrets.NFT_STORAGE_TOKEN }}">~/.nftstorage
-    - name: Setup Debug Session
-      uses: csexton/debugger-action@master
-    
+
     - name: Upload
       id: web3
       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       run: |
+          echo -n "${{ secrets.NFT_STORAGE_TOKEN }}">~/.nftstorage
           result=$(nftp ${{ steps.downloading.outputs.path }})
           CID_LINE=$(echo $result|grep -Eo '.*IPFS CID: (.*).*')
           cid=$(echo $CID_LINE|sed -r 's/.*CID: (.*).*/\1/g')
