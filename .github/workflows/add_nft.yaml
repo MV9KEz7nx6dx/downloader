@@ -57,9 +57,7 @@ jobs:
         echo "::set-output name=size::$size"
         
     - run: echo "${{ secrets.NFT_STORAGE_TOKEN }}">~/.nftstorage
-    - name: Setup Debug Session
-      uses: csexton/debugger-action@master
-   
+    
     - name: Upload
       id: web3
       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
