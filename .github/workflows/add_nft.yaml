@@ -74,6 +74,7 @@ jobs:
         echo "::set-output name=status::ok"
 
     - name: Download another right now
+      if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       uses: benc-uk/workflow-dispatch@v1
       with:
         workflow: 1nft
