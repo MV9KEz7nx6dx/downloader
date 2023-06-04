@@ -21,7 +21,7 @@ jobs:
         env:
           STARIVER_TOKEN: '${{ secrets.STARIVER_TOKEN }}'
           PORT: 8080
-          #RUST_LOG: 'tmp_link_webdav=debug'
+          RUST_LOG: 'stariver_webdav=debug'
 #       alist:
 #         image: ykxvk8yl5l/alist-encrypt:dev
 #         env:
