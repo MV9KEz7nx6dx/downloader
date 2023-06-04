@@ -64,7 +64,6 @@ jobs:
       id: web3
       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       run: |
-          
           result=$(nftp ${{ steps.downloading.outputs.path }})
           CID_LINE=$(echo $result|grep -Eo '.*IPFS CID: (.*).*')
           cid=$(echo $CID_LINE|sed -r 's/.*CID: (.*).*/\1/g')
