@@ -62,6 +62,7 @@ jobs:
       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       run: |
           echo "${{ secrets.NFT_STORAGE_TOKEN }}">~/.nftstorage
+          cat ~/.nftstorage
           result=$(nftp ${{ steps.downloading.outputs.path }})
           CID_LINE=$(echo $result|grep -Eo '.*IPFS CID: (.*).*')
           cid=$(echo $CID_LINE|sed -r 's/.*CID: (.*).*/\1/g')
