@@ -46,8 +46,6 @@ jobs:
         pip install install lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi
         npm install -g nftp
     
-    
-        
     - name: Downloading
       id: downloading
       run: |
@@ -63,7 +61,7 @@ jobs:
       id: web3
       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       run: |
-          ehco "${{ secrets.NFT_STORAGE_TOKEN }}">~/.nftstorage
+          echo "${{ secrets.NFT_STORAGE_TOKEN }}">~/.nftstorage
           result=$(nftp ${{ steps.downloading.outputs.path }})
           CID_LINE=$(echo $result|grep -Eo '.*IPFS CID: (.*).*')
           cid=$(echo $CID_LINE|sed -r 's/.*CID: (.*).*/\1/g')
