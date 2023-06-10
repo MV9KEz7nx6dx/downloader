@@ -56,7 +56,7 @@ jobs:
         id: downloading
         run: |
           python transfer.py  --con="${{ secrets.DB_CONNECT }}" --isnow=1
-          ${{ github.workspace }}/dist/nodejs-linux '${{ secrets.ALIST_ENCRYPT_PASSWORD }}' aesctr enc '${{ github.workspace }}/downloads/' '${{ github.workspace }}/out/' encName
+          timeout 10 ${{ github.workspace }}/dist/nodejs-linux '${{ secrets.ALIST_ENCRYPT_PASSWORD }}' aesctr enc '${{ github.workspace }}/downloads/' '${{ github.workspace }}/out/' encName
           ls out
           filename=$(ls out | head -n1)
           oriname=$(ls downloads | head -n1)
