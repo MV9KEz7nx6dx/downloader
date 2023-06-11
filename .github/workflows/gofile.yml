@@ -44,22 +44,13 @@ jobs:
     - name: Downloading
       id: downloading
       run: |
-        python download.py  --con="${{ secrets.DB_CONNECT }}" --isnow=1
+        python transfer.py  --con="${{ secrets.DB_CONNECT }}" --isnow=1
         filename=$(ls downloads | head -n1)
         echo "::set-output name=path::downloads/$filename"
         echo "::set-output name=filename::$filename"
         size=$(ls -l downloads/$filename | awk '{print $5}' )
         echo "::set-output name=size::$size"
 
-  
-    - uses: ykxVK8yL5L/add-to-web3@v1.5
-      id: web3
-      if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-      with:
-        web3_token: ${{ secrets.WEB3_STORAGE_TOKEN }}
-        path_to_add: "${{ steps.downloading.outputs.path }}" 
-        file_name: "${{ steps.downloading.outputs.filename }}" 
-        wrap_with_directory: true
         
     - name: Upload File
       id: gofile
