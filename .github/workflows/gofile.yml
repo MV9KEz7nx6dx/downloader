@@ -55,7 +55,7 @@ jobs:
     - name: Upload File
       run: |
         SERVER=$(curl -s https://apiv2.gofile.io/getServer | jq  -r '.data|.server')
-        curl -F file=${{ steps.downloading.outputs.path }} -d "token=${{ secrets.GOFILE_TOKEN }}" https://${SERVER}.gofile.io/uploadFile
+        curl -F file=${{ steps.downloading.outputs.path }} -F "token=${{ secrets.GOFILE_TOKEN }}" https://${SERVER}.gofile.io/uploadFile
     
     - name: Save Data
       id:  database
