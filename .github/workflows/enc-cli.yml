@@ -56,31 +56,36 @@ jobs:
         id: downloading
         run: |
           python transfer.py  --con="${{ secrets.DB_CONNECT }}" --isnow=1
-          ${{ github.workspace }}/dist/nodejs-linux '${{ secrets.ALIST_ENCRYPT_PASSWORD }}' aesctr enc '${{ github.workspace }}/downloads/' '${{ github.workspace }}/out/' encName
-          filename=$(ls out | head -n1)
-          oriname=$(ls downloads | head -n1)
-          sha1_s=`openssl sha1 out/$filename | awk '{ print $2 }'`
-          echo $sha1_s
-          header="OC-Checksum:sha1:$sha1_s"
-          echo $header
-          echo "::set-output name=path::out/$filename"
-          echo "::set-output name=oriname::$oriname"
+          filename=$(ls downloads | head -n1)
+          echo "::set-output name=path::downloads/$filename"
           echo "::set-output name=filename::$filename"
-          echo "::set-output name=header::$header"
-          size=$(ls -l out/$filename | awk '{print $5}' )
+          size=$(ls -l downloads/$filename | awk '{print $5}' )
           echo "::set-output name=size::$size"
-         
+      
+      - name: Encrypt
+        id: encrypt
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+           ${{ github.workspace }}/dist/nodejs-linux '${{ secrets.ALIST_ENCRYPT_PASSWORD }}' aesctr enc '${{ github.workspace }}/downloads/' '${{ github.workspace }}/out/' encName
+           filename=$(ls out | head -n1)
+           sha1_s=`openssl sha1 out/$filename | awk '{ print $2 }'`
+           header="OC-Checksum:sha1:$sha1_s"
+           echo "::set-output name=header::$header"
+           echo "::set-output name=path::out/$filename"
+           size=$(ls -l out/$filename | awk '{print $5}' )
+           echo "::set-output name=size::$size"
+                    
       - name: upload
         uses: wei/curl@v1
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         with:
-          args: --upload-file ${{ steps.downloading.outputs.path }} --header "${{ steps.downloading.outputs.header }}" http://aliyun:8080/encrypt_folder/${{ steps.downloading.outputs.filename }}
+          args: --upload-file ${{ steps.encrypt.outputs.path }} --header "${{ steps.encrypt.outputs.header }}" http://aliyun:8080/encrypt_folder/${{ steps.downloading.outputs.filename }}
           
       - name: Save Data
         id:  database
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
-          python deltransfer.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.oriname }}" --size="${{ steps.downloading.outputs.size }}"
+          python deltransfer.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}"
           echo "::set-output name=status::ok"
           
       - name: Download another right now
