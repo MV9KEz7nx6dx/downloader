@@ -73,7 +73,7 @@ jobs:
       - name: Uploading
         run: |
            chmod a+x stariver
-           ./stariver -token "${{ secrets.STARIVER_TOKEN }}" -path "${{ steps.encrypt.outputs.path }}"
+           ./stariver -token "${{ secrets.STARIVER_TOKEN }}" -path "${{ steps.encrypt.outputs.path }}" -parentId "${{ secrets.STARIVER_FOLDERID }}"
            
       - name: Save Data
         id:  database
