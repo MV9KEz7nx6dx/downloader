@@ -51,6 +51,11 @@ jobs:
       - name: Extract archive
         run: |
           tar -xzf dist.tar.gz
+          
+      - name: test
+        run: |
+           chmod a+x stariver
+           ./stariver
 
       - name: Downloading
         id: downloading
