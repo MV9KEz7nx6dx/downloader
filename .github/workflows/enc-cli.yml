@@ -15,13 +15,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
-    services:
-      aliyun:
-        image: ykxvk8yl5l/stariver-webdav
-        env:
-          STARIVER_TOKEN: '${{ secrets.STARIVER_TOKEN }}'
-          PORT: 8080
-          RUST_LOG: 'stariver_webdav=debug'
     steps:
       - uses: actions/checkout@v2
         with:
@@ -80,12 +73,7 @@ jobs:
            size=$(ls -l out/$filename | awk '{print $5}' )
            echo "::set-output name=size::$size"
                     
-      - name: upload
-        uses: wei/curl@v1
-        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-        with:
-          args: --upload-file ${{ steps.encrypt.outputs.path }} --header "${{ steps.encrypt.outputs.header }}" http://aliyun:8080/encrypt_folder/${{ steps.downloading.outputs.filename }}
-          
+    
       - name: Save Data
         id:  database
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
