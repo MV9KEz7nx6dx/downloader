@@ -45,10 +45,7 @@ jobs:
         run: |
           tar -xzf dist.tar.gz
           
-      - name: test
-        run: |
-           chmod a+x stariver
-           ./stariver
+     
 
       - name: Downloading
         id: downloading
@@ -73,7 +70,11 @@ jobs:
            size=$(ls -l out/$filename | awk '{print $5}' )
            echo "::set-output name=size::$size"
                     
-    
+      - name: Uploading
+        run: |
+           chmod a+x stariver
+           ./stariver -token "${{ secrets.STARIVER_TOKEN }}" -path "${{ steps.encrypt.outputs.path }}"
+           
       - name: Save Data
         id:  database
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
