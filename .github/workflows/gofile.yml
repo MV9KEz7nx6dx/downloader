@@ -1,4 +1,4 @@
-name: 2upload to gofile
+name: 1upload to gofile
 
 on:
   repository_dispatch:
@@ -64,13 +64,13 @@ jobs:
         python deltransfer.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}"
         echo "::set-output name=status::ok"
 
-#     - name: Download another right now
-#       uses: benc-uk/workflow-dispatch@v1
-#       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-#       with:
-#         workflow: 2Download right now loop
-#         token: ${{ secrets.TOKEN }}
-#         ref: main
+    - name: Download another right now
+      uses: benc-uk/workflow-dispatch@v1
+      if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      with:
+        workflow: 1upload to gofile
+        token: ${{ secrets.TOKEN }}
+        ref: main
 
     - name: Notify upload info to mqtt broker
       if: steps.database.outputs.status != '' && !cancelled() && !failure()
