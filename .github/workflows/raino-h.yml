@@ -1,4 +1,4 @@
-name: 1task to fetch per hour
+name: 3task to fetch per hour
 on:
     workflow_dispatch:
 #    schedule:
