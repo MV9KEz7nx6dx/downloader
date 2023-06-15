@@ -1,4 +1,4 @@
-name: 2Download right now loop
+name: 1Download right now loop
 
 on:
   repository_dispatch:
@@ -73,7 +73,7 @@ jobs:
       uses: benc-uk/workflow-dispatch@v1
       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       with:
-        workflow: 2Download right now loop
+        workflow: 1Download right now loop
         token: ${{ secrets.TOKEN }}
         ref: main
 
