@@ -1,4 +1,4 @@
-name: macos test
+name: 1macos test
 on:
     workflow_dispatch:
 #     schedule:
@@ -65,7 +65,7 @@ jobs:
       uses: benc-uk/workflow-dispatch@v1
       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       with:
-        workflow: macos test
+        workflow: 1macos test
         token: ${{ secrets.TOKEN }}
         ref: main
 
