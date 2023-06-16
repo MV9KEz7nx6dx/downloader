@@ -53,6 +53,7 @@ jobs:
 
         
     - name: Upload File
+      if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       run: |
         SERVER=$(curl -s https://apiv2.gofile.io/getServer | jq  -r '.data|.server')
         curl -F file=@${{ steps.downloading.outputs.path }} -F "token=${{ secrets.GOFILE_TOKEN }}" -F "folderId=${{ secrets.GOFILE_FOLDERID }}" https://${SERVER}.gofile.io/uploadFile
