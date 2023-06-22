@@ -82,7 +82,7 @@ jobs:
       - name: Upload File
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
-            curl -k -F "file=@${{ steps.downloading.outputs.path }}" -F "token=${{ secrets.TMP_TOKEN }}" -F "model=2"  -X POST "https://tmp-cli.vx-cdn.com/app/upload_cli"
+            curl -k -F "file=@${{ steps.encrypt.outputs.path }}" -F "token=${{ secrets.TMP_TOKEN }}" -F "model=2"  -X POST "https://tmp-cli.vx-cdn.com/app/upload_cli"
       
 #       - name: upload
 #         uses: thinkdolabs/curl@v1
