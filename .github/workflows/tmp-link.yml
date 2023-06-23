@@ -71,7 +71,7 @@ jobs:
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
            export NODE_OPTIONS=--openssl-legacy-provider
-           ${{ github.workspace }}/dist/nodejs-linux '${{ secrets.ALIST_ENCRYPT_PASSWORD }}' aesctr enc '${{ github.workspace }}/downloads/' '${{ github.workspace }}/out/' encName '${{ secrets.TMP_TOKEN }}'
+           ${{ github.workspace }}/dist/nodejs-linux '${{ secrets.ALIST_ENCRYPT_PASSWORD }}' aesctr enc '${{ github.workspace }}/downloads/' '${{ github.workspace }}/out/' encName
            filename=$(ls out | head -n1)
            sha1_s=`openssl sha1 out/$filename | awk '{ print $2 }'`
            header="OC-Checksum:sha1:$sha1_s"
@@ -80,16 +80,16 @@ jobs:
            size=$(ls -l out/$filename | awk '{print $5}' )
            echo "::set-output name=size::$size"
       
-#       - name: Upload File
-#         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-#         run: |
-#             curl -k -F "file=@${{ steps.encrypt.outputs.path }}" -F "token=${{ secrets.TMP_TOKEN }}" -F "model=2"  -X POST "https://tmp-cli.vx-cdn.com/app/upload_cli"
+      - name: Upload File
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+            curl -k -F "file=@${{ steps.encrypt.outputs.path }}" -F "token=${{ secrets.TMP_TOKEN }}" -F "model=2"  -X POST "https://tmp-cli.vx-cdn.com/app/upload_cli"
       
-#       - name: upload
-#         uses: thinkdolabs/curl@v1
-#         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-#         with:
-#           args: --upload-file ${{ steps.downloading.outputs.path }} http://alist:5344/${{ steps.downloading.outputs.filename }} 
+      - name: upload
+        uses: thinkdolabs/curl@v1
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        with:
+          args: --upload-file ${{ steps.downloading.outputs.path }} http://alist:5344/${{ steps.downloading.outputs.filename }} 
           
       - name: Save Data
         id:  database
