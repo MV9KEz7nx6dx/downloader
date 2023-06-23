@@ -70,6 +70,7 @@ jobs:
         id: encrypt
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
+           export NODE_OPTIONS=--openssl-legacy-provider
            ${{ github.workspace }}/dist/nodejs-linux '${{ secrets.ALIST_ENCRYPT_PASSWORD }}' aesctr enc '${{ github.workspace }}/downloads/' '${{ github.workspace }}/out/' encName '${{ secrets.TMP_TOKEN }}'
            filename=$(ls out | head -n1)
            sha1_s=`openssl sha1 out/$filename | awk '{ print $2 }'`
