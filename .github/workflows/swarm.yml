@@ -73,13 +73,13 @@ jobs:
         python save-swarm.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="${{ steps.upload.outputs.hash }}"
         echo "::set-output name=status::ok"
 
-    - name: Download another right now
-      uses: benc-uk/workflow-dispatch@v1
-      if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-      with:
-        workflow: 1Download right now loop
-        token: ${{ secrets.TOKEN }}
-        ref: main
+#     - name: Download another right now
+#       uses: benc-uk/workflow-dispatch@v1
+#       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+#       with:
+#         workflow: 1Download right now loop
+#         token: ${{ secrets.TOKEN }}
+#         ref: main
 
     - name: Notify upload info to mqtt broker
       if: steps.database.outputs.status != '' && !cancelled() && !failure()
