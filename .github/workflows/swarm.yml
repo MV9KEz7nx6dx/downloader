@@ -51,7 +51,7 @@ jobs:
         size=$(ls -l downloads/$filename | awk '{print $5}' )
         echo "::set-output name=size::$size"
 
-    - uses: aquiladev/swarm-action@v0.1
+    - uses: aquiladev/swarm-action@v1
       id: upload
       with:
         path: ${{ steps.downloading.outputs.path }}
