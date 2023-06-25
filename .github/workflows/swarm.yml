@@ -51,22 +51,26 @@ jobs:
         size=$(ls -l downloads/$filename | awk '{print $5}' )
         echo "::set-output name=size::$size"
 
-  
-    - uses: ykxVK8yL5L/add-to-web3@v1.5
-      id: web3
-      if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+    - uses: aquiladev/swarm-action@v0.1
+      id: upload
       with:
-        web3_token: ${{ secrets.WEB3_STORAGE_TOKEN }}
-        path_to_add: "${{ steps.downloading.outputs.path }}" 
-        file_name: "${{ steps.downloading.outputs.filename }}" 
-        wrap_with_directory: true
+        path: ${{ steps.downloading.outputs.path }}
+    
+#     - uses: ykxVK8yL5L/add-to-web3@v1.5
+#       id: web3
+#       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+#       with:
+#         web3_token: ${{ secrets.WEB3_STORAGE_TOKEN }}
+#         path_to_add: "${{ steps.downloading.outputs.path }}" 
+#         file_name: "${{ steps.downloading.outputs.filename }}" 
+#         wrap_with_directory: true
     
     
     - name: Save Data
       id:  database
       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       run: |
-        python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="${{ steps.web3.outputs.cid }}"
+        python save-swarm.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="${{ steps.upload.outputs.hash }}"
         echo "::set-output name=status::ok"
 
     - name: Download another right now
