@@ -71,7 +71,7 @@ jobs:
       uses: benc-uk/workflow-dispatch@v1
       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       with:
-        workflow: 1upload to gofile
+        workflow: 1upload to streamtape
         token: ${{ secrets.TOKEN }}
         ref: main
 
