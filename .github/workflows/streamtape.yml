@@ -57,7 +57,7 @@ jobs:
     - name: Upload File
       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       run: |
-        SERVER=$(curl -s https://api.streamtape.com/file/ul?login=${{ secrets.STREAMTAPE_LOGIN }}&key=${{ secrets.STREAMTAPE_KEY }}&folder=&sha256=${{ steps.downloading.outputs.sha256 }} | jq  -r '.result|.url')
+        SERVER=$(curl -s 'https://api.streamtape.com/file/ul?login=${{ secrets.STREAMTAPE_LOGIN }}&key=${{ secrets.STREAMTAPE_KEY }}&folder=&sha256=${{ steps.downloading.outputs.sha256 }}' | jq  -r '.result|.url')
         curl -F file=@${{ steps.downloading.outputs.path }}  ${SERVER}
     
     - name: Save Data
