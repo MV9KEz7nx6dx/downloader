@@ -1,5 +1,14 @@
 name: 1upload to myfile
 
+# 类似网站如下:https://myfile.is/docs/api
+# https://api.letsupload.cc/upload
+# https://api.share-online.is/upload
+# https://api.vshare.is/upload
+# https://api.hotfile.io/upload
+# https://api.zippysha.re/upload
+# https://api.megaupload.nz/upload
+# https://api.myfile.is/upload
+
 on:
   repository_dispatch:
 #  schedule:
@@ -57,14 +66,13 @@ jobs:
     - name: Upload File
       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       run: |
-        curl -F "file=@${{ steps.downloading.outputs.path }}" https://api.myfile.is/upload|python myfile.py
+        curl -F "file=@${{ steps.downloading.outputs.path }}" https://api.myfile.is/upload|python myfile.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}"
 
     
     - name: Save Data
       id:  database
       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       run: |
-        python myfile.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}"
         echo "::set-output name=status::ok"
 
     - name: Download another right now
