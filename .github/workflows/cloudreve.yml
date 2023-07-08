@@ -46,7 +46,7 @@ jobs:
           tar -xzf dist.tar.gz
       - name: test
         run: |
-          curl 'https://pan.urldwz.com/dav'
+          curl 'https://yun.5210574.xyz/dav'
           
       - name: Downloading
         id: downloading
