@@ -68,19 +68,20 @@ jobs:
            size=$(ls -l out/$filename | awk '{print $5}' )
            echo "::set-output name=size::$size"
                     
-#       - name: rclone
-#         uses: wei/rclone@v1
-#         env:
-#           RCLONE_CONF: ${{ secrets.RCLONE_CLOUDREVE_CONF }}
-#         with:
-#           args: copy ${{ steps.encrypt.outputs.path }} urldwz:/videos
-      - uses: bxb100/action-upload-webdav@v1
+      - name: rclone
+        uses: wei/rclone@v1
+        env:
+          RCLONE_CONF: ${{ secrets.RCLONE_CLOUDREVE_CONF }}
         with:
-          webdav_address: ${{secrets.WEBDAV_ADDRESS}}
-          webdav_username: ${{secrets.WEBDAV_USERNAME}}
-          webdav_password: ${{secrets.WEBDAV_PASSWORD}}
-          webdav_upload_path: "/videos"
-          files: ${{ steps.encrypt.outputs.path }}
+          args: copy ${{ steps.encrypt.outputs.path }} urldwz:/videos
+          
+#       - uses: bxb100/action-upload-webdav@v1
+#         with:
+#           webdav_address: ${{secrets.WEBDAV_ADDRESS}}
+#           webdav_username: ${{secrets.WEBDAV_USERNAME}}
+#           webdav_password: ${{secrets.WEBDAV_PASSWORD}}
+#           webdav_upload_path: "/videos"
+#           files: ${{ steps.encrypt.outputs.path }}
            
       - name: Save Data
         id:  database
