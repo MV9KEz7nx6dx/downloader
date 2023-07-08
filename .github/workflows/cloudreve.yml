@@ -73,7 +73,7 @@ jobs:
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CLOUDREVE_CONF }}
         with:
-          args: ls urldwz:/music
+          args: ls yifan:/
           
 #       - uses: bxb100/action-upload-webdav@v1
 #         with:
