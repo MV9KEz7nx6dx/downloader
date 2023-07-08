@@ -73,7 +73,7 @@ jobs:
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CLOUDREVE_CONF }}
         with:
-          args: copy ${{ steps.encrypt.outputs.path }} urldwz:/videos
+          args: ls urldwz:/music
           
 #       - uses: bxb100/action-upload-webdav@v1
 #         with:
