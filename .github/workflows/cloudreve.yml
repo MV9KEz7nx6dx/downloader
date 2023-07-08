@@ -1,0 +1,111 @@
+name: 1上传到cloudreve
+on:
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      Url:
+        description: 'Download Url'
+        required: false
+        default: 'false'
+
+env:
+  FILE_PATH: 'downloads'
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 
+          
+      - name: Aria2 Install
+        run: sudo apt install -y aria2 nodejs
+        
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+        
+      - name: install prerequisites
+        run: |
+          python -m pip install --upgrade pip wheel
+          pip install install lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi
+          
+      - name: Aria2 Install
+        run: sudo apt install -y aria2
+      
+      - name: Download remote archive
+        run: |
+          curl -L -o dist.tar.gz https://github.com/ykxVK8yL5L/alist-encrypt/releases/download/0.0.1/dist.tar.gz
+          
+      - name: Extract archive
+        run: |
+          tar -xzf dist.tar.gz
+          
+      - name: Downloading
+        id: downloading
+        run: |
+          python transfer.py  --con="${{ secrets.DB_CONNECT }}" --isnow=1
+          filename=$(ls downloads | head -n1)
+          echo "::set-output name=path::downloads/$filename"
+          echo "::set-output name=filename::$filename"
+          size=$(ls -l downloads/$filename | awk '{print $5}' )
+          echo "::set-output name=size::$size"
+      
+      - name: Encrypt
+        id: encrypt
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+           ${{ github.workspace }}/dist/nodejs-linux '${{ secrets.ALIST_ENCRYPT_PASSWORD }}' aesctr enc '${{ github.workspace }}/downloads/' '${{ github.workspace }}/out/' encName
+           filename=$(ls out | head -n1)
+           sha1_s=`openssl sha1 out/$filename | awk '{ print $2 }'`
+           header="OC-Checksum:sha1:$sha1_s"
+           echo "::set-output name=header::$header"
+           echo "::set-output name=path::out/$filename"
+           size=$(ls -l out/$filename | awk '{print $5}' )
+           echo "::set-output name=size::$size"
+                    
+      - name: rclone
+        uses: wei/rclone@v1
+        env:
+          RCLONE_CONF: ${{ secrets.RCLONE_CLOUDREVE_CONF }}
+        with:
+          args: copy ${{ steps.encrypt.outputs.path }} urldwz:/videos
+           
+      - name: Save Data
+        id:  database
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+          python deltransfer.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}"
+          echo "::set-output name=status::ok"
+          
+      - name: Download another right now
+        uses: benc-uk/workflow-dispatch@v1
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        with:
+          workflow: 1使用encrypt的cli加密文件
+          token: ${{ secrets.TOKEN }}
+          ref: main
+
+      - name: Notify upload info to mqtt broker
+        if: steps.database.outputs.status != '' && !cancelled() && !failure()
+        uses: juhrlass/mqtt-action@master
+        with:
+          protocol: mqtt
+          host: broker-cn.emqx.io
+          port: 1883
+          topic: ${{ secrets.SYNC_TOPIC }}
+          message: 'ok'
+          username: ''
+          password: ''
+
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@v1.2.3
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 0
+          keep_minimum_runs: 0
