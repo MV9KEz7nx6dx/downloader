@@ -94,7 +94,7 @@ jobs:
         uses: benc-uk/workflow-dispatch@v1
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         with:
-          workflow: 1使用encrypt的cli加密文件
+          workflow: 1上传到cloudreve
           token: ${{ secrets.TOKEN }}
           ref: main
 
