@@ -44,6 +44,9 @@ jobs:
       - name: Extract archive
         run: |
           tar -xzf dist.tar.gz
+      - name: test
+        run: |
+          curl 'https://pan.urldwz.com/dav'
           
       - name: Downloading
         id: downloading
