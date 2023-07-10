@@ -44,10 +44,7 @@ jobs:
       - name: Extract archive
         run: |
           tar -xzf dist.tar.gz
-      - name: test
-        run: |
-          curl 'https://yun.5210574.xyz/dav'
-          
+
       - name: Downloading
         id: downloading
         run: |
