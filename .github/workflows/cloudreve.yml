@@ -69,6 +69,7 @@ jobs:
            echo "::set-output name=size::$size"
                     
       - name: rclone
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         uses: wei/rclone@v1
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CLOUDREVE_CONF }}
