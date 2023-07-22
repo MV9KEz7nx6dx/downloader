@@ -82,7 +82,10 @@ jobs:
       - name: Upload File
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
-            curl -k -F "file=@${{ steps.encrypt.outputs.path }}" -F "token=${{ secrets.TMP_TOKEN }}" -F "model=2"  -X POST "https://tmp-cli.vx-cdn.com/app/upload_cli"
+            result=$(curl -k -F "file=@${{ steps.encrypt.outputs.path }}" -F "token=${{ secrets.TMP_TOKEN }}" -F "model=2"  -X POST "https://tmp-cli.vx-cdn.com/app/upload_cli")
+            ukey=$(echo $result|grep -oE '/f/([a-zA-Z0-9]+)')
+            file_ukey=${ukey:3}
+            curl -X PUT -H 'X-API-Key:${{ secrets.DETA_DATAKEY }}' -H 'Content-Type:application/json' -d '{ "items": [{"file_ucode":"$file_ukey"}]}' https://database.deta.sh/v1/c0zvsw3jfdh/tmplink/items
       
 #       - name: upload
 #         uses: thinkdolabs/curl@v1
