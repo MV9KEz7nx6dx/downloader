@@ -124,6 +124,11 @@ if __name__ == '__main__':
         quit()
 
     info = loads(dumps(x))
+    cmd = "ipfs get "+info['url']
+    os.system(cmd)
+    quit()
+
+    
     #mycol.delete_one(x)
     urlinfo = info['url'].split("##");
     streamurl = direct_link_generator(urlinfo[0])
