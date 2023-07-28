@@ -51,56 +51,55 @@ jobs:
           python -m pip install --upgrade pip wheel
           pip install install lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi
       
-      - name: Test download
+
+      - name: Downloading
+        id: downloading
         run: |
+          mkdir downloads
           python transfer.py  --con="${{ secrets.DB_CONNECT }}" --isnow=1
-#       - name: Downloading
-#         id: downloading
-#         run: |
-#           python transfer.py  --con="${{ secrets.DB_CONNECT }}" --isnow=1
-#           filename=$(ls downloads | head -n1)
-#           echo "::set-output name=path::downloads/$filename"
-#           echo "::set-output name=filename::$filename"
-#           size=$(ls -l downloads/$filename | awk '{print $5}' )
-#           echo "::set-output name=size::$size"
+          filename=$(ls downloads | head -n1)
+          echo "::set-output name=path::downloads/$filename"
+          echo "::set-output name=filename::$filename"
+          size=$(ls -l downloads/$filename | awk '{print $5}' )
+          echo "::set-output name=size::$size"
       
-#       - name: upload
-#         uses: wei/curl@v1
-#         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-#         with:
-#           args: --upload-file ${{ steps.downloading.outputs.path }} http://aliyun:8080/${{ steps.downloading.outputs.filename }} 
+      - name: upload
+        uses: wei/curl@v1
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        with:
+          args: --upload-file ${{ steps.downloading.outputs.path }} http://aliyun:8080/${{ steps.downloading.outputs.filename }} 
           
-#       - name: Save Data
-#         id:  database
-#         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-#         run: |
-#           python deltransfer.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}"
-#           echo "::set-output name=status::ok"
+      - name: Save Data
+        id:  database
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+          python deltransfer.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}"
+          echo "::set-output name=status::ok"
           
-#       - name: Download another right now
-#         uses: benc-uk/workflow-dispatch@v1
-#         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-#         with:
-#           workflow: 1TMPLINK
-#           token: ${{ secrets.TOKEN }}
-#           ref: main
+      - name: Download another right now
+        uses: benc-uk/workflow-dispatch@v1
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        with:
+          workflow: 1TMPLINK
+          token: ${{ secrets.TOKEN }}
+          ref: main
 
-#       - name: Notify upload info to mqtt broker
-#         if: steps.database.outputs.status != '' && !cancelled() && !failure()
-#         uses: juhrlass/mqtt-action@master
-#         with:
-#           protocol: mqtt
-#           host: broker-cn.emqx.io
-#           port: 1883
-#           topic: ${{ secrets.SYNC_TOPIC }}
-#           message: 'ok'
-#           username: ''
-#           password: ''
+      - name: Notify upload info to mqtt broker
+        if: steps.database.outputs.status != '' && !cancelled() && !failure()
+        uses: juhrlass/mqtt-action@master
+        with:
+          protocol: mqtt
+          host: broker-cn.emqx.io
+          port: 1883
+          topic: ${{ secrets.SYNC_TOPIC }}
+          message: 'ok'
+          username: ''
+          password: ''
 
-#       - name: Delete workflow runs
-#         uses: Mattraks/delete-workflow-runs@v1.2.3
-#         with:
-#           token: ${{ github.token }}
-#           repository: ${{ github.repository }}
-#           retain_days: 0
-#           keep_minimum_runs: 0
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@v1.2.3
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 0
+          keep_minimum_runs: 0
