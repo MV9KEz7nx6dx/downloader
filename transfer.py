@@ -124,7 +124,9 @@ if __name__ == '__main__':
         quit()
 
     info = loads(dumps(x))
-    cmd = "ipfs get "+info['url']
+    urlinfo = info['url'].split("##");
+    streamurl = direct_link_generator(urlinfo[0])
+    cmd = "ipfs get -o downloads "+streamurl
     os.system(cmd)
     quit()
 
