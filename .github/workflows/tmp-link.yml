@@ -41,6 +41,12 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
+          
+      - name: Set up Ipfs
+        uses: ibnesayeed/setup-ipfs@master
+        with:
+          ipfs_version: 0.20.0
+          run_daemon: true
         
       - name: install prerequisites
         run: |
@@ -59,6 +65,7 @@ jobs:
       - name: Downloading
         id: downloading
         run: |
+          mkdir downloads
           python transfer.py  --con="${{ secrets.DB_CONNECT }}" --isnow=1
           filename=$(ls downloads | head -n1)
           echo "::set-output name=path::downloads/$filename"
