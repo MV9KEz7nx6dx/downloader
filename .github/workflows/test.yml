@@ -1,4 +1,4 @@
-name: 1TMPLINK-unencrypt
+name: 1TMPLINK-webdav
 on:
   repository_dispatch:
   workflow_dispatch:
