@@ -21,12 +21,12 @@ jobs:
         env:
           TMP_LINK_TOKEN: '${{ secrets.TMP_TOKEN }}'
           PORT: 8080
-#       alist:
-#         image: ykxvk8yl5l/alist-encrypt:dev
-#         env:
-#           DAV_PASSWORD: '${{ secrets.ALIST_ENCRYPT_PASSWORD }}'
-#           DAV_ENCNAME: true
-#           DAV_ENCPATH: '/*'
+      alist:
+        image: ykxvk8yl5l/alist-encrypt:dev
+        env:
+          DAV_PASSWORD: '${{ secrets.ALIST_ENCRYPT_PASSWORD }}'
+          DAV_ENCNAME: true
+          DAV_ENCPATH: '/*'
     steps:
       - uses: actions/checkout@v2
         with:
@@ -67,7 +67,7 @@ jobs:
         uses: wei/curl@v1
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         with:
-          args: --upload-file ${{ steps.downloading.outputs.path }} http://aliyun:8080/${{ steps.downloading.outputs.filename }} 
+          args: --upload-file ${{ steps.downloading.outputs.path }} http://alist:5344/${{ steps.downloading.outputs.filename }} 
           
       - name: Save Data
         id:  database
