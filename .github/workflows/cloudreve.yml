@@ -21,7 +21,7 @@ jobs:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 
           
-      - name: 增加可用空间 (删除dotnet, android、haskell、CodeQL、Cached Docker Images)
+      - name: 增加可用空间 (删除dotnet, android、haskell、CodeQL)
         shell: bash
         run: |
           sudo rm -rf /usr/share/dotnet
