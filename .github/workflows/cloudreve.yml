@@ -68,6 +68,7 @@ jobs:
       - name: Downloading
         id: downloading
         run: |
+          mkdir downloads
           python transfer.py  --con="${{ secrets.DB_CONNECT }}" --isnow=1
           filename=$(ls downloads | head -n1)
           echo "::set-output name=path::downloads/$filename"
