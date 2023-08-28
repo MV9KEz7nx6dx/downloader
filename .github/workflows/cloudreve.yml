@@ -94,7 +94,7 @@ jobs:
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CLOUDREVE_CONF }}
         with:
-          args: copy ${{ steps.encrypt.outputs.path }} urldwz:/videos/temp
+          args: copy ${{ steps.encrypt.outputs.path }} mayiyun:/test
           
 #       - uses: bxb100/action-upload-webdav@v1
 #         with:
