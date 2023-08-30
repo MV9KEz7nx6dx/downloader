@@ -104,7 +104,7 @@ jobs:
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
         with:
-          args: copy ${{ steps.encrypt.outputs.path }} testje:/videos
+          args: copy ${{ steps.encrypt.outputs.path }} testje:/videos/temp
       
       - name: Save Data
         id:  database
