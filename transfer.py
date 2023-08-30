@@ -122,14 +122,10 @@ if __name__ == '__main__':
     if x is None:
         print("None")
         quit()
-        
-    info = loads(dumps(x))
-    urlinfo = info['url'].split("##");
-    streamurl = direct_link_generator(urlinfo[0])
-    cmd = "aria2c --conf aria2.conf --seed-time=0 -o "+urlinfo[1]+" -d downloads -c \""+streamurl+"\""
-    os.system(cmd)
-    quit()
 
+    #mycol.delete_one(x)
+        
+   
     info = loads(dumps(x))
     urlinfo = info['url'].split("##");
     streamurl = direct_link_generator(urlinfo[0])
@@ -138,8 +134,9 @@ if __name__ == '__main__':
     quit()
 
     
-    #mycol.delete_one(x)
+    info = loads(dumps(x))
     urlinfo = info['url'].split("##");
     streamurl = direct_link_generator(urlinfo[0])
     cmd = "aria2c --conf aria2.conf --seed-time=0 -o "+urlinfo[1]+" -d downloads -c \""+streamurl+"\""
     os.system(cmd)
+    quit()
