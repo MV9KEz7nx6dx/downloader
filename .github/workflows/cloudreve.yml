@@ -93,7 +93,7 @@ jobs:
         id: webdav
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
-          python webdav_user.py --name="5tp"
+          python webdav_user.py --name="5tp" --projet="${{ secrets.DETA_PROJECT_ID }}" --apikey="${{ secrets.DETA_API_KEY }}"
           
       - name: Upload
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
