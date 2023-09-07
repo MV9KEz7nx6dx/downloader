@@ -158,7 +158,7 @@ if __name__ == "__main__":
     sessionID=init_result['data']['sessionID']
     uploader=init_result['data']['uploadURLs'][0]
     chunkSize=init_result['data']['chunkSize']
-    upload_file(uploader, file_name, chunkSize)
+    upload_file(uploader, file_path, chunkSize)
     complete_url = base_url+"/api/v3/callback/onedrive/finish/"+sessionID
     complete_payload = '{}'
     complete_response = requests.request("POST", complete_url, headers=headers, data=complete_payload,verify=False)
