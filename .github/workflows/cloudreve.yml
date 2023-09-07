@@ -6,7 +6,7 @@ on:
       Uploader:
         description: '上传到哪个网盘'
         required: false
-        default: '5tp'
+        default: 'daying'
 
 env:
   FILE_PATH: 'downloads'
