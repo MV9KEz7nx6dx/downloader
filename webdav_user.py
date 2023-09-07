@@ -34,7 +34,7 @@ tasks=json.loads(tasks_req.text)
 if len(tasks['items']) < 1:
     quit()
 task=tasks['items'][0]
-cmd = f"curl --user {task['username']}:{{task['password']}} {{task['url']}}/videos/{args.filename} -T out/{args.filename}"
+cmd = f"curl --user {task['username']}:{task['password']} {task['url']}/videos/{args.filename} -T out/{args.filename}"
 os.system(cmd)
 # with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
 #     print(f'username={task["username"]}',f'password={task["password"]}',f'url={task["url"]}', file=fh)
