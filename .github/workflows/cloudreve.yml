@@ -63,6 +63,10 @@ jobs:
       - name: Extract archive
         run: |
           tar -xzf dist.tar.gz
+          
+      - name: 测试输入
+        run: |
+          echo ${{ github.event.inputs.Uploader}}
 
       - name: Downloading
         id: downloading
