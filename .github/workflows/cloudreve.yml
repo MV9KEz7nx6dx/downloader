@@ -138,6 +138,7 @@ jobs:
           workflow: 1上传到cloudreve
           token: ${{ secrets.TOKEN }}
           ref: main
+          inputs: '{ "Uploader":"${{ github.event.inputs.Uploader}}"}'
 
       - name: Notify upload info to mqtt broker
         if: steps.database.outputs.status != '' && !cancelled() && !failure()
