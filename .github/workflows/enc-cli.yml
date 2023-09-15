@@ -74,7 +74,7 @@ jobs:
            echo "::set-output name=header::$header"
            echo "::set-output name=filename::$newfilename"
            echo "::set-output name=path::out/$newfilename"
-           size=$(ls -l out/$filename | awk '{print $5}' )
+           size=$(ls -l out/$newfilename | awk '{print $5}' )
            echo "::set-output name=size::$size"
                     
       - name: Uploading
