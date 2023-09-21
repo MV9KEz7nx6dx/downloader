@@ -146,7 +146,7 @@ if __name__ == "__main__":
     policy_res = requests.get(base_url+"/api/v3/directory%2F",headers=headers,verify=False)
     policy_result = json.loads(policy_res.text);
     payload = json.dumps({
-        "path":"/videos",
+        "path":"/videos/temp",
         "size":file_size,
         "name":file_name,
         "policy_id":policy_result['data']['policy']['id'],
