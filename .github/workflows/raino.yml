@@ -1,8 +1,8 @@
 name: 3task to fetch per month
 on:
     workflow_dispatch:
-    schedule:
-     - cron: "0 4 1 * *"
+    # schedule:
+    #  - cron: "0 4 1 * *"
 #   watch:
 #     types: started
 env:
