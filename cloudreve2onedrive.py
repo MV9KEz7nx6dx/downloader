@@ -123,7 +123,7 @@ if __name__ == '__main__':
         print("None")
         quit()
 
-    #mycol.delete_one(x)
+    mycol.delete_one(x)
         
     info = loads(dumps(x))
     urlinfo = info['url'].split("##");
