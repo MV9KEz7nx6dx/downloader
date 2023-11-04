@@ -82,7 +82,7 @@ jobs:
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
         with:
-          args: copy ${{ steps.downloading.outputs.path }} testje:/${{ github.event.inputs.Dir}}
+          args: copy ${{ steps.downloading.outputs.path }} testje:/videos/temp
 
       
       - name: Download another right now
