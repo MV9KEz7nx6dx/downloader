@@ -11,6 +11,10 @@ on:
         description: 'Folder to save'
         required: false
         default: 'videos/temp'
+      Name:
+        description: 'File name to save'
+        required: false
+        default: 'test.mp4'
 
 env:
   FILE_PATH: 'downloads'
@@ -68,7 +72,8 @@ jobs:
         id: downloading
         run: |
           mkdir downloads
-          python cloudreve2onedrive.py --con="${{ secrets.DB_CONNECT }}" --isnow=0
+          #python cloudreve2onedrive.py --con="${{ secrets.DB_CONNECT }}" --isnow=0
+          aria2c --conf aria2.conf --seed-time=0 -o "${{ github.event.inputs.Url}}" -d downloads -c "${{ github.event.inputs.Name}}"
           ls downloads
           filename=$(ls downloads | head -n1)
           echo "::set-output name=path::downloads/$filename"
