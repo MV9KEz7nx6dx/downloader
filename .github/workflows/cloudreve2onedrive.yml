@@ -1,4 +1,4 @@
-name: 1ipfs2onedrive
+name: cloudreve2onedrive
 on:
   repository_dispatch:
   workflow_dispatch:
