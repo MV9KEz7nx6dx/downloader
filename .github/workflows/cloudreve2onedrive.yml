@@ -73,7 +73,7 @@ jobs:
         run: |
           mkdir downloads
           #python cloudreve2onedrive.py --con="${{ secrets.DB_CONNECT }}" --isnow=0
-          aria2c --conf aria2.conf --seed-time=0 -o "${{ github.event.inputs.Url}}" -d downloads -c "${{ github.event.inputs.Name}}"
+          aria2c --conf aria2.conf --seed-time=0 -o "${{ github.event.inputs.Name}}" -d downloads -c "${{ github.event.inputs.Url}}"
           ls downloads
           filename=$(ls downloads | head -n1)
           echo "::set-output name=path::downloads/$filename"
