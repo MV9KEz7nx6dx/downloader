@@ -117,8 +117,8 @@ if __name__ == '__main__':
     mycol = mydb["link2onedrive"]
 
 
-    #x = mycol.find_one({"isnow": args.isnow})
-    x = mycol.find_one_and_update({'isnow': args.isnow}, {'$set': {'isnow': 10}})
+    x = mycol.find_one({"isnow": args.isnow})
+    #x = mycol.find_one_and_update({'isnow': args.isnow}, {'$set': {'isnow': 10}})
     if x is None:
         print("None")
         quit()
