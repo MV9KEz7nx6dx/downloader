@@ -114,13 +114,20 @@ jobs:
         with:
           args: copy ${{ steps.encrypt.outputs.path }} testje:/videos/temp
       
-      - name: Delete Task
-        id:  del
+      # - name: Delete Task
+      #   id:  del
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   run: |
+      #     python deltransfer.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}"
+      #     echo "::set-output name=status::ok"
+          
+      - name: Save Data
+        id:  database
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
-          python deltransfer.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}"
+          python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/testje/videos/temp/${{ steps.downloading.outputs.filename }}"
           echo "::set-output name=status::ok"
-          
+
       - name: Download another right now
         uses: benc-uk/workflow-dispatch@v1
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
@@ -129,13 +136,6 @@ jobs:
           token: ${{ secrets.TOKEN }}
           ref: main
           
-      - name: Save Data
-        id:  database
-        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-        run: |
-          python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="${{ steps.web3.outputs.cid }}"
-          echo "::set-output name=status::ok"
-
       - name: Notify upload info to mqtt broker
         if: steps.database.outputs.status != '' && !cancelled() && !failure()
         uses: juhrlass/mqtt-action@master
