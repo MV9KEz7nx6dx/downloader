@@ -95,7 +95,7 @@ jobs:
         id:  database
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
-          python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/testje/files/${{ steps.downloading.outputs.filename }}"
+          python savet.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/testje/files/${{ steps.downloading.outputs.filename }}"
           echo "::set-output name=status::ok"
           
       - name: Download another right now
