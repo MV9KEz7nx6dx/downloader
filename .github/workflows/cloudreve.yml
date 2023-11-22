@@ -122,11 +122,18 @@ jobs:
 #           webdav_upload_path: "/videos"
 #           files: ${{ steps.encrypt.outputs.path }}
            
+      # - name: Save Data
+      #   id:  database
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   run: |
+      #     python deltransfer.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}"
+      #     echo "::set-output name=status::ok"
+
       - name: Save Data
         id:  database
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
-          python deltransfer.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}"
+          python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/daying2/videos/temp/${{ steps.downloading.outputs.filename }}"
           echo "::set-output name=status::ok"
           
       - name: Download another right now
