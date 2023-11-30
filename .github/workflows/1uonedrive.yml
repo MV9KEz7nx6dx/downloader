@@ -80,7 +80,7 @@ jobs:
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         uses: wei/rclone@v1
         env:
-          RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
+          RCLONE_CONF: ${{ secrets.RCLONE_CONF_TESTJE }}
         with:
           args: copy ${{ steps.downloading.outputs.path }} testje:/files
       
