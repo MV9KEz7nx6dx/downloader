@@ -43,6 +43,11 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
+
+      - name: Setup Rclone
+        uses: AnimMouse/setup-rclone@v1
+        with:
+          rclone_config: ${{ secrets.RCLONE_CONF_TESTJE }}
           
       - name: Set up Ipfs
         uses: ibnesayeed/setup-ipfs@master
@@ -99,12 +104,8 @@ jobs:
            echo $size
            echo "::set-output name=size::$size"
 
-      - name: Setup Rclone
-        run: |
-            sudo -v ; curl https://rclone.org/install.sh | sudo bash
-            echo "${{ secrets.RCLONE_CONF_TESTJE }}">~/.config/rclone/rclone.conf
 
-      - name: rclone
+      - name: upload
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: rclone copy ${{ steps.encrypt.outputs.path }} testje:/videos/temp
       
