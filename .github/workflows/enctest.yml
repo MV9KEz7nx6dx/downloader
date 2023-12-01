@@ -1,0 +1,159 @@
+name: 1加密测试
+on:
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      Uploader:
+        description: '上传到哪个网盘'
+        required: false
+        default: 'daying'
+
+env:
+  FILE_PATH: 'downloads'
+  
+jobs:
+  build:
+    runs-on: macos-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 
+          
+
+      - name: 检查空间使用情况
+        run: |
+          echo "Free space:"
+          df -h
+          
+      - uses: ConorMacBride/install-package@v1
+        with:
+          brew: aria2 nodejs
+        
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+          
+      - name: Set up Ipfs
+        uses: ibnesayeed/setup-ipfs@master
+        with:
+          ipfs_version: 0.20.0
+          run_daemon: true
+        
+      - name: install prerequisites
+        run: |
+          python -m pip install --upgrade pip wheel
+          pip install install lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi
+          
+      - name: Download remote archive
+        run: |
+          curl -L -o dist.tar.gz https://github.com/ykxVK8yL5L/alist-encrypt/releases/download/0.0.2/dist.tar.gz
+          
+      - name: Extract archive
+        run: |
+          tar -xzf dist.tar.gz
+          
+      - name: Downloading
+        id: downloading
+        run: |
+          mkdir downloads
+          python transfer.py  --con="${{ secrets.DB_CONNECT }}" --isnow=1
+          filename=$(ls downloads | head -n1)
+          echo "::set-output name=path::downloads/$filename"
+          echo "::set-output name=filename::$filename"
+          size=$(ls -l downloads/$filename | awk '{print $5}' )
+          echo $size
+          echo "::set-output name=size::$size"
+      
+      - name: Encrypt
+        id: encrypt
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+           ${{ github.workspace }}/build/alist-encrypt-macos '${{ secrets.ALIST_ENCRYPT_PASSWORD }}' aesctr enc '${{ github.workspace }}/downloads/' '${{ github.workspace }}/out/' encName
+           filename=$(ls out | head -n1)
+           extension=$(awk 'BEGIN{srand();}{a[NR]=$0}END{print a[int(rand()*NR)+1]}' suffixes | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+           filename_no_suffix="${filename%.*}"
+           newfilename="$filename_no_suffix"."$extension"
+           if [ "$filename" != "$newfilename" ]; then
+            	mv out/$filename out/$newfilename
+           fi
+           sha1_s=`openssl sha1 out/$newfilename | awk '{ print $2 }'`
+           header="OC-Checksum:sha1:$sha1_s"
+           echo "::set-output name=header::$header"
+           echo "::set-output name=filename::$newfilename"
+           echo "::set-output name=path::out/$newfilename"
+           size=$(ls -l out/$newfilename | awk '{print $5}' )
+           echo $size
+           echo "::set-output name=size::$size"
+
+      # - name: 获取webdav的上传信息
+      #   id: webdav
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   run: |
+      #     python webdav_user.py --name="${{ github.event.inputs.Uploader}}" --projet="${{ secrets.DETA_PROJECT_ID }}" --apikey="${{ secrets.DETA_API_KEY }}" --filename="${{ steps.encrypt.outputs.filename }}"
+          
+      # - name: Upload
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   run: |
+      #     curl --user ${{ steps.webdav.outputs.username }}:${{ steps.webdav.outputs.password }} ${{ steps.webdav.outputs.url }}/videos/${{ steps.encrypt.outputs.filename }} -T ${{ steps.encrypt.outputs.path }}
+                    
+      # - name: rclone
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   uses: wei/rclone@v1
+      #   env:
+      #     RCLONE_CONF: ${{ secrets.RCLONE_CLOUDREVE_CONF }}
+      #   with:
+      #     args: copy ${{ steps.encrypt.outputs.path }} mayiyun:/test
+          
+#       - uses: bxb100/action-upload-webdav@v1
+#         with:
+#           webdav_address: ${{secrets.WEBDAV_ADDRESS}}
+#           webdav_username: ${{secrets.WEBDAV_USERNAME}}
+#           webdav_password: ${{secrets.WEBDAV_PASSWORD}}
+#           webdav_upload_path: "/videos"
+#           files: ${{ steps.encrypt.outputs.path }}
+           
+      # - name: Save Data
+      #   id:  database
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   run: |
+      #     python deltransfer.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}"
+      #     echo "::set-output name=status::ok"
+
+      # - name: Save Data
+      #   id:  database
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   run: |
+      #     python savet.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/daying2/videos/temp/${{ steps.downloading.outputs.filename }}"
+      #     echo "::set-output name=status::ok"
+          
+      # - name: Download another right now
+      #   uses: benc-uk/workflow-dispatch@v1
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   with:
+      #     workflow: 1上传到cloudreve
+      #     token: ${{ secrets.TOKEN }}
+      #     ref: main
+      #     inputs: '{ "Uploader":"${{ github.event.inputs.Uploader}}"}'
+
+      - name: Notify upload info to mqtt broker
+        if: steps.database.outputs.status != '' && !cancelled() && !failure()
+        uses: juhrlass/mqtt-action@master
+        with:
+          protocol: mqtt
+          host: broker-cn.emqx.io
+          port: 1883
+          topic: ${{ secrets.SYNC_TOPIC }}
+          message: 'ok'
+          username: ''
+          password: ''
+
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@v1.2.3
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 0
+          keep_minimum_runs: 0
