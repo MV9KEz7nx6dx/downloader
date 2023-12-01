@@ -49,6 +49,7 @@ jobs:
             brew install rclone 
             mkdir ~/.config/rclone
             echo "${{ secrets.RCLONE_CONF_TESTJE }}">~/.config/rclone/rclone.conf
+            rclone ls testje:/videos/temp
           
       - name: Set up Ipfs
         uses: ibnesayeed/setup-ipfs@master
