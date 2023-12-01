@@ -45,11 +45,9 @@ jobs:
           python-version: 3.9
 
       - name: Setup Rclone
-        run: |
-            brew install rclone 
-            mkdir ~/.config/rclone
-            echo "${{ secrets.RCLONE_CONF_TESTJE }}">~/.config/rclone/rclone.conf
-            rclone ls testje:/videos/temp
+        uses: AnimMouse/setup-rclone@v1
+        with:
+          rclone_config: ${{ secrets.RCLONE_CONF_TESTJE }}
           
       - name: Set up Ipfs
         uses: ibnesayeed/setup-ipfs@master
