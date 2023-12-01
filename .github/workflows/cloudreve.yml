@@ -96,11 +96,11 @@ jobs:
            echo $size
            echo "::set-output name=size::$size"
 
-      # - name: 获取webdav的上传信息
-      #   id: webdav
-      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-      #   run: |
-      #     python webdav_user.py --name="${{ github.event.inputs.Uploader}}" --projet="${{ secrets.DETA_PROJECT_ID }}" --apikey="${{ secrets.DETA_API_KEY }}" --filename="${{ steps.encrypt.outputs.filename }}"
+      - name: 获取webdav的上传信息
+        id: webdav
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+          python webdav_user.py --name="${{ github.event.inputs.Uploader}}" --projet="${{ secrets.DETA_PROJECT_ID }}" --apikey="${{ secrets.DETA_API_KEY }}" --filename="${{ steps.encrypt.outputs.filename }}"
           
       # - name: Upload
       #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
@@ -130,21 +130,21 @@ jobs:
       #     python deltransfer.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}"
       #     echo "::set-output name=status::ok"
 
-      # - name: Save Data
-      #   id:  database
-      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-      #   run: |
-      #     python savet.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/daying2/videos/temp/${{ steps.downloading.outputs.filename }}"
-      #     echo "::set-output name=status::ok"
+      - name: Save Data
+        id:  database
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+          python savet.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/daying2/videos/temp/${{ steps.downloading.outputs.filename }}"
+          echo "::set-output name=status::ok"
           
-      # - name: Download another right now
-      #   uses: benc-uk/workflow-dispatch@v1
-      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-      #   with:
-      #     workflow: 1上传到cloudreve
-      #     token: ${{ secrets.TOKEN }}
-      #     ref: main
-      #     inputs: '{ "Uploader":"${{ github.event.inputs.Uploader}}"}'
+      - name: Download another right now
+        uses: benc-uk/workflow-dispatch@v1
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        with:
+          workflow: 1上传到cloudreve
+          token: ${{ secrets.TOKEN }}
+          ref: main
+          inputs: '{ "Uploader":"${{ github.event.inputs.Uploader}}"}'
 
       - name: Notify upload info to mqtt broker
         if: steps.database.outputs.status != '' && !cancelled() && !failure()
