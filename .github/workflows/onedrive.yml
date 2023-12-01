@@ -45,7 +45,10 @@ jobs:
           python-version: 3.9
 
       - name: Setup Rclone
-        run: brew install rclone 
+        run: |
+            brew install rclone 
+            mkdir ~/.config/rclone
+            echo "${{ secrets.RCLONE_CONF_TESTJE }}">~/.config/rclone/rclone.conf
           
       - name: Set up Ipfs
         uses: ibnesayeed/setup-ipfs@master
