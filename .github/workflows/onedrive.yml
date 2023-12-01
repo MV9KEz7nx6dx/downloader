@@ -100,9 +100,9 @@ jobs:
            echo "::set-output name=size::$size"
 
       - name: Setup Rclone
-        uses: AnimMouse/setup-rclone@v1
-        with:
-            rclone_config: ${{ secrets.RCLONE_CONF_TESTJE }}
+        run: |
+            sudo -v ; curl https://rclone.org/install.sh | sudo bash
+            echo "${{ secrets.RCLONE_CONF_TESTJE }}">~/.config/rclone/rclone.conf
 
       - name: rclone
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
