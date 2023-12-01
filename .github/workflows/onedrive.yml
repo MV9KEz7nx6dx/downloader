@@ -103,8 +103,10 @@ jobs:
         uses: AnimMouse/setup-rclone@v1
         with:
             rclone_config: ${{ secrets.RCLONE_CONF_TESTJE }}
-            
-      - run: rclone copy ${{ steps.encrypt.outputs.path }} testje:/videos/temp
+
+      - name: rclone
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: rclone copy ${{ steps.encrypt.outputs.path }} testje:/videos/temp
       
       # - name: rclone
       #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
