@@ -45,9 +45,7 @@ jobs:
           python-version: 3.9
 
       - name: Setup Rclone
-        uses: AnimMouse/setup-rclone@v1
-        with:
-          rclone_config: ${{ secrets.RCLONE_CONF_TESTJE }}
+        run: rclone -V
           
       - name: Set up Ipfs
         uses: ibnesayeed/setup-ipfs@master
