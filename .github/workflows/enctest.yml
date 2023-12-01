@@ -27,10 +27,6 @@ jobs:
           echo "Free space:"
           df -h
           
-      - uses: ConorMacBride/install-package@v1
-        with:
-          brew: aria2
-        
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
