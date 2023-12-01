@@ -45,7 +45,7 @@ jobs:
           python-version: 3.9
 
       - name: Setup Rclone
-        run: rclone -V
+        run: brew install rclone 
           
       - name: Set up Ipfs
         uses: ibnesayeed/setup-ipfs@master
