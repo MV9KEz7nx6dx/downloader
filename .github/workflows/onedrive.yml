@@ -99,13 +99,20 @@ jobs:
            echo $size
            echo "::set-output name=size::$size"
 
-      - name: rclone
-        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-        uses: wei/rclone@v1
-        env:
-          RCLONE_CONF: ${{ secrets.RCLONE_CONF_TESTJE }}
+      - name: Setup Rclone
+        uses: AnimMouse/setup-rclone@v1
         with:
-          args: copy ${{ steps.encrypt.outputs.path }} testje:/videos/temp
+            rclone_config: ${{ secrets.RCLONE_CONF_TESTJE }}
+            
+      - run: rclone copy ${{ steps.encrypt.outputs.path }} testje:/videos/temp
+      
+      # - name: rclone
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   uses: wei/rclone@v1
+      #   env:
+      #     RCLONE_CONF: ${{ secrets.RCLONE_CONF_TESTJE }}
+      #   with:
+      #     args: copy ${{ steps.encrypt.outputs.path }} testje:/videos/temp
       
       # - name: Delete Task
       #   id:  del
