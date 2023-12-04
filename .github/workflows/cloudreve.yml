@@ -13,19 +13,31 @@ env:
   
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
     steps:
       - uses: actions/checkout@v2
         with:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 
-          
+
+      - name: 增加可用空间 (删除dotnet, android、haskell、CodeQL)
+        shell: bash
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
       
       - name: 检查空间使用情况
         run: |
           echo "Free space:"
           df -h
+
+      - name: Aria2 Install
+        run: |
+            sudo apt update
+            sudo apt install -y aria2 nodejs
           
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
@@ -67,7 +79,7 @@ jobs:
         id: encrypt
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
-           ${{ github.workspace }}/build/alist-encrypt-macos '${{ secrets.ALIST_ENCRYPT_PASSWORD }}' aesctr enc '${{ github.workspace }}/downloads/' '${{ github.workspace }}/out/' encName
+           ${{ github.workspace }}/build/alist-encrypt-linux '${{ secrets.ALIST_ENCRYPT_PASSWORD }}' aesctr enc '${{ github.workspace }}/downloads/' '${{ github.workspace }}/out/' encName
            filename=$(ls out | head -n1)
            size=$(ls -l out/$filename | awk '{print $5}' )
            echo $size
