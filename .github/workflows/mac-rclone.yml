@@ -34,7 +34,7 @@ jobs:
            
       - name: Config Rclone
         run: |
-          echo $RCLONE_ENV_FILE >> ~/.config/rclone/rclone.conf
+          printf '$RCLONE_ENV_FILE' >> ~/.config/rclone/rclone.conf
         shell: bash
         env:
           RCLONE_ENV_FILE : ${{secrets.RCLONE_CONF_TESTJE}}
