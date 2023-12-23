@@ -20,16 +20,7 @@ jobs:
         with:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 
-      
-      - name: 检查空间使用情况
-        run: |
-          echo "Free space:"
-          df -h
-          
-      # - name: Aria2 Install
-      #   run: |
-      #       sudo apt update
-      #       sudo apt install -y aria2 nodejs
+
       - name: Rclone Install
         run: |
             curl https://rclone.org/install.sh | sudo bash
