@@ -51,10 +51,7 @@ jobs:
         run: |
             sudo apt update
             sudo apt install -y aria2 nodejs
-            
-      - name: Config NODE_OPTIONS
-        run:  export NODE_OPTIONS=--openssl-legacy-provider
-          
+               
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
