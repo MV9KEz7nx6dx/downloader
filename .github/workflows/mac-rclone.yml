@@ -30,7 +30,7 @@ jobs:
       #   run: |
       #       sudo apt update
       #       sudo apt install -y aria2 nodejs
-      - name: Aria2 Install
+      - name: Rclone Install
         run: |
             curl https://rclone.org/install.sh | sudo bash
           
@@ -38,8 +38,9 @@ jobs:
         run: |
             rclone -V
             aria2c -v
-            node -V
+            node -v
             python -V
+            ls ~/.config
                
       # - name: Set up Python 3.9
       #   uses: actions/setup-python@v2
