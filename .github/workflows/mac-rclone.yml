@@ -30,7 +30,10 @@ jobs:
       #   run: |
       #       sudo apt update
       #       sudo apt install -y aria2 nodejs
-      
+      - name: Aria2 Install
+        run: |
+            curl https://rclone.org/install.sh | sudo bash
+          
       - name: Check depends
         run: |
             rclone -V
