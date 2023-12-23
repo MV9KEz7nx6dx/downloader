@@ -31,7 +31,8 @@ jobs:
             aria2c -v
             node -v
             python -V
-            ls ~/.config
+            echo ${{ secrets.RCLONE_CONF_TESTJE }} >> ~/.config/rclone/rclone.conf
+            rclone ls testje:/files
                
       # - name: Set up Python 3.9
       #   uses: actions/setup-python@v2
