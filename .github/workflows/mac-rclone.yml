@@ -31,7 +31,16 @@ jobs:
             aria2c -v
             node -v
             python -V
-            echo ${{ secrets.RCLONE_CONF_TESTJE }} >> ~/.config/rclone/rclone.conf
+           
+      - name: Config Rclone
+        run: |
+          echo $RCLONE_ENV_FILE >> ~/.config/rclone/rclone.conf
+        shell: bash
+        env:
+          RCLONE_ENV_FILE : ${{secrets.RCLONE_CONF_TESTJE}}
+          
+      - name: Test Rclone
+        run: |
             rclone ls testje:/files
                
       # - name: Set up Python 3.9
