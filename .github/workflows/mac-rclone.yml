@@ -97,16 +97,11 @@ jobs:
            echo "::set-output name=size::$size"
 
 
-      # - name: rclone
-      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-      #   uses: wei/rclone@v1
-      #   env:
-      #     RCLONE_CONF: ${{ secrets.RCLONE_CONF_TESTJE }}
-      #   with:
-      #     args: copy ${{ steps.encrypt.outputs.path }} testje:/videos/temp
+      - name: rclone copy
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+          rclone copy ${{ steps.encrypt.outputs.path }} testje:/videos/temp
       
-
-          
       - name: Save Data
         id:  database
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
