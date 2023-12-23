@@ -97,8 +97,6 @@ jobs:
         run: |
            ${{ github.workspace }}/build/alist-encrypt-linux '${{ secrets.ALIST_ENCRYPT_PASSWORD }}' aesctr enc '${{ github.workspace }}/downloads/' '${{ github.workspace }}/out/' encName
            filename=$(ls out | head -n1)
-           size=$(ls -l download/$filename | awk '{print $5}' )
-           echo $size
            extension=$(awk 'BEGIN{srand();}{a[NR]=$0}END{print a[int(rand()*NR)+1]}' suffixes | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
            filename_no_suffix="${filename%.*}"
            #extension="${filename##*.}"
@@ -113,7 +111,6 @@ jobs:
            echo "::set-output name=path::out/$newfilename"
            size=$(ls -l out/$newfilename | awk '{print $5}' )
            echo $size
-           ls -al out/
            echo "::set-output name=size::$size"
 
 
