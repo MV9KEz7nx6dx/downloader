@@ -45,11 +45,7 @@ jobs:
           
       - name: Config Alist
         run: |
-          curl -L -o alist.tar.gz https://github.com/alist-org/alist/releases/download/v3.30.0/alist-linux-amd64.tar.gz
-          tar -xzf alist.tar.gz
-          mkdir data
-          mv config.json data/config.json
-          ./alist server
+          docker run -d --restart=always -v /etc/alist:${{github.workspace}}/ -e PUID=0 -e PGID=0 -e UMASK=022 -e ALIST_ADMIN_PASSWORD='admin' --name="alist" xhofe/alist:latest
           ls ${{github.workspace}}/data
         env:
           ALIST_ADMIN_PASSWORD: admin
