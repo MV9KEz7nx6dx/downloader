@@ -54,8 +54,8 @@ jobs:
 
       - name: Aria2 Install
         run: |
-            sudo apt update
-            sudo apt install -y aria2 nodejs
+            apt update
+            apt install -y aria2 nodejs
       
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
