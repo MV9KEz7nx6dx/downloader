@@ -27,6 +27,8 @@ jobs:
           ALIST_ADMIN_PASSWORD: 'admin'
         ports:
         - 5244:5244
+        volumes:  
+          - /etc/alist:${{github.workspace}}/
     steps:
       - uses: actions/checkout@v2
         with:
@@ -40,6 +42,10 @@ jobs:
           sudo rm -rf /usr/local/lib/android
           sudo rm -rf /opt/ghc
           sudo rm -rf /opt/hostedtoolcache/CodeQL
+          
+      - name: Config Rclone
+        run: |
+          printf "$ALIST_CONFIG" >> config.json
       
       - name: 检查空间使用情况
         run: |
@@ -50,7 +56,7 @@ jobs:
         run: |
             sudo apt update
             sudo apt install -y aria2 nodejs
-          
+      
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
@@ -61,54 +67,59 @@ jobs:
         with:
           ipfs_version: 0.20.0
           run_daemon: true
+
+      - name: Test for list files
+        run: |
+          curl -o webdavtest.txt -X PROPFIND -u 'admin:admin'  http://localhost:5244/dav/hefamily/
+          cat webdavtest.txt
         
-      - name: install prerequisites
-        run: |
-          python -m pip install --upgrade pip wheel
-          pip install install lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi
+      # - name: install prerequisites
+      #   run: |
+      #     python -m pip install --upgrade pip wheel
+      #     pip install install lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi
           
-      - name: Download remote archive
-        run: |
-          curl -L -o dist.tar.gz https://github.com/ykxVK8yL5L/alist-encrypt/releases/download/0.0.2/dist.tar.gz
+      # - name: Download remote archive
+      #   run: |
+      #     curl -L -o dist.tar.gz https://github.com/ykxVK8yL5L/alist-encrypt/releases/download/0.0.2/dist.tar.gz
           
-      - name: Extract archive
-        run: |
-          tar -xzf dist.tar.gz
+      # - name: Extract archive
+      #   run: |
+      #     tar -xzf dist.tar.gz
           
-      - name: Downloading
-        id: downloading
-        run: |
-          mkdir downloads
-          python transfer.py  --con="${{ secrets.DB_CONNECT }}" --isnow=1
-          filename=$(ls downloads | head -n1)
-          echo "::set-output name=path::downloads/$filename"
-          echo "::set-output name=filename::$filename"
-          size=$(ls -l downloads/$filename | awk '{print $5}' )
-          echo $size
-          echo "::set-output name=size::$size"
+      # - name: Downloading
+      #   id: downloading
+      #   run: |
+      #     mkdir downloads
+      #     python transfer.py  --con="${{ secrets.DB_CONNECT }}" --isnow=1
+      #     filename=$(ls downloads | head -n1)
+      #     echo "::set-output name=path::downloads/$filename"
+      #     echo "::set-output name=filename::$filename"
+      #     size=$(ls -l downloads/$filename | awk '{print $5}' )
+      #     echo $size
+      #     echo "::set-output name=size::$size"
       
-      - name: Encrypt
-        id: encrypt
-        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-        run: |
-           ${{ github.workspace }}/build/alist-encrypt-linux '${{ secrets.ALIST_ENCRYPT_PASSWORD }}' aesctr enc '${{ github.workspace }}/downloads/' '${{ github.workspace }}/out/' encName
-           filename=$(ls out | head -n1)
-           size=$(ls -l out/$filename | awk '{print $5}' )
-           echo $size
-           extension=$(awk 'BEGIN{srand();}{a[NR]=$0}END{print a[int(rand()*NR)+1]}' suffixes | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-           filename_no_suffix="${filename%.*}"
-           newfilename="$filename_no_suffix"."$extension"
-           if [ "$filename" != "$newfilename" ]; then
-            	mv out/$filename out/$newfilename
-           fi
-           sha1_s=`openssl sha1 out/$newfilename | awk '{ print $2 }'`
-           header="OC-Checksum:sha1:$sha1_s"
-           echo "::set-output name=header::$header"
-           echo "::set-output name=filename::$newfilename"
-           echo "::set-output name=path::out/$newfilename"
-           size=$(ls -l out/$newfilename | awk '{print $5}' )
-           echo $size
-           echo "::set-output name=size::$size"
+      # - name: Encrypt
+      #   id: encrypt
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   run: |
+      #      ${{ github.workspace }}/build/alist-encrypt-linux '${{ secrets.ALIST_ENCRYPT_PASSWORD }}' aesctr enc '${{ github.workspace }}/downloads/' '${{ github.workspace }}/out/' encName
+      #      filename=$(ls out | head -n1)
+      #      size=$(ls -l out/$filename | awk '{print $5}' )
+      #      echo $size
+      #      extension=$(awk 'BEGIN{srand();}{a[NR]=$0}END{print a[int(rand()*NR)+1]}' suffixes | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+      #      filename_no_suffix="${filename%.*}"
+      #      newfilename="$filename_no_suffix"."$extension"
+      #      if [ "$filename" != "$newfilename" ]; then
+      #       	mv out/$filename out/$newfilename
+      #      fi
+      #      sha1_s=`openssl sha1 out/$newfilename | awk '{ print $2 }'`
+      #      header="OC-Checksum:sha1:$sha1_s"
+      #      echo "::set-output name=header::$header"
+      #      echo "::set-output name=filename::$newfilename"
+      #      echo "::set-output name=path::out/$newfilename"
+      #      size=$(ls -l out/$newfilename | awk '{print $5}' )
+      #      echo $size
+      #      echo "::set-output name=size::$size"
 
 
 
