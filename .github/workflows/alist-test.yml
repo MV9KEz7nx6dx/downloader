@@ -38,9 +38,14 @@ jobs:
           
       - name: Config Alist
         run: |
-          printf "$ALIST_CONFIG" >> config.json
-          docker run -d --restart=always -v /etc/alist:${{github.workspace}}/ -e PUID=0 -e PGID=0 -e UMASK=022 -e ALIST_ADMIN_PASSWORD='admin' --name="alist" --net=host xhofe/alist:latest
-          ls ${{github.workspace}}
+          curl -L -o alist.tar.gz https://github.com/alist-org/alist/releases/download/v3.30.0/alist-linux-amd64.tar.gz
+          tar -xzf alist.tar.gz
+          mkdir data
+          printf "$ALIST_CONFIG" >> data/config.json
+          ./alist server
+          ls ${{github.workspace}}/data
+        env:
+          ALIST_ADMIN_PASSWORD: admin
 
       - name: Sleep for 30 seconds
         run: sleep 60s
