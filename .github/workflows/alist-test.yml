@@ -19,6 +19,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
+    container: ubuntu
     services:
       alist:
         image: xhofe/alist
@@ -34,15 +35,15 @@ jobs:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 
           
-      - name: 增加可用空间 (删除dotnet, android、haskell、CodeQL)
-        shell: bash
-        run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/local/lib/android
-          sudo rm -rf /opt/ghc
-          sudo rm -rf /opt/hostedtoolcache/CodeQL
+      # - name: 增加可用空间 (删除dotnet, android、haskell、CodeQL)
+      #   shell: bash
+      #   run: |
+      #     sudo rm -rf /usr/share/dotnet
+      #     sudo rm -rf /usr/local/lib/android
+      #     sudo rm -rf /opt/ghc
+      #     sudo rm -rf /opt/hostedtoolcache/CodeQL
           
-      - name: Config Rclone
+      - name: Config Alist
         run: |
           printf "$ALIST_CONFIG" >> config.json
       
