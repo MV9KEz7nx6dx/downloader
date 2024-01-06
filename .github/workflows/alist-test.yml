@@ -50,8 +50,8 @@ jobs:
         env:
           ALIST_ADMIN_PASSWORD: admin
 
-      - name: Sleep for 30 seconds
-        run: sleep 60s
+      - name: Sleep for 300 seconds
+        run: sleep 300s
         shell: bash
       
       - name: 检查空间使用情况
