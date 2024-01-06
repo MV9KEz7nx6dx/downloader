@@ -39,7 +39,7 @@ jobs:
       - name: Config Alist
         run: |
           printf "$ALIST_CONFIG" >> config.json
-          docker run --restart=always -v /etc/alist:${{github.workspace}}/ -e PUID=0 -e PGID=0 -e UMASK=022 -e ALIST_ADMIN_PASSWORD='admin' --name="alist" --net=host xhofe/alist:latest
+          docker run -d --restart=always -v /etc/alist:${{github.workspace}}/ -e PUID=0 -e PGID=0 -e UMASK=022 -e ALIST_ADMIN_PASSWORD='admin' --name="alist" --net=host xhofe/alist:latest
           
       
       - name: 检查空间使用情况
