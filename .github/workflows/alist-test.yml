@@ -46,7 +46,7 @@ jobs:
       - name: Config Alist
         run: |
           docker run -d --restart=always -v /etc/alist:${{github.workspace}}/ -e PUID=0 -e PGID=0 -e UMASK=022 -e ALIST_ADMIN_PASSWORD='admin' --name="alist" xhofe/alist:latest
-          ls ${{github.workspace}}/data
+          ls ${{github.workspace}}
         env:
           ALIST_ADMIN_PASSWORD: admin
 
@@ -56,7 +56,7 @@ jobs:
       
       - name: 检查空间使用情况
         run: |
-          ls ${{github.workspace}}/data
+          ls ${{github.workspace}}
           echo "Free space:"
           df -h
 
