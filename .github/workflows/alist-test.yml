@@ -19,7 +19,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
-    container: ubuntu
     services:
       alist:
         image: xhofe/alist
@@ -70,7 +69,7 @@ jobs:
 
       - name: Test for list files
         run: |
-          curl -o webdavtest.txt -X PROPFIND -u 'admin:admin'  http://localhost:5244/dav/hefamily/
+          curl -o webdavtest.txt -X PROPFIND -u 'admin:admin'  http://alist:5244/dav/hefamily/
           cat webdavtest.txt
         
       # - name: install prerequisites
