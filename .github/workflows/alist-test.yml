@@ -62,11 +62,6 @@ jobs:
         with:
           python-version: 3.9
           
-      - name: Set up Ipfs
-        uses: ibnesayeed/setup-ipfs@master
-        with:
-          ipfs_version: 0.20.0
-          run_daemon: true
 
       - name: Test for list files
         run: |
