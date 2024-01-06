@@ -34,6 +34,9 @@ jobs:
         with:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 
+
+      - uses: docker-practice/actions-setup-docker@master
+        timeout-minutes: 12
           
       # - name: 增加可用空间 (删除dotnet, android、haskell、CodeQL)
       #   shell: bash
@@ -46,6 +49,8 @@ jobs:
       - name: Config Alist
         run: |
           printf "$ALIST_CONFIG" >> config.json
+          docker run -d --restart=always -v /etc/alist:${{github.workspace}}/ -p 5244:5244 -e PUID=0 -e PGID=0 -e UMASK=022 -e ALIST_ADMIN_PASSWORD='admin' --name="alist" --net=host xhofe/alist:latest
+          
       
       - name: 检查空间使用情况
         run: |
@@ -65,7 +70,7 @@ jobs:
 
       - name: Test for list files
         run: |
-          curl -o webdavtest.txt -X PROPFIND -u 'admin:admin'  http://alist:5244/dav/hefamily/
+          curl -o webdavtest.txt -X PROPFIND -u 'admin:admin'  http://localhost:5244/dav/hefamily/
           cat webdavtest.txt
         
       # - name: install prerequisites
