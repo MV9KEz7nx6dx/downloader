@@ -36,19 +36,19 @@ jobs:
       #     sudo rm -rf /opt/ghc
       #     sudo rm -rf /opt/hostedtoolcache/CodeQL
 
-      # - name: create-json
-      #   id: create-json
-      #   uses: jsdaniell/create-json@v1.2.2
-      #   with:
-      #     name: "config.json"
-      #     json: ${{ secrets.ALIST_CONFIG }}
+      - name: create-json
+        id: create-json
+        uses: jsdaniell/create-json@v1.2.2
+        with:
+          name: "config.json"
+          json: ${{ secrets.ALIST_CONFIG }}
           
       - name: Config Alist
         run: |
           curl -L -o alist.tar.gz https://github.com/alist-org/alist/releases/download/v3.30.0/alist-linux-amd64.tar.gz
           tar -xzf alist.tar.gz
           mkdir data
-          printf "${{ secrets.ALIST_CONFIG }}" >> data/config.json
+          mv config.json data/config.json
           ./alist server
           ls ${{github.workspace}}/data
         env:
@@ -60,7 +60,7 @@ jobs:
       
       - name: 检查空间使用情况
         run: |
-          ls ${{github.workspace}}
+          ls ${{github.workspace}}/data
           echo "Free space:"
           df -h
 
