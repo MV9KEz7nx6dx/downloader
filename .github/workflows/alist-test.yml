@@ -35,13 +35,20 @@ jobs:
       #     sudo rm -rf /usr/local/lib/android
       #     sudo rm -rf /opt/ghc
       #     sudo rm -rf /opt/hostedtoolcache/CodeQL
+
+      # - name: create-json
+      #   id: create-json
+      #   uses: jsdaniell/create-json@v1.2.2
+      #   with:
+      #     name: "config.json"
+      #     json: ${{ secrets.ALIST_CONFIG }}
           
       - name: Config Alist
         run: |
           curl -L -o alist.tar.gz https://github.com/alist-org/alist/releases/download/v3.30.0/alist-linux-amd64.tar.gz
           tar -xzf alist.tar.gz
           mkdir data
-          printf "$ALIST_CONFIG" >> data/config.json
+          printf "${{ secrets.ALIST_CONFIG }}" >> data/config.json
           ./alist server
           ls ${{github.workspace}}/data
         env:
