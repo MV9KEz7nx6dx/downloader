@@ -45,8 +45,12 @@ jobs:
           
       - name: Config Alist
         run: |
-          docker run -d --restart=always -v /etc/alist:${{github.workspace}}/ -e PUID=0 -e PGID=0 -e UMASK=022 -e ALIST_ADMIN_PASSWORD='admin' --name="alist" xhofe/alist:latest
-          ls ${{github.workspace}}
+          curl -L -o alist.tar.gz https://github.com/alist-org/alist/releases/download/v3.30.0/alist-linux-amd64.tar.gz
+          tar -xzf alist.tar.gz
+          mkdir data
+          mv config.json data/config.json
+          nohup ./alist server > nohupcmd.out 2>&1 &
+          ls ${{github.workspace}}/data
         env:
           ALIST_ADMIN_PASSWORD: admin
 
@@ -75,6 +79,7 @@ jobs:
         run: |
           curl -o webdavtest.txt -X PROPFIND -u 'admin:admin'  http://localhost:5244/dav/hefamily/
           cat webdavtest.txt
+          curl -v -u 'admin:admin' -T 'runtime.txt' http://localhost:5244/dav/hefamily/music/runtime.txt
         
       # - name: install prerequisites
       #   run: |
