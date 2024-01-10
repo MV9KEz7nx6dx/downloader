@@ -1,4 +1,4 @@
-name: testuploadtoalist
+name: 0testuploadtoalist
 on:
   repository_dispatch:
   workflow_dispatch:
@@ -54,8 +54,8 @@ jobs:
         env:
           ALIST_ADMIN_PASSWORD: admin
 
-      - name: Sleep for 300 seconds
-        run: sleep 300s
+      - name: Sleep for 120 seconds
+        run: sleep 120s
         shell: bash
       
       - name: 检查空间使用情况
@@ -134,7 +134,7 @@ jobs:
         run: |
           # curl -o webdavtest.txt -X PROPFIND -u 'admin:admin'  http://localhost:5244/dav/hefamily/
           # cat webdavtest.txt
-          curl -v -u 'admin:admin' -T '${{ steps.downloading.outputs.path }}' http://localhost:5244/dav/hefamily/files/temp/${{ steps.downloading.outputs.filename }}
+          curl -v -u 'admin:admin' -T '${{ steps.downloading.outputs.path }}' http://localhost:5244/dav/hefamily/videos/temp/${{ steps.downloading.outputs.filename }}
 
 
 
