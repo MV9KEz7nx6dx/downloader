@@ -99,13 +99,13 @@ jobs:
       #     python savet.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/testje/videos/temp/${{ steps.downloading.outputs.filename }}"
       #     echo "::set-output name=status::ok"
 
-      - name: Download another right now
-        uses: benc-uk/workflow-dispatch@v1
-        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-        with:
-          workflow: 0encryptonmac
-          token: ${{ secrets.TOKEN }}
-          ref: main
+      # - name: Download another right now
+      #   uses: benc-uk/workflow-dispatch@v1
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   with:
+      #     workflow: 0encryptonmac
+      #     token: ${{ secrets.TOKEN }}
+      #     ref: main
           
       - name: Notify upload info to mqtt broker
         if: steps.database.outputs.status != '' && !cancelled() && !failure()
