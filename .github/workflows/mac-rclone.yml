@@ -117,18 +117,23 @@ jobs:
           workflow: 0encryptonmac
           token: ${{ secrets.TOKEN }}
           ref: main
+
+      - name: 通知上传结果
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+          curl ${{secrets.BARK_KEY}}?title=上传结果&body=${{ steps.downloading.outputs.filename }}上传成功
           
-      - name: Notify upload info to mqtt broker
-        if: steps.database.outputs.status != '' && !cancelled() && !failure()
-        uses: juhrlass/mqtt-action@master
-        with:
-          protocol: mqtt
-          host: broker-cn.emqx.io
-          port: 1883
-          topic: ${{ secrets.SYNC_TOPIC }}
-          message: 'ok'
-          username: ''
-          password: ''
+      # - name: Notify upload info to mqtt broker
+      #   if: steps.database.outputs.status != '' && !cancelled() && !failure()
+      #   uses: juhrlass/mqtt-action@master
+      #   with:
+      #     protocol: mqtt
+      #     host: broker-cn.emqx.io
+      #     port: 1883
+      #     topic: ${{ secrets.SYNC_TOPIC }}
+      #     message: 'ok'
+      #     username: ''
+      #     password: ''
 
       - name: Delete workflow runs
         uses: Mattraks/delete-workflow-runs@v1.2.3
