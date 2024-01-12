@@ -121,7 +121,7 @@ jobs:
       - name: 通知上传结果
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
-          curl "${{secrets.BARK_KEY}}" --data-urlencode "title=上传结果" --data-urlencode "&body=${{ steps.downloading.outputs.filename }}上传成功"
+          curl --get "${{secrets.BARK_KEY}}" --data-urlencode "title=上传结果" --data-urlencode "body=${{ steps.downloading.outputs.filename }}上传成功"
           
       # - name: Notify upload info to mqtt broker
       #   if: steps.database.outputs.status != '' && !cancelled() && !failure()
