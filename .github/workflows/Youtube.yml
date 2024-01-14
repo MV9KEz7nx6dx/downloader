@@ -7,10 +7,6 @@ on:
         description: '下载网址'
         required: true
         default: ''
-      proxy:
-        description: '代理地址'
-        required: false
-        default: ''
 
 jobs:
   Download:
@@ -23,20 +19,25 @@ jobs:
           with-ffmpeg: true
       - name: 'Download Video' 
         run: |
-          mkdir videos
-          cd videos
+          mkdir out
+          cd out
           yt-dlp -f bestvideo+bestaudio -S ext:mp4:m4a --downloader aria2c ${{ github.event.inputs.download_url }}
-      - name: 'Set Proxy'
+
+      - name: Downloading
+        id: downloading
         run: |
-          export http_proxy=${{ github.event.inputs.proxy }}
-          export HTTP_PROXY=${{ github.event.inputs.proxy }}
-            
-      - name: rclone
-        uses: wei/rclone@v1
-        env:
-          RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
-        with:
-          args: copy --s3-upload-cutoff 10M videos cloud:videos
+          filename=$(ls out | head -n1)
+          echo "::set-output name=path::downloads/$filename"
+          echo "::set-output name=filename::$filename"
+          size=$(ls -l downloads/$filename | awk '{print $5}' )
+          echo $filename
+          echo "::set-output name=size::$size"
+
+      - name: 上传到Cloudreve
+        id: webdav
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+          python webdav_user.py --name="hefamily" --projet="${{ secrets.DETA_PROJECT_ID }}" --apikey="${{ secrets.DETA_API_KEY }}" --filename="${{ steps.downloading.outputs.filename }}"
 
         
 
