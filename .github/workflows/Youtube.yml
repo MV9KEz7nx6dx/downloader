@@ -29,7 +29,7 @@ jobs:
           filename=$(ls out | head -n1)
           echo "::set-output name=path::out/$filename"
           echo "::set-output name=filename::$filename"
-          size=$(ls -l out/$filename | awk '{print $5}' )
+          size=$(ls -l 'out/$filename' | awk '{print $5}' )
           echo $filename
           echo "::set-output name=size::$size"
 
