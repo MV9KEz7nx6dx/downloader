@@ -155,6 +155,7 @@ if __name__ == "__main__":
         "mime_type":mime_type
     })
     init_response = requests.request("PUT", url, headers=headers, data=payload,verify=False)
+    print(init_response.text)
     init_result=json.loads(init_response.text)
     sessionID=init_result['data']['sessionID']
     uploader=init_result['data']['uploadURLs'][0]
