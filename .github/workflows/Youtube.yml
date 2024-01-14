@@ -1,4 +1,4 @@
-name: Youtube转存Rclone
+name: 00Youtube转存Rclone
 on:
   repository_dispatch:
   workflow_dispatch:
@@ -37,7 +37,7 @@ jobs:
         id: webdav
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
-          python webdav_user.py --name="hefamily" --projet="${{ secrets.DETA_PROJECT_ID }}" --apikey="${{ secrets.DETA_API_KEY }}" --filename="${{ steps.downloading.outputs.filename }}"
+          python webdav_user.py --name="hefamily" --projet="${{ secrets.DETA_PROJECT_ID }}" --apikey="${{ secrets.DETA_API_KEY }}" --filename="${{ steps.downloading.outputs.filename }}" --filepath="/files"
 
         
 
