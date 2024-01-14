@@ -98,6 +98,7 @@ def upload_file(url, filename, chunk_size):
             # 发送分片数据
             response = requests.put(url, data=data, headers=headers,verify=False)
             # 打印上传结果
+            print(response.text)
             print('Uploaded chunk {}/{} with status code {}'.format(i+1, num_chunks, response.status_code))
 
 if __name__ == "__main__":
