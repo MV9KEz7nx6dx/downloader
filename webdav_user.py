@@ -12,6 +12,7 @@ parser.add_argument("--projet", help="deta.space的project_id", default="")
 parser.add_argument("--apikey", help="deta.space的x_api_key", default="")
 parser.add_argument("--name", help="要上传的云盘名称", default="")
 parser.add_argument("--filename", help="要上传的文件名称", default="")
+parser.add_argument("--filepath", help="要上传的文件夹", default="/videos/temp")
 args = parser.parse_args()
 
 DETA_DATAKEY=args.apikey
@@ -146,7 +147,7 @@ if __name__ == "__main__":
     policy_res = requests.get(base_url+"/api/v3/directory%2F",headers=headers,verify=False)
     policy_result = json.loads(policy_res.text);
     payload = json.dumps({
-        "path":"/videos/temp",
+        "path":args.filepath,
         "size":file_size,
         "name":file_name,
         "policy_id":policy_result['data']['policy']['id'],
