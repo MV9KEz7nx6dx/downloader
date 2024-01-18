@@ -92,20 +92,20 @@ jobs:
         run: |
           python webdav_user.py --name="${{ github.event.inputs.Uploader}}" --projet="${{ secrets.DETA_PROJECT_ID }}" --apikey="${{ secrets.DETA_API_KEY }}" --filename="${{ steps.encrypt.outputs.filename }}"
       
-      # - name: Save Data
-      #   id:  database
-      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-      #   run: |
-      #     python savet.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/testje/videos/temp/${{ steps.downloading.outputs.filename }}"
-      #     echo "::set-output name=status::ok"
+      - name: 保存记录
+        id:  database
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+          python savet.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/testje/videos/temp/${{ steps.downloading.outputs.filename }}"
+          echo "::set-output name=status::ok"
 
-      # - name: Download another right now
-      #   uses: benc-uk/workflow-dispatch@v1
-      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-      #   with:
-      #     workflow: 0encryptonmac
-      #     token: ${{ secrets.TOKEN }}
-      #     ref: main
+      - name: 再次开启下载
+        uses: benc-uk/workflow-dispatch@v1
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        with:
+          workflow: 1上传到cloudreve
+          token: ${{ secrets.TOKEN }}
+          ref: main
 
       - name: 通知上传结果
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
