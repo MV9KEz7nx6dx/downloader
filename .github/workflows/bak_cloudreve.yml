@@ -1,4 +1,4 @@
-name: 1上传到cloudreve_
+name: bak_1上传到cloudreve
 on:
   repository_dispatch:
   workflow_dispatch:
