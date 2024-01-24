@@ -21,7 +21,14 @@ jobs:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 
           
-
+      - name: 增加可用空间 (删除dotnet, android、haskell、CodeQL)
+        shell: bash
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          
       - name: 检查空间使用情况
         run: |
           echo "Free space:"
@@ -62,29 +69,35 @@ jobs:
           size=$(ls -l downloads/$filename | awk '{print $5}' )
           echo $size
           echo "::set-output name=size::$size"
-      
-      - name: Encrypt
-        id: encrypt
-        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+
+      - name: 上传到ipfs
+        id: uploading
         run: |
-           ${{ github.workspace }}/build/alist-encrypt-macos '${{ secrets.ALIST_ENCRYPT_PASSWORD }}' aesctr enc '${{ github.workspace }}/downloads/' '${{ github.workspace }}/out/' encName
-           filename=$(ls out | head -n1)
-           size=$(ls -l out/$newfilename | awk '{print $5}' )
-           echo $size
-           extension=$(awk 'BEGIN{srand();}{a[NR]=$0}END{print a[int(rand()*NR)+1]}' suffixes | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-           filename_no_suffix="${filename%.*}"
-           newfilename="$filename_no_suffix"."$extension"
-           if [ "$filename" != "$newfilename" ]; then
-            	mv out/$filename out/$newfilename
-           fi
-           sha1_s=`openssl sha1 out/$newfilename | awk '{ print $2 }'`
-           header="OC-Checksum:sha1:$sha1_s"
-           echo "::set-output name=header::$header"
-           echo "::set-output name=filename::$newfilename"
-           echo "::set-output name=path::out/$newfilename"
-           size=$(ls -l out/$newfilename | awk '{print $5}' )
-           echo $size
-           echo "::set-output name=size::$size"
+          RESULT=$(curl -X POST -F file=@${{ steps.downloading.outputs.path }} "https://demo.storj-ipfs.com/api/v0/add?wrap-with-directory=true")
+          echo $RESULT
+      
+      # - name: Encrypt
+      #   id: encrypt
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   run: |
+      #      ${{ github.workspace }}/build/alist-encrypt-macos '${{ secrets.ALIST_ENCRYPT_PASSWORD }}' aesctr enc '${{ github.workspace }}/downloads/' '${{ github.workspace }}/out/' encName
+      #      filename=$(ls out | head -n1)
+      #      size=$(ls -l out/$newfilename | awk '{print $5}' )
+      #      echo $size
+      #      extension=$(awk 'BEGIN{srand();}{a[NR]=$0}END{print a[int(rand()*NR)+1]}' suffixes | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+      #      filename_no_suffix="${filename%.*}"
+      #      newfilename="$filename_no_suffix"."$extension"
+      #      if [ "$filename" != "$newfilename" ]; then
+      #       	mv out/$filename out/$newfilename
+      #      fi
+      #      sha1_s=`openssl sha1 out/$newfilename | awk '{ print $2 }'`
+      #      header="OC-Checksum:sha1:$sha1_s"
+      #      echo "::set-output name=header::$header"
+      #      echo "::set-output name=filename::$newfilename"
+      #      echo "::set-output name=path::out/$newfilename"
+      #      size=$(ls -l out/$newfilename | awk '{print $5}' )
+      #      echo $size
+      #      echo "::set-output name=size::$size"
 
       # - name: 获取webdav的上传信息
       #   id: webdav
@@ -136,22 +149,22 @@ jobs:
       #     ref: main
       #     inputs: '{ "Uploader":"${{ github.event.inputs.Uploader}}"}'
 
-      - name: Notify upload info to mqtt broker
-        if: steps.database.outputs.status != '' && !cancelled() && !failure()
-        uses: juhrlass/mqtt-action@master
-        with:
-          protocol: mqtt
-          host: broker-cn.emqx.io
-          port: 1883
-          topic: ${{ secrets.SYNC_TOPIC }}
-          message: 'ok'
-          username: ''
-          password: ''
+      # - name: Notify upload info to mqtt broker
+      #   if: steps.database.outputs.status != '' && !cancelled() && !failure()
+      #   uses: juhrlass/mqtt-action@master
+      #   with:
+      #     protocol: mqtt
+      #     host: broker-cn.emqx.io
+      #     port: 1883
+      #     topic: ${{ secrets.SYNC_TOPIC }}
+      #     message: 'ok'
+      #     username: ''
+      #     password: ''
 
-      - name: Delete workflow runs
-        uses: Mattraks/delete-workflow-runs@v1.2.3
-        with:
-          token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          retain_days: 0
-          keep_minimum_runs: 0
+      # - name: Delete workflow runs
+      #   uses: Mattraks/delete-workflow-runs@v1.2.3
+      #   with:
+      #     token: ${{ github.token }}
+      #     repository: ${{ github.repository }}
+      #     retain_days: 0
+      #     keep_minimum_runs: 0
