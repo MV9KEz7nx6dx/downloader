@@ -109,7 +109,7 @@ jobs:
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
           python save_xb.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/testje/videos/temp/${{ steps.downloading.outputs.filename }}"
-          python task.py --projet="${{ secrets.DETA_XIAOBAI_PROJECT_ID }}" --apikey="${{ secrets.DETA_XIAOBAI_API_KEY }}" --taskkey="${{ steps.downloading.outputs.taskkey }}" --act="del"
+          python deta.py --projet="${{ secrets.DETA_XIAOBAI_PROJECT_ID }}" --apikey="${{ secrets.DETA_XIAOBAI_API_KEY }}" --taskkey="${{ steps.downloading.outputs.taskkey }}" --act="del"
           echo "::set-output name=status::ok"
 
       - name: Download another right now
