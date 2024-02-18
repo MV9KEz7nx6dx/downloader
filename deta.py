@@ -43,7 +43,6 @@ if args.act=="download":
     urlinfo = task['url'].split("##");
     streamurl = urlinfo[0]
     cmd = "aria2c --conf aria2.conf --seed-time=0 -o "+urlinfo[1]+" -d downloads -c \""+streamurl+"\""
-    os.system(cmd)
     # 更新下载状态
     putpayload = json.dumps({
       "set" : {
@@ -56,5 +55,6 @@ if args.act=="download":
     #print(f'::set-output name=taskkey::{task["key"]}')
     with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
         print(f'taskkey={task["key"]}', file=fh)
+    os.system(cmd)
     quit()
 
