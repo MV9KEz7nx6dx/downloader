@@ -57,7 +57,7 @@ jobs:
           mkdir downloads
           python transfer.py  --con="${{ secrets.DB_CONNECT }}" --isnow=1
           filename=$(ls downloads | head -n1)
-          folder=$(sh file.sh $filename)
+          folder=$(sh folder.sh $filename)
           echo "::set-output name=path::downloads/$filename"
           echo "::set-output name=filename::$filename"
           echo "::set-output name=folder::$folder"
