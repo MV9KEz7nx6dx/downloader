@@ -1,4 +1,4 @@
-name: test
+name: 0save2folder
 on:
   repository_dispatch:
   workflow_dispatch:
@@ -101,13 +101,13 @@ jobs:
       #     python savet.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/testje/videos/temp/${{ steps.downloading.outputs.filename }}"
       #     echo "::set-output name=status::ok"
 
-      # - name: 再次开启下载
-      #   uses: benc-uk/workflow-dispatch@v1
-      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-      #   with:
-      #     workflow: 1上传到cloudreve
-      #     token: ${{ secrets.TOKEN }}
-      #     ref: main
+      - name: 再次开启下载
+        uses: benc-uk/workflow-dispatch@v1
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        with:
+          workflow: 0save2folder
+          token: ${{ secrets.TOKEN }}
+          ref: main
 
       - name: 通知上传结果
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
