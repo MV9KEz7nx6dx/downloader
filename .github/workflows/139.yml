@@ -6,7 +6,7 @@ on:
       Uploader:
         description: '上传到哪个网盘'
         required: false
-        default: 'daying'
+        default: '139'
 
 env:
   FILE_PATH: 'downloads'
@@ -102,8 +102,8 @@ jobs:
           json_string='${{ secrets.CATAIDS }}'
           key_value=$(echo $json_string | jq '.${{ steps.downloading.outputs.folder }}')
           ydypinfo="${{ secrets.YDYPCK }}"
-          auth=${ydypinfo##*##}
-          account=${ydypinfo%##*}
+          account=${ydypinfo##*##}
+          auth=${ydypinfo%##*}
           python upload_139.py --auth="$auth" --account="$account" --cataId="${{ secrets.DETA_API_KEY }}" --folder="out"
       
       # - name: 保存记录
