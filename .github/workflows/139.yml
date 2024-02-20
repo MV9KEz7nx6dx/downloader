@@ -20,6 +20,13 @@ jobs:
         with:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 
+
+      - name: 测试
+        run: |
+          json_string='${{ secrets.CATAIDS }}'
+          key_value=$(echo $json_string | jq '.${{ steps.downloading.outputs.folder }}')
+          echo key_value
+          exit 1
           
       - name: 检查依赖程序
         run: |
@@ -98,7 +105,7 @@ jobs:
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
           json_string='${{ secrets.CATAIDS }}'
-          key_value=$(echo $json_string | jq '${{ steps.downloading.outputs.folder }}')
+          key_value=$(echo $json_string | jq '.${{ steps.downloading.outputs.folder }}')
           ydypinfo="${{ secrets.YDYPCK }}"
           auth=${ydypinfo##*##}
           account=${ydypinfo%##*}
