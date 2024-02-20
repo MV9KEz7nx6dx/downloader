@@ -58,6 +58,8 @@ def updata_file(ufile):
     file_name = ufile[1]
     file_size = ufile[2]
     chunk_size = 1024 * 1024 * 100  # 每次上传的文件块大小为32G
+    if int(file_size)>1024*1024*1024*30:
+        chunk_size = 1024 * 1024 * 500
     digest = calculate_md5(file_path)
     payload = '''
                 <pcUploadFileRequest>
@@ -93,14 +95,12 @@ def updata_file(ufile):
         return
     if response.status_code != 200:
         return print('上传失败')
-    print(response.text)
     result = xmltodict.parse(response.text)
     is_need_upload = 0
     if int(result['result']['uploadResult']['newContentIDList']['@length'])==1:
         is_need_upload = int(result['result']['uploadResult']['newContentIDList']['newContent']['isNeedUpload'])
     else:
         is_need_upload = int(result['result']['uploadResult']['newContentIDList']['newContent'][0]['isNeedUpload'])
-    print(result)
     if is_need_upload ==1:
         upload_url = result['result']['uploadResult']['redirectionUrl']
         upload_id = result['result']['uploadResult']['uploadTaskID']
@@ -112,13 +112,12 @@ def updata_file(ufile):
                 up_data = file.read(chunk_size)
                 up_headers = {
                     "UploadtaskID": upload_id,
-                    "contentSize": f"{str(len(up_data))}",
+                    "contentSize": f"{str(int(file_size))}",
                     "Range": f"bytes={offset}-{offset + len(up_data) - 1}",
                     "rangeType": "0",
                     "Content-Type": f"*/*;name={parse.quote(file_name)}"
                 }
                 up_response = requests.post(url = upload_url, headers = up_headers, data = up_data)
-                print(up_response)
                 if up_response.status_code == 200:
                     print(f"Uploaded chunk {offset}-{offset + len(up_data) - 1}")
                 else:
