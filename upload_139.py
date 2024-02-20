@@ -57,7 +57,7 @@ def updata_file(ufile):
     file_path = ufile[0]
     file_name = ufile[1]
     file_size = ufile[2]
-    chunk_size = 1024 * 1024 * 1024 * 32  # 每次上传的文件块大小为32G
+    chunk_size = 1024 * 1024 * 100  # 每次上传的文件块大小为32G
     digest = calculate_md5(file_path)
     payload = '''
                 <pcUploadFileRequest>
