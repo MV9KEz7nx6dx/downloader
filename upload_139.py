@@ -63,7 +63,7 @@ def updata_file(ufile):
                 <pcUploadFileRequest>
                     <ownerMSISDN>{phone}</ownerMSISDN>
                     <fileCount>1</fileCount>
-                    <totalSize>1</totalSize>
+                    <totalSize>0</totalSize>
                     <uploadContentList length="1">
                         <uploadContentInfo>
                             <comlexFlag>0</comlexFlag>
