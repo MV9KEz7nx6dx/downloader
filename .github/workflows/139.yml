@@ -25,7 +25,7 @@ jobs:
         run: |
           json_string='${{ secrets.CATAIDS }}'
           key_value=$(echo $json_string | jq '.${{ steps.downloading.outputs.folder }}')
-          echo key_value
+          echo $key_value
           exit 1
           
       - name: 检查依赖程序
