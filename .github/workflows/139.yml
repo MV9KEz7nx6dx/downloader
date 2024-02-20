@@ -104,7 +104,7 @@ jobs:
           ydypinfo="${{ secrets.YDYPCK }}"
           account=${ydypinfo##*##}
           auth=${ydypinfo%##*}
-          python upload_139.py --auth="$auth" --account="$account" --cataId="$cataId" --folder="out"
+          python upload_139.py --auth="$auth" --account="$account" --cataId=$cataId --folder="out"
       
       # - name: 保存记录
       #   id:  database
