@@ -42,7 +42,7 @@ jobs:
       - name: 测试
         run: |
           json_string='${{ secrets.CATAIDS }}'
-          key_value=$(echo $json_string | jq '.${{ steps.downloading.outputs.folder }}')
+          key_value=$(echo $json_string | jq '.A')
           echo $key_value
           exit 1
            
