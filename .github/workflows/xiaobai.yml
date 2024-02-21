@@ -22,7 +22,6 @@ jobs:
           fetch-depth: 0 
 
       - name: test
-        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
           curl --get "${{secrets.BARK_KEY}}" --data-urlencode "isArchive=1" --data-urlencode "title=上传结果" --data-urlencode "body=${{ secrets.DETA_XIAOBAI_PROJECT_ID }}-${{ secrets.DETA_XIAOBAI_API_KEY }}"
           exit(1)
