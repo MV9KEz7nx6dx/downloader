@@ -6,7 +6,7 @@ on:
       Uploader:
         description: '上传到哪个网盘'
         required: false
-        default: '99699'
+        default: 'xiaobai'
 env:
   FILE_PATH: 'downloads'
   
