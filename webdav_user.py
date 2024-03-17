@@ -46,7 +46,7 @@ def get_cloudreve(cloudreve):
         'accept': 'application/json, text/plain, */*',
         'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8',
         'content-type': 'application/json;charset=UTF-8',
-        'cookie': cloudreve['cookie'],
+        'cookie': 'cloudreve-session='+cloudreve['cookie'],
         'origin': base_url,
         'referer': base_url+'/home?path=%2Fvideos',
         'sec-ch-ua': '"Chromium";v="116", "Not)A;Brand";v="24", "Google Chrome";v="116"',
