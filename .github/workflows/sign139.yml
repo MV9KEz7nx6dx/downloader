@@ -1,0 +1,54 @@
+name: 移动云盘签到
+on:
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      Uploader:
+        description: '上传到哪个网盘'
+        required: false
+        default: '139'
+
+  
+jobs:
+  sign:
+    runs-on: macos-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 
+
+      - name: 检查依赖程序
+        run: |
+            python -V
+            
+      - name: 安装Python3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: 安装需要的Python依赖
+        run: |
+          python -m pip install --upgrade pip wheel
+          pip install install requests
+
+      - name: 执行脚本
+        id: sign
+        env: 
+          ydypCk: ${{ secrets.CAIUYUNSIGN }}
+        run: |
+          python sign139.py  
+
+      - name: 通知上传结果
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+          curl --get "${{secrets.BARK_KEY}}" --data-urlencode "isArchive=0" --data-urlencode "title=签到结果" --data-urlencode "body=${{ steps.sign.outputs.result }}"
+
+      # - name: 删除旧的任务
+      #   uses: Mattraks/delete-workflow-runs@v1.2.3
+      #   with:
+      #     token: ${{ github.token }}
+      #     repository: ${{ github.repository }}
+      #     retain_days: 0
+      #     keep_minimum_runs: 0
