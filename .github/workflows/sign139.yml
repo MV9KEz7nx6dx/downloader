@@ -45,10 +45,17 @@ jobs:
         run: |
           curl --get "${{secrets.BARK_KEY}}" --data-urlencode "isArchive=0" --data-urlencode "title=签到结果" --data-urlencode "body=${{ steps.sign.outputs.result }}"
 
-      # - name: 删除旧的任务
-      #   uses: Mattraks/delete-workflow-runs@v1.2.3
-      #   with:
-      #     token: ${{ github.token }}
-      #     repository: ${{ github.repository }}
-      #     retain_days: 0
-      #     keep_minimum_runs: 0
+      - name: 开启新的下载任务
+        uses: benc-uk/workflow-dispatch@v1
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        with:
+          workflow: sign139.yml
+          ref: main
+        
+      - name: 删除旧的上传记录
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 0
+          keep_minimum_runs: 0
