@@ -15,7 +15,7 @@ import requests
 
 cookies = os.getenv("ydypCk")
 ua = 'Mozilla/5.0 (Linux; Android 13; 2304FPN6DC Build/TKQ1.220829.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/115.0.5790.40 Mobile Safari/537.36 MCloudApp/10.1.0'
-parent_catalogid = ''  # 上传文件的父文件夹id，不填默认根目录
+parent_catalogid = os.getenv("ydypCk_cataid") 
 
 
 class YP:
