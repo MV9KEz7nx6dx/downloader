@@ -37,6 +37,7 @@ jobs:
         id: sign
         env: 
           ydypCk: ${{ secrets.CAIUYUNSIGN }}
+          ydypCk_cataid: ${{ secrets.CAIUYUNSIGN_CATAID }}
         run: |
           python sign139.py  
 
