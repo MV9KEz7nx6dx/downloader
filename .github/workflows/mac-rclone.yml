@@ -69,8 +69,10 @@ jobs:
           mkdir downloads
           python transfer.py  --con="${{ secrets.DB_CONNECT }}" --isnow=0
           filename=$(ls downloads | head -n1)
+          folder=$(sh folder.sh $filename)
           echo "::set-output name=path::downloads/$filename"
           echo "::set-output name=filename::$filename"
+          echo "::set-output name=folder::$folder"
           size=$(ls -l downloads/$filename | awk '{print $5}' )
           echo $size
           echo "::set-output name=size::$size"
@@ -101,13 +103,13 @@ jobs:
       - name: rclone copy
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
-          rclone copy ${{ steps.encrypt.outputs.path }} testje:/videos/temp
+          rclone copy ${{ steps.encrypt.outputs.path }} lisi:/files/${{ steps.downloading.outputs.folder }}
       
       - name: Save Data
         id:  database
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
-          python savet.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/testje/videos/temp/${{ steps.downloading.outputs.filename }}"
+          python savet.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/lisi/files/${{ steps.downloading.outputs.folder }}/${{ steps.downloading.outputs.filename }}"
           echo "::set-output name=status::ok"
 
       - name: Download another right now
