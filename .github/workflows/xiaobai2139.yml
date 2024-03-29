@@ -54,7 +54,7 @@ jobs:
         id: downloading
         run: |
           mkdir downloads
-          python xiaobai.py --projet="${{ secrets.XIAOBAI_APP_URL }}" --apikey="${{ secrets.XIAOBAI_APP_KEY }}" --act="download"
+          python xiaobai.py --projet="${{ secrets.XIAOBAI_APP_URL }}" --appkey="${{ secrets.XIAOBAI_APP_KEY }}" --act="download"
           filename=$(ls downloads | head -n1)
           folder=$(sh folder.sh $filename)
           echo "::set-output name=path::downloads/$filename"
