@@ -118,7 +118,7 @@ def updata_file(ufile):
                     "rangeType": "0",
                     "Content-Type": f"*/*;name={parse.quote(file_name)}"
                 }
-                up_response = requests.post(url = upload_url, headers = up_headers, data = up_data)
+                up_response = requests.post(url = upload_url, headers = up_headers, data = up_data,timeout=3600)
                 if up_response.status_code == 200:
                     print(f"Uploaded chunk {offset}-{offset + len(up_data) - 1}")
                 else:
