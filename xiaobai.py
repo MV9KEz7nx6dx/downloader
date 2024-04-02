@@ -41,7 +41,7 @@ if args.act=="download":
     # 更新下载状态
     putpayload = json.dumps({"action": "update","data":task['key']})
     put_req = requests.post(API_URL,headers=deta_headers,data=putpayload,verify=False)
-    cmd = "aria2c -x 16 -s 5 --conf aria2.conf --seed-time=0 -o "+urlinfo[1]+" -d downloads -c \""+streamurl+"\""
+    cmd = "aria2c --conf aria2.conf -x 16 -s 64 --seed-time=0 -o "+urlinfo[1]+" -d downloads -c \""+streamurl+"\""
     os.system(cmd)
     #os.system('cls' if os.name == 'nt' else 'clear')
     #print(f'::set-output name=taskkey::{task["key"]}')
