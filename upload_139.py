@@ -3,6 +3,8 @@ import os
 import hashlib
 import argparse
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 import xmltodict
 from urllib import parse
 import random
@@ -12,6 +14,12 @@ import json
 import base64
 import urllib.parse
 import datetime
+
+
+session = requests.Session()
+retries = Retry(total=3, backoff_factor=1)
+session.mount('http://', HTTPAdapter(max_retries=retries))
+session.mount('https://', HTTPAdapter(max_retries=retries))
 
 parser = argparse.ArgumentParser(description='上传文件到yun.139.com')
 parser.add_argument("--auth", help="Authorization认证，不带Basic", default="")
@@ -95,7 +103,7 @@ def updata_file(ufile):
         'x-yun-svc-type': '1',
         'x-m4c-caller': 'PC'
     }      
-    response = requests.post(url = UPLOAD_URL, headers = headers, data = payload)
+    response = session.post(url = UPLOAD_URL, headers = headers, data = payload)
     if response is None:
         return
     if response.status_code != 200:
@@ -118,7 +126,7 @@ def updata_file(ufile):
                     "rangeType": "0",
                     "Content-Type": f"*/*;name={parse.quote(file_name)}"
                 }
-                up_response = requests.post(url = upload_url, headers = up_headers, data = up_data,timeout=3600)
+                up_response = session.post(url = upload_url, headers = up_headers, data = up_data,timeout=600)
                 if up_response.status_code == 200:
                     print(f"Uploaded chunk {offset}-{offset + len(up_data) - 1}")
                 else:
