@@ -114,6 +114,11 @@ jobs:
           token: ${{ secrets.TOKEN }}
           ref: main
 
+      - name: 通知失败结果
+        if:  failure()
+        run: |
+          curl --get "${{secrets.BARK_KEY}}" --data-urlencode "isArchive=0" --data-urlencode "title=上传失败" --data-urlencode "body=上传失败，请手动开启新的下载"
+
       - name: 通知上传结果
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
