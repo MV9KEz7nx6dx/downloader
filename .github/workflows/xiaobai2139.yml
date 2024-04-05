@@ -108,7 +108,7 @@ jobs:
           ydypinfo="${{ secrets.YDYPCK }}"
           account=${ydypinfo##*##}
           auth=${ydypinfo%##*}
-          chomd a+x 139uploader
+          chmod a+x 139uploader
           ./139uploader --auth-token="$auth" --cata-id="$cataId" --file-path="${{ steps.encrypt.outputs.path }}"
 
       - name: 保存
