@@ -33,6 +33,8 @@ if args.act=="download":
     payload = json.dumps({"action": "query"})
     tasks_req = requests.post(API_URL,headers=deta_headers,data=payload,verify=False)
     tasks=json.loads(tasks_req.text)
+    with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+        print(f'taskcount={len(tasks)}', file=fh)
     if len(tasks) < 1:
         quit()
     task=tasks[0]
