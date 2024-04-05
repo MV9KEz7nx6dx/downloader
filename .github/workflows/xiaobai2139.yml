@@ -87,18 +87,6 @@ jobs:
            echo $size
            echo "::set-output name=size::$size"
 
-
-      # - name: 上传
-      #   id: upload
-      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-      #   run: |
-      #     json_string='${{ secrets.CATAIDS }}'
-      #     cataId=$(echo $json_string | jq -r '.${{ steps.downloading.outputs.folder }}')
-      #     ydypinfo="${{ secrets.YDYPCK }}"
-      #     account=${ydypinfo##*##}
-      #     auth=${ydypinfo%##*}
-      #     python upload_139.py --auth="$auth" --account="$account" --cataId="$cataId" --folder="out"
-
       - name: 上传
         id: upload
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
@@ -108,8 +96,7 @@ jobs:
           ydypinfo="${{ secrets.YDYPCK }}"
           account=${ydypinfo##*##}
           auth=${ydypinfo%##*}
-          chmod a+x 139uploader
-          ./139uploader --auth-token="$auth" --cata-id="$cataId" --file-path="${{ steps.encrypt.outputs.path }}"
+          python upload_139.py --auth="$auth" --account="$account" --cataId="$cataId" --folder="out"
 
       - name: 保存
         id:  database
