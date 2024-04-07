@@ -126,13 +126,21 @@ def updata_file(ufile):
                     "rangeType": "0",
                     "Content-Type": f"*/*;name={parse.quote(file_name)}"
                 }
-                up_response = session.post(url = upload_url, headers = up_headers, data = up_data,timeout=600)
-                if up_response.status_code == 200:
-                    print(f"Uploaded chunk {offset}-{offset + len(up_data) - 1}")
-                else:
-                    print(f"Failed to upload chunk {offset}-{offset + len(up_data) - 1}")
+                max_retries = 3
+                retry_count = 0
+                while retry_count < max_retries:
+                    try:
+                        up_response = session.post(url=upload_url, headers=up_headers, data=up_data, timeout=600)
+                        if up_response.status_code == 200:
+                            print(f"Uploaded chunk {offset}-{offset + len(up_data) - 1}")
+                            break  # 如果上传成功，跳出循环
+                        else:
+                            print(f"Failed to upload chunk {offset}-{offset + len(up_data) - 1}")
+                    except Exception as e:
+                        print(f"Error occurred while uploading chunk: {e}")
+                    time.sleep(1)  
+                    retry_count += 1
                 offset += len(up_data)
-
 
 
 if __name__ == "__main__":
