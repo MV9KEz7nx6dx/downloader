@@ -100,7 +100,7 @@ jobs:
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
           json_string='${{ secrets.CATAIDS }}'
-          cataId=$(echo $json_string | jq -r '.${{ steps.downloading.outputs.folder }}')
+          cataId=$(echo $json_string | jq -r '.["${{ steps.downloading.outputs.folder }}"]')
           ydypinfo="${{ secrets.YDYPCK }}"
           account=${ydypinfo##*##}
           auth=${ydypinfo%##*}
