@@ -93,6 +93,7 @@ jobs:
         run: |
           json_string='${{ secrets.CATAIDS }}'
           cataId=$(echo $json_string | jq -r '.${{ steps.downloading.outputs.folder }}')
+          echo $cataId
           ydypinfo="${{ secrets.YDYPCK }}"
           account=${ydypinfo##*##}
           auth=${ydypinfo%##*}
