@@ -1,0 +1,151 @@
+name: 0xiaobai2139
+on:
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      Uploader:
+        description: '上传到哪个网盘'
+        required: false
+        default: '139'
+env:
+  FILE_PATH: 'downloads'
+  
+jobs:
+  download:
+    runs-on: self-hosted
+    if: github.event.repository.owner.id == github.event.sender.id
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 
+
+      - name: 检查依赖
+        run: |
+            aria2c -v
+            node -v
+            python -V
+            
+      - name: 安装Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+           
+      - name: 安装IPFS
+        uses: ibnesayeed/setup-ipfs@master
+        with:
+          ipfs_version: 0.20.0
+          run_daemon: true
+        
+      - name: 安装Python依赖
+        run: |
+          python -m pip install --upgrade pip wheel
+          pip install install lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi xmltodict
+          
+      - name: 下载加密程序
+        run: |
+          curl -L -o dist.tar.gz https://github.com/ykxVK8yL5L/alist-encrypt/releases/download/0.0.2/dist.tar.gz
+          
+      - name: 解压加密程序
+        run: |
+          tar -xzf dist.tar.gz
+          
+      - name: 下载
+        id: downloading
+        run: |
+          mkdir downloads
+          python xiaobai.py --projet="${{ secrets.XIAOBAI_APP_URL }}" --appkey="${{ secrets.XIAOBAI_APP_KEY }}" --act="download"
+          filename=$(ls downloads | head -n1)
+          folder=$(sh folder.sh $filename)
+          echo "::set-output name=path::downloads/$filename"
+          echo "::set-output name=filename::$filename"
+          echo "::set-output name=folder::$folder"
+          echo "::set-output name=taskkey::$taskkey"
+          size=$(ls -l downloads/$filename | awk '{print $5}' )
+          echo $size
+          echo "::set-output name=size::$size"
+          
+      - name: 加密文件
+        id: encrypt
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+           ${{ github.workspace }}/build/alist-encrypt-macos '${{ secrets.ALIST_ENCRYPT_PASSWORD }}' aesctr enc '${{ github.workspace }}/downloads/' '${{ github.workspace }}/out/' encName
+           filename=$(ls out | head -n1)
+           extension=$(awk 'BEGIN{srand();}{a[NR]=$0}END{print a[int(rand()*NR)+1]}' suffixes | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+           filename_no_suffix="${filename%.*}"
+           #extension="${filename##*.}"
+           newfilename="$filename_no_suffix"."$extension"
+           if [ "$filename" != "$newfilename" ]; then
+            	mv out/$filename out/$newfilename
+           fi
+           sha1_s=`openssl sha1 out/$newfilename | awk '{ print $2 }'`
+           header="OC-Checksum:sha1:$sha1_s"
+           echo "::set-output name=header::$header"
+           echo "::set-output name=filename::$newfilename"
+           echo "::set-output name=path::out/$newfilename"
+           size=$(ls -l out/$newfilename | awk '{print $5}' )
+           echo $size
+           echo "::set-output name=size::$size"
+
+      - name: 上传
+        id: upload
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+          json_string='${{ secrets.CATAIDS }}'
+          cataId=$(echo $json_string | jq -r '.["${{ steps.downloading.outputs.folder }}"]')
+          ydypinfo="${{ secrets.YDYPCK }}"
+          account=${ydypinfo##*##}
+          auth=${ydypinfo%##*}
+          python upload_139.py --auth="$auth" --account="$account" --cataId="$cataId" --folder="out"
+
+      # - name: 第二种上传方式
+      #   id: upload
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   run: |
+      #     json_string='${{ secrets.CATAIDS }}'
+      #     cataId=$(echo $json_string | jq -r '.${{ steps.downloading.outputs.folder }}')
+      #     ydypinfo="${{ secrets.YDYPCK }}"
+      #     account=${ydypinfo##*##}
+      #     auth=${ydypinfo%##*}
+      #     chmod a+x 139uploader
+      #     ./139uploader --auth-token="$auth" --cata-id="$cataId" --file-path="${{ steps.encrypt.outputs.path }}"
+
+      # - name: 通过gofile转存
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   run: |
+      #     SERVER=$(curl -s https://api.gofile.io/getServer | jq  -r '.data|.server')
+      #     curl -F file=@${{ steps.encrypt.outputs.path }} -F "token=${{ secrets.GOFILE_TOKEN }}" -F "folderId=${{ secrets.GOFILE_FOLDERID }}" https://${SERVER}.gofile.io/uploadFile
+
+      
+      - name: 保存
+        id:  database
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+          python xiaobai.py --projet="${{ secrets.XIAOBAI_APP_URL }}" --appkey="${{ secrets.XIAOBAI_APP_KEY }}" --taskkey="${{ steps.downloading.outputs.taskkey }}" --act="del"
+          echo "::set-output name=status::ok"
+
+      - name: 再次开启下载
+        uses: benc-uk/workflow-dispatch@v1
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        with:
+          workflow: 0xiaobai2139
+          token: ${{ secrets.TOKEN }}
+          ref: main
+
+      - name: 通知失败结果
+        if:  failure()
+        run: |
+          curl --get "${{secrets.BARK_KEY}}" --data-urlencode "isArchive=0" --data-urlencode "title=上传失败" --data-urlencode "body=上传失败，请手动开启新的下载"
+
+      - name: 通知上传结果
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+          curl --get "${{secrets.BARK_KEY}}" --data-urlencode "isArchive=0" --data-urlencode "title=上传结果" --data-urlencode "body=${{ steps.downloading.outputs.filename }}上传成功"
+          
+      - name: 删除旧的运行记录
+        uses: Mattraks/delete-workflow-runs@v1.2.3
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 0
+          keep_minimum_runs: 0
