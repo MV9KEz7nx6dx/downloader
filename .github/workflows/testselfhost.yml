@@ -1,4 +1,4 @@
-name: 0xiaobai2139
+name: testselfhost
 on:
   repository_dispatch:
   workflow_dispatch:
@@ -124,13 +124,13 @@ jobs:
           python xiaobai.py --projet="${{ secrets.XIAOBAI_APP_URL }}" --appkey="${{ secrets.XIAOBAI_APP_KEY }}" --taskkey="${{ steps.downloading.outputs.taskkey }}" --act="del"
           echo "::set-output name=status::ok"
 
-      - name: 再次开启下载
-        uses: benc-uk/workflow-dispatch@v1
-        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-        with:
-          workflow: 0xiaobai2139
-          token: ${{ secrets.TOKEN }}
-          ref: main
+      # - name: 再次开启下载
+      #   uses: benc-uk/workflow-dispatch@v1
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   with:
+      #     workflow: 0xiaobai2139
+      #     token: ${{ secrets.TOKEN }}
+      #     ref: main
 
       - name: 通知失败结果
         if:  failure()
