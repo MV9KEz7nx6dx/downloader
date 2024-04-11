@@ -178,7 +178,6 @@ def upload_family_file(ufile):
     digest = calculate_md5(file_path)
     seqNo=generate_uuid()
     payload = json.dumps({"cloudID":args.cloudId,"path":args.path,"operation":0,"cloudType":1,"catalogType":3,"manualRename":2,"fileCount":1,"totalSize":file_size,"uploadContentList":[{"contentName":file_name,"contentSize":file_size,"digest":digest}],"seqNo":seqNo,"commonAccountInfo":{"account":args.account,"accountType":1}})
-    print(payload)
     timestamp = int(time.time())
     formatted_time = datetime.datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
     key = ''.join(random.choices(string.ascii_letters + string.digits, k=16))
