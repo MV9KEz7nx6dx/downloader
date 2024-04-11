@@ -212,7 +212,6 @@ def upload_family_file(ufile):
         'x-m4c-caller': 'PC'
     }      
     response = session.post(url = FAMILY_UPLOAD_URL, headers = headers, data = payload)
-    print(response.text)
     if response is None:
         return
     if response.status_code != 200:
