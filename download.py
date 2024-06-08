@@ -127,5 +127,5 @@ if __name__ == '__main__':
     #mycol.delete_one(x)
     urlinfo = info['url'].split("##");
     streamurl = direct_link_generator(urlinfo[0])
-    cmd = "aria2c --conf aria2.conf --header='User-Agent:AndroidDownloadManager/12 (Linux; U; Android 12; M2004J7AC Build/SP1A.210812.016)' --seed-time=0 -o "+urlinfo[1]+" -d downloads -c \""+streamurl+"\""
+    cmd = "aria2c --conf aria2.conf --seed-time=0 -o "+urlinfo[1]+" -d downloads -c \""+streamurl+"\""
     os.system(cmd)
