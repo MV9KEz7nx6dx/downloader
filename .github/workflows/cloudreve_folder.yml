@@ -21,6 +21,9 @@ jobs:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 
           
+      - name: Hide the inputs values to keep them private in the logs when running this workflow
+        uses: levibostian/action-hide-sensitive-inputs@v1
+          
       - name: 检查依赖程序
         run: |
             aria2c -v
