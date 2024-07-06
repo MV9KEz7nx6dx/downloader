@@ -50,7 +50,7 @@ jobs:
         run: |
           mkdir downloads
           #python transfer.py  --con="${{ secrets.DB_CONNECT }}" --isnow=0
-          aria2c --conf aria2.conf --seed-time=0 -o test.mp4 -d downloads -c "https://4v27df-my.sharepoint.com/personal/qinmai2_4v27df_onmicrosoft_com/_layouts/15/download.aspx?UniqueId=3c35d60e-51d6-4137-93ba-8aeac333b216&Translate=false&tempauth=v1.eyJzaXRlaWQiOiI3NGJlNzk5NS1lOTBjLTQwZjItODFiYy1jODBiMTBiNDg4NDIiLCJhcHBfZGlzcGxheW5hbWUiOiJxaW5nbWFpMiIsImFwcGlkIjoiMTUzYThmYzMtYzVlZC00MjlhLWFjMGEtMDVlOWJmNDk1YzRiIiwiYXVkIjoiMDAwMDAwMDMtMDAwMC0wZmYxLWNlMDAtMDAwMDAwMDAwMDAwLzR2MjdkZi1teS5zaGFyZXBvaW50LmNvbUBiYzUwNmJmYy1jYmE5LTQ2MDctYjQ5ZC1iMGIyZDc4NWZkOTYiLCJleHAiOiIxNzIwMjQ5NDcyIn0.CgoKBHNuaWQSAjY4EgsIhLe1mfHijj0QBRoOMjAuMTkwLjEzMi4xMDYqLHJ4Q3dLRVExaU9UWVV4ZCtoaE5lcmIrMXE3Q2did2ZTd251S1lLc1JoRlU9MKABOAFCEKE5jRv1kAAweDXvDQV0ALhKEGhhc2hlZHByb29mdG9rZW5yKTBoLmZ8bWVtYmVyc2hpcHwxMDAzMjAwMjk3ZDA2ZGQ1QGxpdmUuY29tegEyggESCfxrULypywdGEbSdsLLXhf2WmgECMjKiAR5xaW5tYWkyQDR2MjdkZi5vbm1pY3Jvc29mdC5jb22qARAxMDAzMjAwMjk3RDA2REQ1sgEOYWxsZmlsZXMud3JpdGXIAQE.3jR9s1CsnPlWGSqDV_heEaGGV4qzCTj0EQXSU01sGNE&ApiVersion=2.0"
+          aria2c --conf aria2.conf --seed-time=0 -o test.mp4 -d downloads -c "https://www.baidu.com"
           filename=$(ls downloads | head -n1)
           folder=$(sh folder.sh $filename)
           echo "::set-output name=path::downloads/$filename"
