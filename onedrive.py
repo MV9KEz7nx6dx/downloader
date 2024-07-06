@@ -83,6 +83,9 @@ class Onedrive():
                 self.config.read_file(f)
         except IOError:
             # 如果配置文件不存在，创建一个空的配置文件
+            if not os.path.exists("configs/onedrive.ini"):
+                # 创建文件夹及文件
+                os.makedirs(os.path.dirname("configs/onedrive.ini"), exist_ok=True)
             with open("configs/onedrive.ini", "w") as f:
                 self.config.write(f)
                 
