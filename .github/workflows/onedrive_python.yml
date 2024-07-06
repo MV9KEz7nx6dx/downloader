@@ -1,4 +1,4 @@
-name: 0upload to onedrive use python
+name: 0upload2onedrivepython
 on:
   repository_dispatch:
   workflow_dispatch:
@@ -21,13 +21,8 @@ jobs:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 
 
-      - name: Rclone Install
-        run: |
-            curl https://rclone.org/install.sh | sudo bash
-          
       - name: Check depends
         run: |
-            rclone -V
             aria2c -v
             node -v
             python -V
@@ -36,19 +31,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-           
-      - name: Config Rclone
-        run: |
-          printf "$RCLONE_ENV_FILE" >> ~/.config/rclone/rclone.conf
-        shell: bash
-        env:
-          RCLONE_ENV_FILE : ${{secrets.RCLONE_CONF_TESTJE}}
-               
-      - name: Set up Ipfs
-        uses: ibnesayeed/setup-ipfs@master
-        with:
-          ipfs_version: 0.20.0
-          run_daemon: true
         
       - name: install prerequisites
         run: |
@@ -100,10 +82,9 @@ jobs:
            echo "::set-output name=size::$size"
 
 
-      - name: rclone copy
+      - name: Upload
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
-          #rclone copy ${{ steps.encrypt.outputs.path }} lisi:/files/${{ steps.downloading.outputs.folder }}
           python onedrive.py --path="/files/${{ steps.downloading.outputs.folder }}" --clientID="${{ secrets.clientID }}" --clientSecret="${{ secrets.clientSecret }}" --refreshToken="${{ secrets.refreshToken }}" ${{ steps.encrypt.outputs.path }}
       
       - name: Save Data
@@ -117,7 +98,7 @@ jobs:
         uses: benc-uk/workflow-dispatch@v1
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         with:
-          workflow: 0encryptonmac
+          workflow: 0upload2onedrivepython
           token: ${{ secrets.TOKEN }}
           ref: main
 
@@ -126,18 +107,6 @@ jobs:
         run: |
           curl --get "${{secrets.BARK_KEY}}" --data-urlencode "isArchive=0" --data-urlencode "title=上传结果" --data-urlencode "body=${{ steps.downloading.outputs.filename }}上传成功"
           
-      # - name: Notify upload info to mqtt broker
-      #   if: steps.database.outputs.status != '' && !cancelled() && !failure()
-      #   uses: juhrlass/mqtt-action@master
-      #   with:
-      #     protocol: mqtt
-      #     host: broker-cn.emqx.io
-      #     port: 1883
-      #     topic: ${{ secrets.SYNC_TOPIC }}
-      #     message: 'ok'
-      #     username: ''
-      #     password: ''
-
       - name: Delete workflow runs
         uses: Mattraks/delete-workflow-runs@v1.2.3
         with:
