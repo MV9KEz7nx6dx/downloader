@@ -86,7 +86,7 @@ jobs:
       - name: Upload
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
-          python onedrive.py --path="/files/${{ steps.downloading.outputs.folder }}" --clientID="${{ secrets.clientID }}" --clientSecret="${{ secrets.clientSecret }}" --refreshToken="${{ secrets.refreshToken }}" ${{ steps.encrypt.outputs.path }}
+          python onedrive.py --path="/files/${{ steps.downloading.outputs.folder }}" --clientID="${{ secrets.CLIENTID }}" --clientSecret="${{ secrets.CLIENTSECRET }}" --refreshToken="${{ secrets.REFRESHTOKEN }}" ${{ steps.encrypt.outputs.path }}
       
       - name: Save Data
         id:  database
