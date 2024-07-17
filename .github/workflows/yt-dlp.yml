@@ -27,7 +27,7 @@ jobs:
     - name: install prerequisites
       run: |
         python -m pip install --upgrade pip wheel
-        pip install install requests cloudscraper pymongo pymongo[srv] pymongo[tls] certifi
+        pip install requests cloudscraper pymongo pymongo[srv] pymongo[tls] certifi
         
     - name: Setup yt-dlp
       uses: AnimMouse/setup-yt-dlp@v1

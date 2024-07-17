@@ -52,7 +52,7 @@ jobs:
       - name: Install prerequisites
         run: |
           python -m pip install --upgrade pip wheel
-          pip install install requests lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi
+          pip install requests lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi
       
       - name: Downloading
         id: downloading
