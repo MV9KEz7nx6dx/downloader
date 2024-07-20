@@ -43,12 +43,6 @@ jobs:
         shell: bash
         env:
           RCLONE_ENV_FILE : ${{secrets.RCLONE_CONF_TESTJE}}
-               
-      - name: Set up Ipfs
-        uses: ibnesayeed/setup-ipfs@master
-        with:
-          ipfs_version: 0.20.0
-          run_daemon: true
         
       - name: install prerequisites
         run: |
