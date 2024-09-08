@@ -22,9 +22,9 @@ jobs:
           echo "硬盘详情："
           df -h
           cd /System/Volumes/Data
-          du -d 1 -h
+          sudo du -d 1 -h
           sudo rm -rf /System/Volumes/Data/Library/Developer/Xcode/iOS DeviceSupport
-          du -d 1 -h
+          sudo du -d 1 -h
           echo "硬盘详情："
           df -h
        
