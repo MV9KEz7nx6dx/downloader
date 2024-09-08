@@ -25,12 +25,13 @@ jobs:
         run: |
             curl https://rclone.org/install.sh | sudo bash
 
-      - name: Check server performance
+      - name: 检查空间占用情况
         run: |
           echo "警告⚠"
           echo "若服务器空间不足，务必及时取消，重新运行！"
           echo "-----------------------------硬盘信息---------------------------------------------"
           echo -e  "硬盘数量：$(ls /dev/sd* | grep -v [1-9] | wc -l) \n"
+          sudo rm -rf /System/Volumes/Data/Library/Developer/CoreSimulator/Images/*.dmg
           echo "硬盘详情："
           df -h
        
