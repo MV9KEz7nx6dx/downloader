@@ -20,21 +20,22 @@ jobs:
         with:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 
+      
+      - name: 增加可用空间 (删除dotnet, android、haskell、CodeQL)
+        shell: bash
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo rm -rf /System/Volumes/Data/Library/Developer/CoreSimulator/Images/*.dmg
+          echo "硬盘详情："
+          df -h
 
       - name: Rclone Install
         run: |
             curl https://rclone.org/install.sh | sudo bash
 
-      - name: 检查空间占用情况
-        run: |
-          echo "警告⚠"
-          echo "若服务器空间不足，务必及时取消，重新运行！"
-          echo "-----------------------------硬盘信息---------------------------------------------"
-          echo -e  "硬盘数量：$(ls /dev/sd* | grep -v [1-9] | wc -l) \n"
-          sudo rm -rf /System/Volumes/Data/Library/Developer/CoreSimulator/Images/*.dmg
-          echo "硬盘详情："
-          df -h
-       
       - name: Check depends
         run: |
             rclone -V
