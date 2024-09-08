@@ -23,8 +23,8 @@ jobs:
           df -h
           #cd /System/Volumes/Data
           #sudo du -d 1 -h
-          #sudo rm -rf /System/Volumes/Data/Library/Developer/Xcode/iOS DeviceSupport
           #sudo du -d 1 -h
+          sudo rm -rf /System/Volumes/Data/Library/Developer/CoreSimulator/Images/*.dmg
           sudo ls -al /System/Volumes/Data/Library/Developer/CoreSimulator/Images
           echo "硬盘详情："
           df -h
