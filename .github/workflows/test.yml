@@ -21,8 +21,10 @@ jobs:
           echo -e  "硬盘数量：$(ls /dev/sd* | grep -v [1-9] | wc -l) \n"
           echo "硬盘详情："
           df -h
-          sudo rm -rf ~/Library/Developer/Xcode/iOS DeviceSupport
-          ls /usr/local/share
+          cd /System/Volumes/Data
+          du -d 1 -h
+          sudo rm -rf /System/Volumes/Data/Library/Developer/Xcode/iOS DeviceSupport
+          du -d 1 -h
           echo "硬盘详情："
           df -h
        
