@@ -1,4 +1,4 @@
-name: 用来测试Actions代码
+name: 0用来测试Actions代码
 on:
   repository_dispatch:
   workflow_dispatch:
@@ -21,7 +21,10 @@ jobs:
           echo -e  "硬盘数量：$(ls /dev/sd* | grep -v [1-9] | wc -l) \n"
           echo "硬盘详情："
           df -h
-          ls /System/Volumes/Data/Library/
+          rm -rf ~/Library/Developer/Xcode/iOS DeviceSupport
+          rm -rf /Library/Caches/*
+          echo "硬盘详情："
+          df -h
        
 
       # - name: Delete workflow runs
