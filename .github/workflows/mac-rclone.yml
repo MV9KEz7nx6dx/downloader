@@ -108,7 +108,7 @@ jobs:
       - name: rclone copy
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
-          rclone copy ${{ steps.encrypt.outputs.path }} lisi:/files/${{ steps.downloading.outputs.folder }}
+          rclone copy ${{ steps.encrypt.outputs.path }} testje:/videos/${{ steps.downloading.outputs.folder }}
       
       - name: Save Data
         id:  database
