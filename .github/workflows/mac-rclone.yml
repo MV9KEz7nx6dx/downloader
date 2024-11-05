@@ -104,6 +104,28 @@ jobs:
            echo $size
            echo "::set-output name=size::$size"
 
+      # - name: Encrypt
+      #   id: encrypt
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   run: |
+      #      ${{ github.workspace }}/rclone_crypt_mac encrypt -m standard -e base64 -p '${{ secrets.RP }}' -s '${{ secrets.RS }}' '${{ github.workspace }}/downloads/' -o '${{ github.workspace }}/out/'
+      #      filename=$(ls out | head -n1)
+      #      extension=$(awk 'BEGIN{srand();}{a[NR]=$0}END{print a[int(rand()*NR)+1]}' suffixes | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+      #      filename_no_suffix="${filename%.*}"
+      #      #extension="${filename##*.}"
+      #      newfilename="$filename_no_suffix"."$extension"
+      #      if [ "$filename" != "$newfilename" ]; then
+      #       	mv out/$filename out/$newfilename
+      #      fi
+      #      sha1_s=`openssl sha1 out/$newfilename | awk '{ print $2 }'`
+      #      header="OC-Checksum:sha1:$sha1_s"
+      #      echo "::set-output name=header::$header"
+      #      echo "::set-output name=filename::$newfilename"
+      #      echo "::set-output name=path::out/$newfilename"
+      #      size=$(ls -l out/$newfilename | awk '{print $5}' )
+      #      echo $size
+      #      echo "::set-output name=size::$size"
+
 
       - name: rclone copy
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
