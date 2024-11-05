@@ -108,8 +108,8 @@ jobs:
       #   id: encrypt
       #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       #   run: |
-      #      ${{ github.workspace }}/rclone_crypt_mac encrypt -m standard -e base64 -p '${{ secrets.RP }}' -s '${{ secrets.RS }}' '${{ github.workspace }}/downloads/' -o '${{ github.workspace }}/out/'
       #      filename=$(ls out | head -n1)
+      #      ${{ github.workspace }}/rclone_crypt_mac encrypt -m standard -e base64 -p '${{ secrets.RP }}' -s '${{ secrets.RS }}' ${{ github.workspace }}/downloads/$filename -o '${{ github.workspace }}/out/'
       #      extension=$(awk 'BEGIN{srand();}{a[NR]=$0}END{print a[int(rand()*NR)+1]}' suffixes | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
       #      filename_no_suffix="${filename%.*}"
       #      #extension="${filename##*.}"
