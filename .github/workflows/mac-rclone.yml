@@ -130,7 +130,7 @@ jobs:
       - name: rclone copy
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
-          rclone copy ${{ steps.downloading.outputs.path }} files:/${{ steps.downloading.outputs.folder }} --transfers 8  --cache-chunk-size 20M  --bwlimit 120M --max-size 100G
+          rclone copy ${{ steps.downloading.outputs.path }} files:/${{ steps.downloading.outputs.folder }} 
       
       - name: Save Data
         id:  database
