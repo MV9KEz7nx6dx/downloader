@@ -21,8 +21,8 @@ jobs:
         fetch-depth: 0 
     
     - name: 增加可用空间 (删除dotnet, android、haskell、CodeQL)
-        shell: bash
-        run: |
+      shell: bash
+      run: |
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/local/lib/android
           sudo rm -rf /opt/ghc
