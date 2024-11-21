@@ -5,26 +5,22 @@ import json
 import mimetypes
 import argparse
 from urllib.parse import urlparse
-
+import certifi
+import pymongo
+import sys
+from bson.json_util import dumps, loads
 
 parser = argparse.ArgumentParser(description='webdav信息')
-parser.add_argument("--projet", help="deta.space的project_id", default="")
-parser.add_argument("--apikey", help="deta.space的x_api_key", default="")
+parser.add_argument("--con", help="Connection url", default="")
 parser.add_argument("--name", help="要上传的云盘名称", default="")
 parser.add_argument("--filename", help="要上传的文件名称", default="")
 parser.add_argument("--filepath", help="要上传的文件夹", default="/videos/temp")
 args = parser.parse_args()
 
-DETA_DATAKEY=args.apikey
-DETA_PROJECT_ID=args.projet
 
-QUERY_URL=f"https://database.deta.sh/v1/{DETA_PROJECT_ID}/cloudreve/query"
-UPDATE_URL=f"https://database.deta.sh/v1/{DETA_PROJECT_ID}/cloudreve/items/"
-
-deta_headers = {
-    'X-API-Key':DETA_DATAKEY,
-    'Content-Type':'application/json'
-}
+client = pymongo.MongoClient(args.con, tlsCAFile=certifi.where())
+mydb = client["mydb"]
+mycol = mydb["cloudreves"]
 
 def get_file_info(file_path):
     # 获取文件大小
@@ -105,27 +101,19 @@ if __name__ == "__main__":
     file_path = "out/"+args.filename  # 替换为实际的文件路径
     file_size, modification_time, file_name = get_file_info(file_path)
     mime_type, encoding = mimetypes.guess_type(file_path)
-    
-    payload = json.dumps({
-        "query": [{"name": args.name}],
-        "limit": 1
-    })
-    tasks_req = requests.post(QUERY_URL,headers=deta_headers,data=payload,verify=False)
-    tasks=json.loads(tasks_req.text)
-    if len(tasks['items']) < 1:
+
+    x = mycol.find_one({"name": args.name})
+    if x is None:
+        print("None")
         quit()
-    task=tasks['items'][0]
-    base_url= task["url"]
+    
+    info = loads(dumps(x))
+    base_url= info["url"]
     parsed_url = urlparse(base_url)
     host = parsed_url.netloc 
-    cloudreve_cookie=get_cloudreve(task)
+    cloudreve_cookie=get_cloudreve(info)
     #更新cookie 
-    putpayload = json.dumps({
-        "set" : {
-            "cookie": cloudreve_cookie,
-        }
-    })
-    put_req = requests.patch(UPDATE_URL+task["key"],headers=deta_headers,data=putpayload,verify=False)
+    ux = mycol.find_one_and_update({'name': args.name}, {'$set': {'cookie': cloudreve_cookie}})
     #更新cookie结束
     url = base_url+"/api/v3/file/upload"
     headers = {
