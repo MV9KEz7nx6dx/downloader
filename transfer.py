@@ -118,7 +118,7 @@ if __name__ == '__main__':
 
 
     #x = mycol.find_one({"isnow": args.isnow})
-    x = mycol.find_one_and_update({'isnow': args.isnow}, {'$set': {'isnow': 10}})
+    x = mycol.find_one_and_update({'isnow': args.isnow}, {'$set': {'isnow': 10}},sort=[('_id', pymongo.DESCENDING)]))
     if x is None:
         print("None")
         quit()
