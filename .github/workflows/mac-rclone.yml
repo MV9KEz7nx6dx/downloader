@@ -162,8 +162,8 @@ jobs:
       - name: 通知上传结果
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
-          #curl --request GET --url "${{secrets.BARK_KEY}}?title=上传结果&icon=https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png&group=Actions&body=${{ steps.downloading.outputs.filename }}上传成功&isArchive=0"
-          curl --get "${{secrets.BARK_KEY}}" --data-urlencode "isArchive=0" --data-urlencode "icon=https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png" --data-urlencode "group=Actions" --data-urlencode "title=上传结果" --data-urlencode "body=${{ steps.downloading.outputs.filename }}上传成功"
+          wget -O /dev/null -o /dev/null "${{secrets.BARK_KEY}}?title=上传结果&icon=https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png&group=Actions&body=${{ steps.downloading.outputs.filename }}上传成功&isArchive=0"
+          #curl --get "${{secrets.BARK_KEY}}" --data-urlencode "isArchive=0" --data-urlencode "icon=https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png" --data-urlencode "group=Actions" --data-urlencode "title=上传结果" --data-urlencode "body=${{ steps.downloading.outputs.filename }}上传成功"
           
       # - name: Notify upload info to mqtt broker
       #   if: steps.database.outputs.status != '' && !cancelled() && !failure()
