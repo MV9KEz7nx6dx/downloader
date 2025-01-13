@@ -1,4 +1,4 @@
-name: Copy To Rclone on Mac
+name: 0encryptonmac-p
 on:
   repository_dispatch:
   workflow_dispatch:
