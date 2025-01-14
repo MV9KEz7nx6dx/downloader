@@ -54,6 +54,10 @@ jobs:
         shell: bash
         env:
           RCLONE_ENV_FILE : ${{secrets.RCLONE_CONF}}
+          
+      - name: install postgresql
+        run: |
+          brew install postgresql
         
       - name: install prerequisites
         run: |
@@ -64,7 +68,7 @@ jobs:
         id: downloading
         run: |
           mkdir downloads
-          python task-p.py --opt="query" --con="${{ secrets.DB_P_CONNECT }}" --isnow=0
+          python task-p.py --opt="query" --con="${{ secrets.DB_P_CONNECT }}"
           filename=$(ls downloads | head -n1)
           folder=$(sh folder.sh $filename)
           echo "::set-output name=path::downloads/$filename"
@@ -83,7 +87,7 @@ jobs:
         id:  database
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
-          python task-p.py --opt="delete" --con="${{ secrets.DB_P_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" 
+          python task-p.py --opt="delete" --con="${{ secrets.DB_P_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}"
           echo "::set-output name=status::ok"
 
 
