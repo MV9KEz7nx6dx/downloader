@@ -48,25 +48,12 @@ jobs:
         uses: dcarbone/install-jq-action@v2
         with:
           version: '1.7'
-          
-      - name: 安装IPFS
-        uses: ibnesayeed/setup-ipfs@master
-        with:
-          ipfs_version: 0.20.0
-          run_daemon: true
         
       - name: 安装需要的Python依赖
         run: |
           python -m pip install --upgrade pip wheel
           pip install lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi xmltodict
           
-      - name: 下载加密程序
-        run: |
-          curl -L -o dist.tar.gz https://github.com/ykxVK8yL5L/alist-encrypt/releases/download/0.0.2/dist.tar.gz
-          
-      - name: 解压加密程序
-        run: |
-          tar -xzf dist.tar.gz
           
       - name: 下载
         id: downloading
@@ -82,39 +69,18 @@ jobs:
           echo $size
           echo "::set-output name=size::$size"
           
-      - name: 加密
-        id: encrypt
-        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-        run: |
-           ${{ github.workspace }}/build/alist-encrypt-macos '${{ secrets.ALIST_ENCRYPT_PASSWORD }}' aesctr enc '${{ github.workspace }}/downloads/' '${{ github.workspace }}/out/' encName
-           filename=$(ls out | head -n1)
-           extension=$(awk 'BEGIN{srand();}{a[NR]=$0}END{print a[int(rand()*NR)+1]}' suffixes | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-           filename_no_suffix="${filename%.*}"
-           #extension="${filename##*.}"
-           newfilename="$filename_no_suffix"."$extension"
-           if [ "$filename" != "$newfilename" ]; then
-            	mv out/$filename out/$newfilename
-           fi
-           sha1_s=`openssl sha1 out/$newfilename | awk '{ print $2 }'`
-           header="OC-Checksum:sha1:$sha1_s"
-           echo "::set-output name=header::$header"
-           echo "::set-output name=filename::$newfilename"
-           echo "::set-output name=path::out/$newfilename"
-           size=$(ls -l out/$newfilename | awk '{print $5}' )
-           echo $size
-           echo "::set-output name=size::$size"
-
 
       - name: 上传到移动盘
         id: upload
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
           json_string='${{ secrets.CATAIDS }}'
-          cataId=$(echo $json_string | jq -r '.["${{ steps.downloading.outputs.folder }}"]')
+          #cataId=$(echo $json_string | jq -r '.["${{ steps.downloading.outputs.folder }}"]')
+          cataId=${{ secrets.CAIUYUNSIGN_CATAID }}
           ydypinfo="${{ secrets.YDYPCK }}"
           account=${ydypinfo##*##}
           auth=${ydypinfo%##*}
-          python upload_139.py --auth="$auth" --account="$account" --cataId="$cataId" --folder="out"
+          python upload_139.py --auth="$auth" --account="$account" --cataId="$cataId" --folder="downloads"
       
       # - name: 保存记录
       #   id:  database
@@ -123,18 +89,18 @@ jobs:
       #     python savet.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/testje/videos/temp/${{ steps.downloading.outputs.filename }}"
       #     echo "::set-output name=status::ok"
 
-      - name: 再次开启下载
-        uses: benc-uk/workflow-dispatch@v1
-        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-        with:
-          workflow: 0save139
-          token: ${{ secrets.TOKEN }}
-          ref: main
+      # - name: 再次开启下载
+      #   uses: benc-uk/workflow-dispatch@v1
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   with:
+      #     workflow: 0save139
+      #     token: ${{ secrets.TOKEN }}
+      #     ref: main
 
-      - name: 通知上传结果
-        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-        run: |
-          curl --get "${{secrets.BARK_KEY}}" --data-urlencode "isArchive=0" --data-urlencode "title=上传结果" --data-urlencode "body=${{ steps.downloading.outputs.filename }}上传成功"
+      # - name: 通知上传结果
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   run: |
+      #     curl --get "${{secrets.BARK_KEY}}" --data-urlencode "isArchive=0" --data-urlencode "title=上传结果" --data-urlencode "body=${{ steps.downloading.outputs.filename }}上传成功"
           
       # - name: Notify upload info to mqtt broker
       #   if: steps.database.outputs.status != '' && !cancelled() && !failure()
