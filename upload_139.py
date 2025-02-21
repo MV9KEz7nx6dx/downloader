@@ -94,7 +94,7 @@ def upload_file(ufile):
     if int(file_size)>1024*1024*1024*30:
         chunk_size = 1024 * 1024 * 500
     digest = calculate_md5(file_path)
-    payload = json.dumps({"manualRename":2,"operation":0,"fileCount":1,"totalSize":file_size,"uploadContentList":[{"contentName":file_name,"contentSize":file_size,"digest":digest}],"parentCatalogID":args.cataId,"newCatalogName":"","path":"","commonAccountInfo":{"account":args.account,"accountType":1}})
+    payload = json.dumps({"manualRename":2,"operation":0,"fileCount":1,"totalSize":file_size,"uploadContentList":[{"contentName":file_name,"contentSize":file_size,"digest":digest}],"parentCatalogID":'',"newCatalogName":"","path":"","commonAccountInfo":{"account":args.account,"accountType":1}})
     timestamp = int(time.time())
     formatted_time = datetime.datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
     key = ''.join(random.choices(string.ascii_letters + string.digits, k=16))
