@@ -149,6 +149,7 @@ def updata_file(ufile):
         return
     if response.status_code != 200:
         return print('上传失败')
+    print(response.text)
     result = xmltodict.parse(response.text)
     is_need_upload = 0
     if int(result['result']['uploadResult']['newContentIDList']['@length'])==1:
