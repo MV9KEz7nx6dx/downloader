@@ -32,9 +32,29 @@ parser.add_argument("--cloudId", help="上传到家庭云的ID", default="")
 parser.add_argument("--path", help="上传到家庭云的PATH", default="")
 args = parser.parse_args()
 
-UA = 'Mozilla/5.0 (Linux; Android 13; 2304FPN6DC Build/TKQ1.220829.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/115.0.5790.40 Mobile Safari/537.36 MCloudApp/10.1.0'
-UPLOAD_URL = 'https://yun.139.com/orchestration/personalCloud/uploadAndDownload/v1.0/pcUploadFileRequest'
+
 FAMILY_UPLOAD_URL = 'https://yun.139.com/orchestration/familyCloud-rebuild/content/v1.0/getFileUploadURL'
+UA = 'Mozilla/5.0 (Linux; Android 13; 2304FPN6DC Build/TKQ1.220829.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/115.0.5790.40 Mobile Safari/537.36 MCloudApp/10.1.0'
+UPLOAD_URL = 'http://ose.caiyun.feixin.10086.cn/richlifeApp/devapp/IUploadAndDownload'
+
+headers = {
+    'x-huawei-uploadSrc': '1',
+    'x-ClientOprType': '11',
+    'Connection': 'keep-alive',
+    'x-NetType': '6',
+    'x-DeviceInfo': '6|127.0.0.1|1|10.0.1|Xiaomi|M2012K10C|CB63218727431865A48E691BFFDB49A1|02-00-00-00-00-00|android 11|1080X2272|zh||||032|',
+    'x-huawei-channelSrc': '10000023',
+    'x-MM-Source': '032',
+    'x-SvcType': '1',
+    'APP_NUMBER': args.account,
+    'Authorization': 'Basic '+args.auth,
+    'X-Tingyun-Id': 'p35OnrDoP8k;c=2;r=1955442920;u=43ee994e8c3a6057970124db00b2442c::8B3D3F05462B6E4C',
+    'Host': 'ose.caiyun.feixin.10086.cn',
+    'User-Agent': 'okhttp/3.11.0',
+    'Content-Type': 'application/xml; charset=UTF-8',
+    'Accept': '*/*'
+}
+
 
 def Yun139Sign(timestamp, key, data):
     #去除多余空格
@@ -86,7 +106,8 @@ def calculate_md5(file_path):
     return file_hash.hexdigest()
 
 
-def upload_file(ufile):
+
+def updata_file(ufile):
     file_path = ufile[0]
     file_name = ufile[1]
     file_size = ufile[2]
@@ -94,51 +115,49 @@ def upload_file(ufile):
     if int(file_size)>1024*1024*1024*30:
         chunk_size = 1024 * 1024 * 500
     digest = calculate_md5(file_path)
-    payload = json.dumps({"manualRename":2,"operation":0,"fileCount":1,"totalSize":file_size,"uploadContentList":[{"contentName":file_name,"contentSize":file_size,"digest":digest}],"parentCatalogID":args.cataId,"newCatalogName":"","path":"","commonAccountInfo":{"account":args.account,"accountType":1}})
-    timestamp = int(time.time())
-    formatted_time = datetime.datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
-    key = ''.join(random.choices(string.ascii_letters + string.digits, k=16))
-    sign = Yun139Sign(formatted_time, key,payload)
-    headers = {
-        'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
-        'mcloud-route': '001',
-        'x-yun-module-type': '100',
-        'x-yun-app-channel': '10000034',
-        'Authorization': 'Basic '+args.auth,
-        'x-huawei-channelSrc': '10000034',
-        "x-DeviceInfo":"||9|6.6.0|chrome|95.0.4638.69|uwIy75obnsRPIwlJSd7D9GhUvFwG96ce||macos 10.15.2||zh-CN|||",
-        'caller': 'web',
-        'x-yun-channel-source': '10000034',
-        'x-inner-ntwk': '2',
-        'sec-ch-ua-platform': '"macOS"',
-        'CMS-DEVICE': 'default',
-        'mcloud-client': '10701',
-        'mcloud-channel': '1000101',
-        'mcloud-sign': formatted_time + "," + key + "," + sign,
-        'x-m4c-src': '10002',
-        'INNER-HCY-ROUTER-HTTPS': '1',
-        'mcloud-version': '7.13.1',
-        'Content-Type': 'application/json;charset=UTF-8',
-        'x-SvcType': '1',
-        'Accept': 'application/json, text/plain, */*',
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'x-yun-api-version': 'v1',
-        'sec-ch-ua-mobile': '?0',
-        'Referer': 'https://yun.139.com/w/',
-        'x-yun-svc-type': '1',
-        'x-m4c-caller': 'PC'
-    }      
-    response = session.post(url = UPLOAD_URL, headers = headers, data = payload)
+    payload = '''
+                <pcUploadFileRequest>
+                    <ownerMSISDN>{phone}</ownerMSISDN>
+                    <fileCount>1</fileCount>
+                    <totalSize>0</totalSize>
+                    <uploadContentList length="1">
+                        <uploadContentInfo>
+                            <comlexFlag>0</comlexFlag>
+                            <contentDesc><![CDATA[]]></contentDesc>
+                            <contentName><![CDATA[{filename}]]></contentName>
+                            <contentSize>{filesize}</contentSize>
+                            <contentTAGList></contentTAGList>
+                            <digest>{digest}</digest>
+                            <exif/>
+                            <fileEtag>0</fileEtag>
+                            <fileVersion>0</fileVersion>
+                            <updateContentID></updateContentID>
+                        </uploadContentInfo>
+                    </uploadContentList>
+                    <newCatalogName></newCatalogName>
+                    <parentCatalogID>{parent_catalogid}</parentCatalogID>
+                    <operation>0</operation>
+                    <path></path>
+                    <manualRename>2</manualRename>
+                    <autoCreatePath length="0"/>
+                    <tagID></tagID>
+                    <tagType></tagType>
+                </pcUploadFileRequest>
+            '''.format(phone = args.account,filename=file_name,filesize=file_size,digest=digest,parent_catalogid = args.cataId)
+    response = requests.post(url = UPLOAD_URL, headers = headers, data = payload)
     if response is None:
         return
     if response.status_code != 200:
         return print('上传失败')
-    print(response.text)
-    result = json.loads(response.text)
-    is_need_upload = int(result['data']['uploadResult']['newContentIDList'][0]['isNeedUpload'])
+    result = xmltodict.parse(response.text)
+    is_need_upload = 0
+    if int(result['result']['uploadResult']['newContentIDList']['@length'])==1:
+        is_need_upload = int(result['result']['uploadResult']['newContentIDList']['newContent']['isNeedUpload'])
+    else:
+        is_need_upload = int(result['result']['uploadResult']['newContentIDList']['newContent'][0]['isNeedUpload'])
     if is_need_upload ==1:
-        upload_url = result['data']['uploadResult']['redirectionUrl']
-        upload_id = result['data']['uploadResult']['uploadTaskID']
+        upload_url = result['result']['uploadResult']['redirectionUrl']
+        upload_id = result['result']['uploadResult']['uploadTaskID']
         with open(file_path, "rb") as file:
             total_size = int(file_size)
             offset = 0
@@ -152,22 +171,12 @@ def upload_file(ufile):
                     "rangeType": "0",
                     "Content-Type": f"*/*;name={parse.quote(file_name)}"
                 }
-                max_retries = 3
-                retry_count = 0
-                while retry_count < max_retries:
-                    try:
-                        up_response = session.post(url=upload_url, headers=up_headers, data=up_data, timeout=600)
-                        if up_response.status_code == 200:
-                            print(f"Uploaded chunk {offset}-{offset + len(up_data) - 1}")
-                            break  # 如果上传成功，跳出循环
-                        else:
-                            print(f"Failed to upload chunk {offset}-{offset + len(up_data) - 1}")
-                    except Exception as e:
-                        print(f"Error occurred while uploading chunk: {e}")
-                    time.sleep(1)  
-                    retry_count += 1
+                up_response = requests.post(url = upload_url, headers = up_headers, data = up_data)
+                if up_response.status_code == 200:
+                    print(f"Uploaded chunk {offset}-{offset + len(up_data) - 1}")
+                else:
+                    print(f"Failed to upload chunk {offset}-{offset + len(up_data) - 1}")
                 offset += len(up_data)
-
 
 def upload_family_file(ufile):
     file_path = ufile[0]
