@@ -107,7 +107,7 @@ def calculate_md5(file_path):
 
 
 
-def updata_file(ufile):
+def upload_file(ufile):
     file_path = ufile[0]
     file_name = ufile[1]
     file_size = ufile[2]
