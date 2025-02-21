@@ -133,6 +133,7 @@ def upload_file(ufile):
         return
     if response.status_code != 200:
         return print('上传失败')
+    print(response.text)
     result = json.loads(response.text)
     is_need_upload = int(result['data']['uploadResult']['newContentIDList'][0]['isNeedUpload'])
     if is_need_upload ==1:
