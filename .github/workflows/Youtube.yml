@@ -21,7 +21,7 @@ jobs:
         run: |
           mkdir out
           cd out
-          yt-dlp -f bestvideo+bestaudio -S ext:mp4:m4a --downloader aria2c ${{ github.event.inputs.download_url }}
+          yt-dlp -f bestvideo+bestaudio -S -4 ext:mp4:m4a --downloader aria2c ${{ github.event.inputs.download_url }}
 
       - name: Downloading
         id: downloading
