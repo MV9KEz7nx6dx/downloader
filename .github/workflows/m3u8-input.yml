@@ -47,7 +47,15 @@ jobs:
       run: |
         python -m pip install --upgrade pip wheel
         pip install requests cloudscraper pymongo pymongo[srv] pymongo[tls] certifi
-    - uses: FedericoCarboni/setup-ffmpeg@v1
+        
+    - uses: FedericoCarboni/setup-ffmpeg@v3
+      id: setup-ffmpeg
+      with:
+        ffmpeg-version: release
+        architecture: ''
+        linking-type: static
+        github-token: ${{ github.server_url == 'https://github.com' && github.token || '' }}
+      
     - name: Downloading
       id: downloading
       run: |
