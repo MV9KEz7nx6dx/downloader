@@ -59,7 +59,10 @@ jobs:
         python -m pip install --upgrade pip wheel
         pip install requests cloudscraper pymongo pymongo[srv] pymongo[tls] certifi
         
-    - uses: FedericoCarboni/setup-ffmpeg@v3
+    - name: Setup FFmpeg
+      uses: AnimMouse/setup-ffmpeg@v1
+      with:
+        version: 7.0.2
     
     - name: Downloading
       id: downloading
