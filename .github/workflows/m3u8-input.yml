@@ -39,9 +39,9 @@ jobs:
     - name: Config Rclone
       run: |
         printf "$RCLONE_ENV_FILE" >> ~/.config/rclone/rclone.conf
-        shell: bash
-        env:
-          RCLONE_ENV_FILE : ${{secrets.RCLONE_CONF_TESTJE}}
+      shell: bash
+      env:
+        RCLONE_ENV_FILE : ${{secrets.RCLONE_CONF_TESTJE}}
         
     - name: install prerequisites
       run: |
