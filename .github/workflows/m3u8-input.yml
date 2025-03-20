@@ -19,10 +19,29 @@ jobs:
       with:
         persist-credentials: false 
         fetch-depth: 0 
+
+    - name: Rclone Install
+      run: |
+          curl https://rclone.org/install.sh | sudo bash
+
+    - name: Check depends
+      run: |
+          rclone -V
+          aria2c -v
+          node -v
+          python -V
+            
     - name: Set up Python 3.9
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+          python-version: 3.9
+           
+    - name: Config Rclone
+      run: |
+        printf "$RCLONE_ENV_FILE" >> ~/.config/rclone/rclone.conf
+        shell: bash
+        env:
+          RCLONE_ENV_FILE : ${{secrets.RCLONE_CONF_TESTJE}}
         
     - name: install prerequisites
       run: |
@@ -43,34 +62,10 @@ jobs:
         size=$(ls -l video/$filename | awk '{print $5}' )
         echo "::set-output name=size::$size"
        
-    - uses: ykxVK8yL5L/add-to-web3@v1.5
-      id: web3
-      if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-      with:
-        web3_token: ${{ secrets.WEB3_STORAGE_TOKEN }}
-        path_to_add: "${{ steps.downloading.outputs.path }}" 
-        file_name: "${{ steps.downloading.outputs.filename }}" 
-        wrap_with_directory: true
-        
-    - name: Save Data
-      id:  database
+    - name: rclone copy
       if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
       run: |
-        python save.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="${{ steps.web3.outputs.cid }}"
-        echo "::set-output name=status::ok"
-
-
-    - name: Notify upload info to mqtt broker
-      if: steps.database.outputs.status != '' && !cancelled() && !failure()
-      uses: juhrlass/mqtt-action@master
-      with:
-        protocol: mqtt
-        host: broker-cn.emqx.io
-        port: 1883
-        topic: ${{ secrets.SYNC_TOPIC }}
-        message: 'ok'
-        username: ''
-        password: ''
+        rclone copy ${{ steps.downloading.outputs.path }} files:/${{ steps.downloading.outputs.folder }} 
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@main
