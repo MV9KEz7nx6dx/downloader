@@ -37,6 +37,7 @@ jobs:
 
     - name: Check depends
       run: |
+          uname -a
           rclone -V
           aria2c -v
           node -v
@@ -62,7 +63,7 @@ jobs:
     - name: Setup FFmpeg
       uses: AnimMouse/setup-ffmpeg@v1
       with:
-        version: 7.0.2
+        version: 71
     
     - name: Downloading
       id: downloading
