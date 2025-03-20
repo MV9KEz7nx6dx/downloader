@@ -13,12 +13,23 @@ env:
   FILE_PATH: 'downloads'
 jobs:
   m3u8download:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
       with:
         persist-credentials: false 
         fetch-depth: 0 
+        
+    - name: 增加可用空间 (删除dotnet, android、haskell、CodeQL)
+      shell: bash
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /usr/local/lib/android
+        sudo rm -rf /opt/ghc
+        sudo rm -rf /opt/hostedtoolcache/CodeQL
+        sudo rm -rf /System/Volumes/Data/Library/Developer/CoreSimulator/Images/*.dmg
+        echo "硬盘详情："
+        df -h
 
     - name: Rclone Install
       run: |
