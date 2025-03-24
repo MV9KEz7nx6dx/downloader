@@ -29,7 +29,6 @@ jobs:
           sudo rm -rf /opt/ghc
           sudo rm -rf /opt/hostedtoolcache/CodeQL
           sudo rm -rf /System/Volumes/Data/Library/Developer/CoreSimulator/Images/*.dmg
-          pwd
           echo "硬盘详情："
           df -h
 
