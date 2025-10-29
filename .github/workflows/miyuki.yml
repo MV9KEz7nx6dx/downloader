@@ -1,0 +1,184 @@
+name: 0miyuki
+on:
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      Url:
+        description: 'Download Url'
+        required: false
+        default: 'false'
+
+env:
+  FILE_PATH: 'downloads'
+  
+jobs:
+  build:
+    runs-on: macos-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: true # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 
+      
+      - name: 增加可用空间 (删除dotnet, android、haskell、CodeQL)
+        shell: bash
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo rm -rf /System/Volumes/Data/Library/Developer/CoreSimulator/Images/*.dmg
+          echo "硬盘详情："
+          df -h
+
+      - name: Rclone Install
+        run: |
+            curl https://rclone.org/install.sh | sudo bash
+
+      - name: Check depends
+        run: |
+            rclone -V
+            aria2c -v
+            node -v
+            python -V
+            
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+           
+      - name: Config Rclone
+        run: |
+          printf "$RCLONE_ENV_FILE" >> ~/.config/rclone/rclone.conf
+        shell: bash
+        env:
+          RCLONE_ENV_FILE : ${{secrets.RCLONE_CONF_TESTJE}}
+        
+      - name: install prerequisites
+        run: |
+          python -m pip install --upgrade pip wheel
+          pip install lk21==1.5.61 pymongo pymongo[srv] pymongo[tls] certifi curl_cffi
+          
+      - name: Download remote archive
+        run: |
+          git clone https://github.com/shanyou0815/MissAV-Downloader-New
+          
+
+      - name: Downloading
+        id: downloading
+        run: |
+          python MissAV-Downloader-New/miyuki/miyuki-new.py -urls ""
+          # mkdir downloads
+          # python transfer.py  --con="${{ secrets.DB_CONNECT }}" --isnow=0
+          filename=$(ls movies_folder_miyuki | head -n1)
+          folder=$(sh folder.sh $filename)
+          echo "::set-output name=path::movies_folder_miyuki/$filename"
+          echo "::set-output name=filename::$filename"
+          echo "::set-output name=folder::$folder"
+          size=$(ls -l movies_folder_miyuki/$filename | awk '{print $5}' )
+          echo $size
+          echo "::set-output name=size::$size"
+          
+      # - name: Encrypt
+      #   id: encrypt
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   run: |
+      #      ${{ github.workspace }}/build/alist-encrypt-macos '${{ secrets.ALIST_ENCRYPT_PASSWORD }}' aesctr enc '${{ github.workspace }}/downloads/' '${{ github.workspace }}/out/' encName
+      #      filename=$(ls out | head -n1)
+      #      extension=$(awk 'BEGIN{srand();}{a[NR]=$0}END{print a[int(rand()*NR)+1]}' suffixes | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+      #      filename_no_suffix="${filename%.*}"
+      #      #extension="${filename##*.}"
+      #      newfilename="$filename_no_suffix"."$extension"
+      #      if [ "$filename" != "$newfilename" ]; then
+      #       	mv out/$filename out/$newfilename
+      #      fi
+      #      sha1_s=`openssl sha1 out/$newfilename | awk '{ print $2 }'`
+      #      header="OC-Checksum:sha1:$sha1_s"
+      #      echo "::set-output name=header::$header"
+      #      echo "::set-output name=filename::$newfilename"
+      #      echo "::set-output name=path::out/$newfilename"
+      #      size=$(ls -l out/$newfilename | awk '{print $5}' )
+      #      echo $size
+      #      echo "::set-output name=size::$size"
+
+      # - name: Encrypt
+      #   id: encrypt
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   run: |
+      #      filename=$(ls out | head -n1)
+      #      ${{ github.workspace }}/rclone_crypt_mac encrypt -m standard -e base64 -p '${{ secrets.RP }}' -s '${{ secrets.RS }}' ${{ github.workspace }}/downloads/$filename -o '${{ github.workspace }}/out/'
+      #      extension=$(awk 'BEGIN{srand();}{a[NR]=$0}END{print a[int(rand()*NR)+1]}' suffixes | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+      #      filename_no_suffix="${filename%.*}"
+      #      #extension="${filename##*.}"
+      #      newfilename="$filename_no_suffix"."$extension"
+      #      if [ "$filename" != "$newfilename" ]; then
+      #       	mv out/$filename out/$newfilename
+      #      fi
+      #      sha1_s=`openssl sha1 out/$newfilename | awk '{ print $2 }'`
+      #      header="OC-Checksum:sha1:$sha1_s"
+      #      echo "::set-output name=header::$header"
+      #      echo "::set-output name=filename::$newfilename"
+      #      echo "::set-output name=path::out/$newfilename"
+      #      size=$(ls -l out/$newfilename | awk '{print $5}' )
+      #      echo $size
+      #      echo "::set-output name=size::$size"
+
+
+      - name: rclone copy
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+          rclone copy ${{ steps.downloading.outputs.path }} files:/leak
+      
+      # - name: Save Data
+      #   id:  database
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   run: |
+      #     python savet.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/zhangsan/files/${{ steps.downloading.outputs.folder }}/${{ steps.downloading.outputs.filename }}"
+      #     echo "::set-output name=status::ok"
+
+      # - name: Download another right now
+      #   uses: benc-uk/workflow-dispatch@v1
+      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+      #   with:
+      #     workflow: mac-rclone.yml
+      #     token: ${{ secrets.TOKEN }}
+      #     ref: main
+
+
+      - name: Download another right now
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+            curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/MV9KEz7nx6dx/downloader/actions/workflows/miyuki.yml/dispatches \
+            -d '{"ref":"main","inputs":{}}' 
+
+      - name: 通知上传结果
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+          wget -O /dev/null -o /dev/null "${{secrets.BARK_KEY}}?title=上传结果&icon=https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png&group=Actions&body=${{ steps.downloading.outputs.filename }}上传成功&isArchive=0"
+          #curl --get "${{secrets.BARK_KEY}}" --data-urlencode "isArchive=0" --data-urlencode "icon=https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png" --data-urlencode "group=Actions" --data-urlencode "title=上传结果" --data-urlencode "body=${{ steps.downloading.outputs.filename }}上传成功"
+          
+      # - name: Notify upload info to mqtt broker
+      #   if: steps.database.outputs.status != '' && !cancelled() && !failure()
+      #   uses: juhrlass/mqtt-action@master
+      #   with:
+      #     protocol: mqtt
+      #     host: broker-cn.emqx.io
+      #     port: 1883
+      #     topic: ${{ secrets.SYNC_TOPIC }}
+      #     message: 'ok'
+      #     username: ''
+      #     password: ''
+
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@v1.2.3
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 0
+          keep_minimum_runs: 0
