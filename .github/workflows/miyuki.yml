@@ -130,12 +130,12 @@ jobs:
         run: |
           rclone copy ${{ steps.downloading.outputs.path }} files:/leak
       
-      # - name: Save Data
-      #   id:  database
-      #   if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
-      #   run: |
-      #     python savet.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/zhangsan/files/${{ steps.downloading.outputs.folder }}/${{ steps.downloading.outputs.filename }}"
-      #     echo "::set-output name=status::ok"
+      - name: Save Data
+        id:  database
+        if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
+        run: |
+          python savet.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/sunqian/files/leak/${{ steps.downloading.outputs.filename }}"
+          echo "::set-output name=status::ok"
 
       # - name: Download another right now
       #   uses: benc-uk/workflow-dispatch@v1
