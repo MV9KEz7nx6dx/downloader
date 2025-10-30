@@ -149,7 +149,7 @@ jobs:
         id:  database
         if: steps.downloading.outputs.filename != '' && !cancelled() && !failure()
         run: |
-          python savet.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/sunqian/files/leak/${{ steps.downloading.outputs.filename }}"
+          #python savet.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/sunqian/files/leak/${{ steps.downloading.outputs.filename }}"
           echo "::set-output name=status::ok"
           curl -X DELETE '${{ secrets.D_HOST }}/items/actions/${{ steps.downloading.outputs.id }}' --header 'Authorization: Bearer ${{ secrets.D_TOKEN }}'
           
