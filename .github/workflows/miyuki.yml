@@ -47,6 +47,11 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
+
+      - name: 'Setup jq'
+        uses: dcarbone/install-jq-action@v3
+        with:
+          version: '1.7.1'
            
       - name: Config Rclone
         run: |
@@ -68,11 +73,21 @@ jobs:
       - name: Downloading
         id: downloading
         run: |
-          python MissAV-Downloader-New/miyuki/miyuki-new.py -urls ""
+          response=$(curl --location '${{ secrets.D_MURL }}' --header 'Authorization: Bearer ${{ secrets.D_TOKEN }}')
+          if [ "$(echo "$response" | jq 'length')" -eq 0 ]; then
+            echo "⚠️ 数据为空，取消执行后续步骤。"
+            exit 0
+          fi
+          id=$(echo "$response" | jq -r '.[0].id')
+          url=$(echo "$response" | jq -r '.[0].url')
+          python MissAV-Downloader-New/miyuki/miyuki-new.py -urls "$url"
           # mkdir downloads
           # python transfer.py  --con="${{ secrets.DB_CONNECT }}" --isnow=0
           filename=$(ls movies_folder_miyuki | head -n1)
           folder=$(sh folder.sh $filename)
+           # 设置为输出变量
+          echo "id=$id" >> $GITHUB_OUTPUT
+          echo "url=$url" >> $GITHUB_OUTPUT
           echo "::set-output name=path::movies_folder_miyuki/$filename"
           echo "::set-output name=filename::$filename"
           echo "::set-output name=folder::$folder"
@@ -136,6 +151,8 @@ jobs:
         run: |
           python savet.py --con="${{ secrets.DB_CONNECT }}" --name="${{ steps.downloading.outputs.filename }}" --size="${{ steps.downloading.outputs.size }}" --cid="/sunqian/files/leak/${{ steps.downloading.outputs.filename }}"
           echo "::set-output name=status::ok"
+          curl -X DELETE '${{ secrets.D_HOST }}/items/actions/${{ steps.downloading.outputs.id }}' --header 'Authorization: Bearer ${{ secrets.D_TOKEN }}'
+          
 
       # - name: Download another right now
       #   uses: benc-uk/workflow-dispatch@v1
