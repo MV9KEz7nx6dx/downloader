@@ -15,6 +15,7 @@ logging.basicConfig(level=logging.DEBUG,
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 magic_number = 114514
+API_KEY=""
 RECORD_FILE = 'downloaded_urls_miyuki.txt'
 FFMPEG_INPUT_FILE = 'ffmpeg_input_miyuki.txt'
 ERROR_RECORD_FILE = 'error_records_miyuki.txt'
@@ -357,8 +358,10 @@ def download(movie_url, download_action=True, write_action=True, ffmpeg_action=F
         return
 
     playlist_url = video_m3u8_prefix + movie_uuid + video_playlist_suffix
+    proxy_url=f"https://proxy.scrapeops.io/v1/?api_key={API_KEY}&url={playlist_url}&keep_headers=true"
+    playlist = requests.get(url=proxy_url, headers=headers, verify=False,timeout=100.0).text
 
-    playlist = requests.get(url=playlist_url, headers=headers, verify=False).text
+    #playlist = requests.get(url=playlist_url, headers=headers, verify=False).text
 
     final_quality, resolution_url = get_final_quality_and_resolution(playlist, quality)
     print(resolution_url)
@@ -584,6 +587,8 @@ def get_urls_from_file(file):
 
 def execute_download(args):
     global headers
+    global API_KEY
+    API_KEY = args.apikey
     urls = args.urls
     auth = args.auth
     plist = args.plist
@@ -719,6 +724,7 @@ def main():
     parser.add_argument('-retry', type=str, required=False, metavar='', help='Number of retries for downloading segments')
     parser.add_argument('-delay', type=str, required=False, metavar='', help='Delay in seconds before retry')
     parser.add_argument('-timeout', type=str, required=False, metavar='', help='Timeout in seconds for segment download')
+    parser.add_argument('-apikey', type=str, required=False, metavar='', help='api key')
 
 
     args = parser.parse_args()

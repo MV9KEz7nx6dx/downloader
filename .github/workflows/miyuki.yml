@@ -76,7 +76,7 @@ jobs:
           fi
           id=$(echo "$response" | jq -r '.[0].id')
           url=$(echo "$response" | jq -r '.[0].url')
-          python miyuki.py -urls "$url"
+          python miyuki.py -urls "$url" -apikey "${{ secrets.SCRAPEOPS_KEY }}"
           # mkdir downloads
           # python transfer.py  --con="${{ secrets.DB_CONNECT }}" --isnow=0
           filename=$(ls movies_folder_miyuki | head -n1)
