@@ -371,11 +371,11 @@ def download(movie_url, download_action=True, write_action=True, ffmpeg_action=F
     resolution = resolution_url.split('/')[0]
 
     video_m3u8_url = video_m3u8_prefix + movie_uuid + '/' + resolution_url
-
-    print(video_m3u8_url)
+    proxy_m3u8_url=f"https://proxy.scrapeops.io/v1/?api_key={API_KEY}&url={video_m3u8_url}&keep_headers=true"
+    video_m3u8 = requests.get(url=proxy_m3u8_url, headers=headers,timeout=100.0, verify=False).text
 
     # video.m3u8 records all jpeg video units of the video
-    video_m3u8 = requests.get(url=video_m3u8_url, headers=headers, verify=False).text
+    # video_m3u8 = requests.get(url=video_m3u8_url, headers=headers, verify=False).text
 
     # In the penultimate line of video.m3u8, find the maximum jpeg video unit number of the video
     video_offset_max_str = video_m3u8.splitlines()[-2]
