@@ -8,7 +8,7 @@ import threading
 import time
 import sys
 from urllib.parse import urlparse
-from curl_cffi import requests
+from curl_cffi import requests as cffi_requests
 
 logging.basicConfig(level=logging.DEBUG,
                     format='Miyuki - %(asctime)s - %(levelname)s - %(message)s',
@@ -37,6 +37,9 @@ TIMEOUT = 10
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
 }
+
+
+requests = cffi_requests.Session(impersonate='chrome')
 
 banner = """
  ██████   ██████  ███                        █████       ███ 
@@ -408,8 +411,6 @@ def download(movie_url, download_action=True, write_action=True, ffmpeg_action=F
         video_download_jpegs(intervals, movie_uuid, resolution, movie_name, video_offset_max, retry, delay, timeout)
         counter.reset()
     
-    quit()
-
     if write_action:
         if ffmpeg_action:
             video_write_jpegs_to_mp4_by_ffmpeg(movie_name, video_offset_max, cover_as_preview, final_file_name)
