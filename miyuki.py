@@ -193,7 +193,6 @@ def generate_input_txt(movie_name, video_offset_max):
                 find_count = find_count + 1
                 input_txt.write(f"file '{file_path}'\n")
 
-    print()
     total_files = video_offset_max + 1
     downloaded_files = find_count
     completion_rate = '{:.2%}'.format(downloaded_files / (total_files))
@@ -358,24 +357,23 @@ def download(movie_url, download_action=True, write_action=True, ffmpeg_action=F
         return
 
     playlist_url = video_m3u8_prefix + movie_uuid + video_playlist_suffix
-    proxy_url=f"https://proxy.scrapeops.io/v1/?api_key={API_KEY}&url={playlist_url}&keep_headers=true"
-    playlist = requests.get(url=proxy_url, headers=headers, verify=False,timeout=100.0).text
+    # proxy_url=f"https://proxy.scrapeops.io/v1/?api_key={API_KEY}&url={playlist_url}&keep_headers=true"
+    # playlist = requests.get(url=proxy_url, headers=headers, verify=False,timeout=100.0).text
 
-    #playlist = requests.get(url=playlist_url, headers=headers, verify=False).text
-
+    playlist = requests.get(url=playlist_url, headers=headers, verify=False).text
     final_quality, resolution_url = get_final_quality_and_resolution(playlist, quality)
-    print(resolution_url)
 
     final_file_name = movie_name + '_' + final_quality
 
     resolution = resolution_url.split('/')[0]
 
     video_m3u8_url = video_m3u8_prefix + movie_uuid + '/' + resolution_url
-    proxy_m3u8_url=f"https://proxy.scrapeops.io/v1/?api_key={API_KEY}&url={video_m3u8_url}&keep_headers=true"
-    video_m3u8 = requests.get(url=proxy_m3u8_url, headers=headers,timeout=100.0, verify=False).text
+    # proxy_m3u8_url=f"https://proxy.scrapeops.io/v1/?api_key={API_KEY}&url={video_m3u8_url}&keep_headers=true"
+    # video_m3u8 = requests.get(url=proxy_m3u8_url, headers=headers,timeout=100.0, verify=False).text
+ 
 
     # video.m3u8 records all jpeg video units of the video
-    # video_m3u8 = requests.get(url=video_m3u8_url, headers=headers, verify=False).text
+    video_m3u8 = requests.get(url=video_m3u8_url, headers=headers, verify=False).text
 
     # In the penultimate line of video.m3u8, find the maximum jpeg video unit number of the video
     video_offset_max_str = video_m3u8.splitlines()[-2]
@@ -409,6 +407,8 @@ def download(movie_url, download_action=True, write_action=True, ffmpeg_action=F
         counter.reset()
         video_download_jpegs(intervals, movie_uuid, resolution, movie_name, video_offset_max, retry, delay, timeout)
         counter.reset()
+    
+    quit()
 
     if write_action:
         if ffmpeg_action:
